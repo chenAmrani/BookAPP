@@ -1,6 +1,6 @@
 import express from "express";
 const router = express.Router();
-import book_post_Controller from "../controllers/book_controller";
+import book_post_Controller from "../controllers/book_post_controller";
 
 router.get("/", book_post_Controller.get.bind(book_post_Controller));
 
