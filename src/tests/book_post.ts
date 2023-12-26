@@ -2,7 +2,7 @@ import { Express } from "express";
 import request from "supertest";
 import initApp from "../app";
 import mongoose from "mongoose";
-import Post from "../models/book_post_model";
+// import Post from "../models/book_post_model";
 
 
 
