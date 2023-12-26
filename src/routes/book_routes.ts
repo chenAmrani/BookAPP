@@ -1,16 +1,15 @@
 import express from "express";
 const router = express.Router();
-import studentController from "../../controllers/book_controller";
-import authMiddleware from "../common/auth_middleware";
+import Book from "../controllers/book_controller";
 
-router.get("/", authMiddleware, bookController.get.bind(bookController));
+router.get("/", Book.getAllBooks);
 
-router.get("/:id", authMiddleware, bookController.getById.bind(bookController));
+router.get("/:id", Book.getBookById);
 
-router.post("/", authMiddleware, bookController.post.bind(bookController));
+router.post("/", Book.postBook);
 
-router.put("/:id", bookController.putById.bind(bookController));
+router.put("/:id", Book.putBookById);
 
-router.delete("/:id", authMiddleware, bookController.deleteById.bind(bookController));
+router.delete("/:id", Book.deleteBookById);
 
-export default router;
+export default router; 
