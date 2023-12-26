@@ -1,15 +1,15 @@
 import express from "express";
 const router = express.Router();
-import Book from "../controllers/book_controller";
+import bookController from "../controllers/book_controller";
 
-router.get("/", Book.getAllBooks);
+router.get("/", bookController.get.bind(bookController));
 
-router.get("/:id", Book.getBookById);
+router.get("/:id", bookController.getById.bind(bookController));
 
-router.post("/", Book.postBook);
+router.post("/", bookController.post.bind(bookController));
 
-router.put("/:id", Book.putBookById);
+router.put("/:id", bookController.putById.bind(bookController));
 
-router.delete("/:id", Book.deleteBookById);
+router.delete("/:id", bookController.deleteById.bind(bookController));
 
 export default router; 
