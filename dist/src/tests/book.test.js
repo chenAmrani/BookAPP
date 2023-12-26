@@ -1,3 +1,4 @@
+"use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -7,18 +8,22 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-const request = require("supertest");
-const app = require("../app");
-const mongoose = require("mongoose");
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const supertest_1 = __importDefault(require("supertest"));
+const app_1 = __importDefault(require("../app"));
+const mongoose_1 = __importDefault(require("mongoose"));
 beforeAll((done) => {
     done();
 });
-afterAll(() => __awaiter(this, void 0, void 0, function* () {
-    yield mongoose.connection.close();
+afterAll(() => __awaiter(void 0, void 0, void 0, function* () {
+    yield mongoose_1.default.connection.close();
 }));
 describe("Book tests", () => {
-    test("Test Get All Books", () => __awaiter(this, void 0, void 0, function* () {
-        const response = yield request(app).get("/book");
+    test("Test Get All Books", () => __awaiter(void 0, void 0, void 0, function* () {
+        const response = yield (0, supertest_1.default)(app_1.default).get("/book");
         expect(response.status).toEqual(200);
     }));
 });
