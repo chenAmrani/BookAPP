@@ -1,6 +1,6 @@
 import express from "express";
 const router = express.Router();
-import bookController from "../controllers/book_controller";
+import studentController from "../../controllers/book_controller";
 import authMiddleware from "../common/auth_middleware";
 
 router.get("/", authMiddleware, bookController.get.bind(bookController));

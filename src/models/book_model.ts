@@ -10,7 +10,7 @@ export interface IBook {
   author: string;
   category: string;
   summary: string;
-  reviews: string[];
+  reviews: typeof mongoose.Schema.Types.ObjectId;
 }
 
 const bookSchema = new mongoose.Schema<IBook>({

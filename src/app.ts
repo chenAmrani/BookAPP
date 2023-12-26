@@ -3,8 +3,8 @@ env.config();
 import express, { Express } from "express";
 import mongoose from "mongoose";
 import bodyParser from "body-parser";
-import bookRoute from "./routes/book_route";
-import bookPostRoute from "./routes/book_post_routes";
+import bookRoute from "../routes/book_routes";
+import bookPostRoute from "../routes/book_post_routes";
 // import authRoute from "./routes/auth_route";
 
 const initApp = (): Promise<Express> => {

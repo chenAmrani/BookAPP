@@ -1,6 +1,6 @@
 ###
 
-GET http://localhost:3000/book
+GET http://localhost:3000/
 
 ###
 
