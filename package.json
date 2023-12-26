@@ -9,7 +9,7 @@
   "scripts": {
     "test": "tsc && jest--detectOpenHandles --forceExit ",
     "start": "tsc && node ./dist/server.js",
-    "dev": "nodemon server.js"
+    "dev": "nodemon ./src/server.ts"
   },
   "author": "Ori Farkash & Chen Amrani",
   "license": "ISC",

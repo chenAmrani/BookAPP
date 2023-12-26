@@ -23,5 +23,5 @@ const bookPostSchema = new mongoose_1.default.Schema({
         ref: "Book",
     },
 });
-exports.default = mongoose_1.default.model("BookPost", bookPostSchema);
+exports.default = mongoose_1.default.model("Review", bookPostSchema);
 //# sourceMappingURL=review_model.js.map
