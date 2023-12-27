@@ -1,58 +1,75 @@
 import { Request, Response } from "express";
 import { Model } from "mongoose";
 
+class BaseConstroller<ModelType>{
 
-class BaseController<ModelType>{
-model:Model<ModelType>
-constructor(model:Model<ModelType>){
-    this.model = model
-}
+    model: Model<ModelType>
+    constructor(model: Model<ModelType>) {
+        this.model = model;
+    }
+
     async get(req:Request, res:Response){
+        console.log("getAllBooks");
         try{
             if(req.query.name){
-                const o =  await this.model.find();
-                res.send(o);
+                const books =  await this.model.find();
+                res.send(books);
             } else {
-                const o = await this.model.find();
-                res.send(o);
+                const books = await this.model.find();
+                res.send(books);
             }
         }catch(err){
             res.status(500).json({message: err.message});
         }
     }
-    async getById(req:Request, res:Response){
-        try{
-            if(req.query.name){
-                const o =  await this.model.find();
-                res.send(o);
-            } else {
-                const o = await this.model.find();
-                res.send(o);
-            }
-        }catch(err){
-            res.status(500).json({message: err.message});
-        }
-    }
-    async post(req:Request, res:Response){
-        try{
-            if(req.query.name){
-                const o =  await this.model.find();
-                res.send(o);
-            } else {
-                const o = await this.model.find();
-                res.send(o);
-            }
-        }catch(err){
-            res.status(500).json({message: err.message});
-        }
-    }
-  putById(req:Request,res:Response){
-    res.send("put book by id: " + req.params.id);
-  }
 
-  deleteById(req:Request,res:Response){
-    res.send("delete book by id: " + req.params.id);
-  }
- 
+    async getById(req: Request, res: Response) {
+        console.log("getBookById:" + req.params.id);
+        try {
+            const student = await this.model.findById(req.params.id);
+            res.send(student);
+        } catch (err) {
+            res.status(500).json({ message: err.message });
+        }
+    }
+
+    async post(req: Request, res: Response) {
+        console.log("postBook:" + req.body);
+        try {
+            await this.model.create(req.body);
+            res.status(201).send("OK");
+        } catch (err) {
+            console.log(err);
+            res.status(406).send("fail: " + err.message);
+        }
+    }
+
+    async putById(req: Request, res: Response) {
+        console.log("putStudent:" + req.body);
+        try {
+            await this.model.findByIdAndUpdate(req.params.id, req.body);
+            const obj = await this.model.findById(req.params.id);
+            res.status(200).send(obj);
+        } catch (err) {
+            console.log(err);
+            res.status(406).send("fail: " + err.message);
+        }
+    }
+
+    async deleteById(req: Request, res: Response) {
+        console.log("deleteById:" + req.body);
+        try {
+            await this.model.findByIdAndDelete(req.params.id);
+            res.status(200).send("OK");
+        } catch (err) {
+            console.log(err);
+            res.status(406).send("fail: " + err.message);
+        }
+    }
 }
-export default BaseController;
+
+const createController = <ModelType>(model: Model<ModelType>) => {
+    return new BaseConstroller<ModelType>(model);
+}
+
+export default createController;

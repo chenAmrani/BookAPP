@@ -2,7 +2,7 @@ import { Express } from "express";
 import request from "supertest";
 import initApp from "../app";
 import mongoose from "mongoose";
-// import Book from "../models/book_model";
+import Book from "../models/book_model";
 
 
 
@@ -11,7 +11,7 @@ let app: Express;
 beforeAll(async () => {
   app = await initApp();
   console.log("beforeAll");
-//   await Book.deleteMany();
+   await Book.deleteMany();
 
 //   User.deleteMany({ 'email': user.email });
 //   await request(app).post("/auth/register").send(user);

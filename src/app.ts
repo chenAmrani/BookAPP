@@ -5,7 +5,7 @@ import mongoose from "mongoose";
 import bodyParser from "body-parser";
 import bookRoute from "./routes/book_routes";
 import bookPostRoute from "./routes/book_post_routes";
-// import authRoute from "./routes/auth_route";
+
 
 const initApp = (): Promise<Express> => {
   const promise = new Promise<Express>((resolve) => {
@@ -17,9 +17,9 @@ const initApp = (): Promise<Express> => {
       const app = express();
       app.use(bodyParser.json());
       app.use(bodyParser.urlencoded({ extended: true }));
+
       app.use("/book", bookRoute);
       app.use("/bookpost", bookPostRoute);
-    //   app.use("/auth", authRoute);
       resolve(app);
     });
   });

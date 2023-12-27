@@ -2,7 +2,7 @@ import { Express } from "express";
 import request from "supertest";
 import initApp from "../app";
 import mongoose from "mongoose";
-// import Post from "../models/book_post_model";
+import BookPost from "../models/book_post_model";
 
 
 
@@ -11,13 +11,9 @@ let app: Express;
 beforeAll(async () => {
   app = await initApp();
   console.log("beforeAll");
-//   await Book.deleteMany();
+  await BookPost.deleteMany();
 
-//   User.deleteMany({ 'email': user.email });
-//   await request(app).post("/auth/register").send(user);
-//   const response = await request(app).post("/auth/login").send(user);
-//   accessToken = response.body.accessToken;
-// });
+
 });
 
 afterAll(async () => {

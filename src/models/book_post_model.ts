@@ -27,4 +27,4 @@ const bookPostSchema = new mongoose.Schema<IBookPost>({
   },
 });
 
-export default mongoose.model<IBookPost>("Review", bookPostSchema);
+export default mongoose.model<IBookPost>("BookPost", bookPostSchema);
