@@ -7,7 +7,7 @@ const app_1 = __importDefault(require("./app"));
 (0, app_1.default)().then((app) => {
     const port = process.env.PORT;
     app.listen(port, () => {
-        console.log(`Example app listening at http://localhost:${3000}`);
+        console.log(`Server is listening at http://localhost:${port}`);
     });
 });
 //# sourceMappingURL=server.js.map
