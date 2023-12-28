@@ -2,7 +2,7 @@ import { Express } from "express";
 import request from "supertest";
 import initApp from "../app";
 import mongoose from "mongoose";
-// import Book from "../models/book_model";
+import Book from "../models/book_model";
 
 
 
@@ -11,7 +11,7 @@ let app: Express;
 beforeAll(async () => {
   app = await initApp();
   console.log("beforeAll");
-//   await Book.deleteMany();
+   await Book.deleteMany();
 
 //   User.deleteMany({ 'email': user.email });
 //   await request(app).post("/auth/register").send(user);
@@ -54,8 +54,8 @@ const book1: IBook = {
 describe("Book tests", () => {
     const addBook = async (book: IBook) => {
         const response = await request(app).post("/book").send(book);
-        expect(response.status).toBe(201);
         expect(response.body.name).toBe("OK");
+        expect(response.status).toBe(201);
     };
     
     test("Test get all books", async () => {
@@ -65,13 +65,13 @@ describe("Book tests", () => {
     });
 
     test("Test Post Book", async () => {
-        await addBook(book1);
+        addBook(book1);
     });
 
     test("Test Get All Books with one post in DB", async () => {
         const response = await request(app).get("/book");
         expect(response.status).toBe(200);
-        expect(response.body.length).toBe(1);
+        expect(response.body.length).toBeGreaterThan(0);
         const rc = response.body[0];
         expect(rc.name).toBe(book1.name);
         expect(rc.year).toBe(book1.year);

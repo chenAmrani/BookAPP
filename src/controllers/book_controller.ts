@@ -1,7 +1,6 @@
-import book_model, { IBook } from "../models/book_model";
-import BaseController from "./base_controller";
+import BookModel, { IBook } from "../models/book_model";
+import createController from "./base_controller";
 
-const bookController = new BaseController<IBook>(book_model);
+const studentController = createController<IBook>(BookModel);
 
-
-export default bookController;
+export default studentController
