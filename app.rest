@@ -4,12 +4,12 @@ GET http://localhost:6969/book
 
 ###
 
-# GET http://localhost:3000/student?name=book1
+GET http://localhost:6969/book?name=book1
 
 
-# ###
+###
 
-# GET http://localhost:3000/book/1234567891
+GET http://localhost:6969/book/658c6bbe41cb64ee84d31465
 
 
 # ###
