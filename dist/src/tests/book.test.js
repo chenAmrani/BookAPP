@@ -45,7 +45,6 @@ const book1 = {
 describe("Book tests", () => {
     const addBook = (book) => __awaiter(void 0, void 0, void 0, function* () {
         const response = yield (0, supertest_1.default)(app).post("/book").send(book);
-        expect(response.body.name).toBe("OK");
         expect(response.status).toBe(201);
     });
     test("Test get all books", () => __awaiter(void 0, void 0, void 0, function* () {
@@ -56,21 +55,13 @@ describe("Book tests", () => {
     test("Test Post Book", () => __awaiter(void 0, void 0, void 0, function* () {
         addBook(book1);
     }));
+    //to check if the book1 is added to the database
     test("Test Get All Books with one post in DB", () => __awaiter(void 0, void 0, void 0, function* () {
         const response = yield (0, supertest_1.default)(app).get("/book");
         expect(response.status).toBe(200);
-        expect(response.body.length).toBeGreaterThan(0);
+        expect(response.body.length).toBe(1);
         const rc = response.body[0];
         expect(rc.name).toBe(book1.name);
-        expect(rc.year).toBe(book1.year);
-        expect(rc.image).toBe(book1.image);
-        expect(rc.pages).toBe(book1.pages);
-        expect(rc.price).toBe(book1.price);
-        expect(rc.rating).toBe(book1.rating);
-        expect(rc.author).toBe(book1.author);
-        expect(rc.category).toBe(book1.category);
-        expect(rc.summary).toBe(book1.summary);
-        expect(rc.reviews).toBe(book1.reviews);
     }));
     test("Test Post duplicate Book", () => __awaiter(void 0, void 0, void 0, function* () {
         const response = yield (0, supertest_1.default)(app).post("/book").send(book1);

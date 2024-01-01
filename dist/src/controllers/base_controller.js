@@ -45,17 +45,31 @@ class BaseConstroller {
     }
     post(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            console.log("postBook:" + req.body);
+            console.log("postBook:", req.body);
+            const { name } = req.body;
             try {
-                yield this.model.create(req.body);
-                res.status(201).send("OK");
+                const existingBook = yield this.model.findOne({ name });
+                if (existingBook) {
+                    return res.status(406).json({ message: "Duplicate book entry" });
+                }
+                const obj = yield this.model.create(req.body);
+                res.status(201).send(obj);
             }
             catch (err) {
-                console.log(err);
-                res.status(406).send("fail: " + err.message);
+                res.status(500).json({ message: err.message });
             }
         });
     }
+    // async post(req: Request, res: Response) {
+    //     console.log("postBook:" + req.body);
+    //     try {
+    //         const obj = await this.model.create(req.body);
+    //         res.status(201).send(obj);
+    //     } catch (err) {
+    //         console.log(err);
+    //         res.status(406).send("fail: " + err.message);
+    //     }
+    // }
     putById(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             console.log("putStudent:" + req.body);
