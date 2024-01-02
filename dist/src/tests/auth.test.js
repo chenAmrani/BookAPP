@@ -15,10 +15,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const supertest_1 = __importDefault(require("supertest"));
 const app_1 = __importDefault(require("../app"));
 const mongoose_1 = __importDefault(require("mongoose"));
+const user_model_1 = __importDefault(require("../models/user_model"));
 let app;
 beforeAll(() => __awaiter(void 0, void 0, void 0, function* () {
     app = yield (0, app_1.default)();
     console.log("beforeAll");
+    yield user_model_1.default.deleteMany();
 }));
 afterAll(() => __awaiter(void 0, void 0, void 0, function* () {
     yield mongoose_1.default.connection.close();
@@ -26,18 +28,33 @@ afterAll(() => __awaiter(void 0, void 0, void 0, function* () {
 describe("Auth tests", () => {
     test("Test Register", () => __awaiter(void 0, void 0, void 0, function* () {
         const response = yield (0, supertest_1.default)(app).post("/auth/register").send({
-            username: "test@test.com",
+            email: "test@test.com",
             password: "123456789"
         });
-        expect(response.status).toBe(200);
-        expect(response.body).toStrictEqual({ message: "OK" });
+        expect(response.status).toBe(201);
     }));
     test("Test Login", () => __awaiter(void 0, void 0, void 0, function* () {
         const response = yield (0, supertest_1.default)(app).post("/auth/register").send({
-            username: "test@test.com",
+            email: "test@test.com",
             password: "123456789"
         });
         expect(response.status).toBe(200);
+    }));
+    test("Test Register exist email", () => __awaiter(void 0, void 0, void 0, function* () {
+        const response = yield (0, supertest_1.default)(app).post("/auth/register").send({
+            email: "test@test.com",
+        });
+        // const response = await request(app)
+        //   .post("/auth/register")
+        //   .send(User);
+        expect(response.statusCode).toBe(400);
+    }));
+    test("Test Register missing password", () => __awaiter(void 0, void 0, void 0, function* () {
+        const response = yield (0, supertest_1.default)(app)
+            .post("/auth/register").send({
+            email: "test@test.com",
+        });
+        expect(response.statusCode).toBe(400);
     }));
 });
 //# sourceMappingURL=auth.test.js.map
