@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1704188788434" clover="3.2.0">
-  <project timestamp="1704188788435" name="All files">
-    <metrics statements="109" coveredstatements="72" conditionals="3" coveredconditionals="0" methods="18" coveredmethods="8" elements="130" coveredelements="80" complexity="0" loc="109" ncloc="109" packages="4" files="10" classes="10"/>
+<coverage generated="1704191229992" clover="3.2.0">
+  <project timestamp="1704191229992" name="All files">
+    <metrics statements="120" coveredstatements="84" conditionals="7" coveredconditionals="4" methods="14" coveredmethods="8" elements="141" coveredelements="96" complexity="0" loc="120" ncloc="120" packages="4" files="11" classes="11"/>
     <package name="src">
       <metrics statements="24" coveredstatements="24" conditionals="0" coveredconditionals="0" methods="5" coveredmethods="4"/>
-      <file name="app.ts" path="C:\Users\amnav\Desktop\BookAp\BookAPP\src\app.ts">
+      <file name="app.ts" path="C:\Users\admin\Desktop\אורי\אורי לימודים\web_advanced\Book application\BookAPP\src\app.ts">
         <metrics statements="24" coveredstatements="24" conditionals="0" coveredconditionals="0" methods="5" coveredmethods="4"/>
         <line num="1" count="1" type="stmt"/>
         <line num="2" count="1" type="stmt"/>
@@ -33,18 +33,28 @@
       </file>
     </package>
     <package name="src.controllers">
-      <metrics statements="54" coveredstatements="17" conditionals="3" coveredconditionals="0" methods="13" coveredmethods="4"/>
-      <file name="auth_controller.ts" path="C:\Users\amnav\Desktop\BookAp\BookAPP\src\controllers\auth_controller.ts">
-        <metrics statements="7" coveredstatements="5" conditionals="0" coveredconditionals="0" methods="6" coveredmethods="2"/>
-        <line num="4" count="2" type="stmt"/>
-        <line num="5" count="2" type="stmt"/>
-        <line num="7" count="1" type="stmt"/>
-        <line num="8" count="0" type="stmt"/>
-        <line num="10" count="1" type="stmt"/>
-        <line num="11" count="0" type="stmt"/>
-        <line num="13" count="1" type="stmt"/>
+      <metrics statements="64" coveredstatements="28" conditionals="7" coveredconditionals="4" methods="9" coveredmethods="4"/>
+      <file name="auth_controller.ts" path="C:\Users\admin\Desktop\אורי\אורי לימודים\web_advanced\Book application\BookAPP\src\controllers\auth_controller.ts">
+        <metrics statements="17" coveredstatements="16" conditionals="4" coveredconditionals="4" methods="2" coveredmethods="2"/>
+        <line num="2" count="1" type="stmt"/>
+        <line num="3" count="1" type="stmt"/>
+        <line num="6" count="4" type="stmt"/>
+        <line num="7" count="4" type="stmt"/>
+        <line num="8" count="4" type="stmt"/>
+        <line num="9" count="4" type="cond" truecount="3" falsecount="0"/>
+        <line num="10" count="2" type="stmt"/>
+        <line num="12" count="2" type="stmt"/>
+        <line num="13" count="2" type="stmt"/>
+        <line num="14" count="2" type="cond" truecount="1" falsecount="0"/>
+        <line num="15" count="1" type="stmt"/>
+        <line num="17" count="1" type="stmt"/>
+        <line num="18" count="1" type="stmt"/>
+        <line num="19" count="1" type="stmt"/>
+        <line num="20" count="1" type="stmt"/>
+        <line num="22" count="0" type="stmt"/>
+        <line num="114" count="1" type="stmt"/>
       </file>
-      <file name="base_controller.ts" path="C:\Users\amnav\Desktop\BookAp\BookAPP\src\controllers\base_controller.ts">
+      <file name="base_controller.ts" path="C:\Users\admin\Desktop\אורי\אורי לימודים\web_advanced\Book application\BookAPP\src\controllers\base_controller.ts">
         <metrics statements="39" coveredstatements="4" conditionals="3" coveredconditionals="0" methods="7" coveredmethods="2"/>
         <line num="8" count="2" type="stmt"/>
         <line num="12" count="0" type="stmt"/>
@@ -86,14 +96,14 @@
         <line num="89" count="2" type="stmt"/>
         <line num="92" count="1" type="stmt"/>
       </file>
-      <file name="book_controller.ts" path="C:\Users\amnav\Desktop\BookAp\BookAPP\src\controllers\book_controller.ts">
+      <file name="book_controller.ts" path="C:\Users\admin\Desktop\אורי\אורי לימודים\web_advanced\Book application\BookAPP\src\controllers\book_controller.ts">
         <metrics statements="4" coveredstatements="4" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
         <line num="1" count="1" type="stmt"/>
         <line num="2" count="1" type="stmt"/>
         <line num="4" count="1" type="stmt"/>
         <line num="6" count="1" type="stmt"/>
       </file>
-      <file name="book_post_controller.ts" path="C:\Users\amnav\Desktop\BookAp\BookAPP\src\controllers\book_post_controller.ts">
+      <file name="book_post_controller.ts" path="C:\Users\admin\Desktop\אורי\אורי לימודים\web_advanced\Book application\BookAPP\src\controllers\book_post_controller.ts">
         <metrics statements="4" coveredstatements="4" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
         <line num="1" count="1" type="stmt"/>
         <line num="2" count="1" type="stmt"/>
@@ -102,33 +112,37 @@
       </file>
     </package>
     <package name="src.models">
-      <metrics statements="6" coveredstatements="6" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
-      <file name="book_model.ts" path="C:\Users\amnav\Desktop\BookAp\BookAPP\src\models\book_model.ts">
+      <metrics statements="9" coveredstatements="9" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+      <file name="book_model.ts" path="C:\Users\admin\Desktop\אורי\אורי לימודים\web_advanced\Book application\BookAPP\src\models\book_model.ts">
         <metrics statements="3" coveredstatements="3" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
         <line num="1" count="1" type="stmt"/>
         <line num="16" count="1" type="stmt"/>
         <line num="62" count="1" type="stmt"/>
       </file>
-      <file name="book_post_model.ts" path="C:\Users\amnav\Desktop\BookAp\BookAPP\src\models\book_post_model.ts">
+      <file name="book_post_model.ts" path="C:\Users\admin\Desktop\אורי\אורי לימודים\web_advanced\Book application\BookAPP\src\models\book_post_model.ts">
         <metrics statements="3" coveredstatements="3" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
         <line num="1" count="1" type="stmt"/>
         <line num="10" count="1" type="stmt"/>
         <line num="30" count="1" type="stmt"/>
       </file>
+      <file name="user_model.ts" path="C:\Users\admin\Desktop\אורי\אורי לימודים\web_advanced\Book application\BookAPP\src\models\user_model.ts">
+        <metrics statements="3" coveredstatements="3" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+        <line num="1" count="1" type="stmt"/>
+        <line num="10" count="1" type="stmt"/>
+        <line num="25" count="1" type="stmt"/>
+      </file>
     </package>
     <package name="src.routes">
-      <metrics statements="25" coveredstatements="25" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
-      <file name="auth_route.ts" path="C:\Users\amnav\Desktop\BookAp\BookAPP\src\routes\auth_route.ts">
-        <metrics statements="7" coveredstatements="7" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+      <metrics statements="23" coveredstatements="23" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+      <file name="auth_route.ts" path="C:\Users\admin\Desktop\אורי\אורי לימודים\web_advanced\Book application\BookAPP\src\routes\auth_route.ts">
+        <metrics statements="5" coveredstatements="5" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
         <line num="1" count="1" type="stmt"/>
         <line num="2" count="1" type="stmt"/>
         <line num="3" count="1" type="stmt"/>
         <line num="5" count="1" type="stmt"/>
-        <line num="7" count="1" type="stmt"/>
-        <line num="9" count="1" type="stmt"/>
         <line num="12" count="1" type="stmt"/>
       </file>
-      <file name="book_post_routes.ts" path="C:\Users\amnav\Desktop\BookAp\BookAPP\src\routes\book_post_routes.ts">
+      <file name="book_post_routes.ts" path="C:\Users\admin\Desktop\אורי\אורי לימודים\web_advanced\Book application\BookAPP\src\routes\book_post_routes.ts">
         <metrics statements="9" coveredstatements="9" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
         <line num="1" count="1" type="stmt"/>
         <line num="2" count="1" type="stmt"/>
@@ -140,7 +154,7 @@
         <line num="13" count="1" type="stmt"/>
         <line num="15" count="1" type="stmt"/>
       </file>
-      <file name="book_routes.ts" path="C:\Users\amnav\Desktop\BookAp\BookAPP\src\routes\book_routes.ts">
+      <file name="book_routes.ts" path="C:\Users\admin\Desktop\אורי\אורי לימודים\web_advanced\Book application\BookAPP\src\routes\book_routes.ts">
         <metrics statements="9" coveredstatements="9" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
         <line num="1" count="1" type="stmt"/>
         <line num="2" count="1" type="stmt"/>
