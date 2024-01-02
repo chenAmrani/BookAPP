@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-export interface IBookPost {
+export interface IReview {
   name: string;
   date: Date;
   text: string;
@@ -8,7 +8,7 @@ export interface IBookPost {
   // bookId: typeof mongoose.Schema.Types.ObjectId;
 }
 
-const bookPostSchema = new mongoose.Schema<IBookPost>({
+const reviewSchema = new mongoose.Schema<IReview>({
   name: {
     type: String,
     required: true,
@@ -28,4 +28,4 @@ const bookPostSchema = new mongoose.Schema<IBookPost>({
   // },
 });
 
-export default mongoose.model<IBookPost>("BookPost", bookPostSchema);
+export default mongoose.model<IReview>("Review", reviewSchema);

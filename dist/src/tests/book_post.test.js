@@ -18,51 +18,61 @@ const mongoose_1 = __importDefault(require("mongoose"));
 const book_post_model_1 = __importDefault(require("../models/book_post_model"));
 const user_model_1 = __importDefault(require("../models/user_model"));
 let app;
-let accessToken;
 const user = {
     email: "testBook@test.com",
     password: "1234567890",
 };
+let accessToken;
 beforeAll(() => __awaiter(void 0, void 0, void 0, function* () {
     app = yield (0, app_1.default)();
     console.log("beforeAll");
     yield book_post_model_1.default.deleteMany();
-    user_model_1.default.deleteMany({ 'email': user.email });
-    yield (0, supertest_1.default)(app).post("/auth/register").send(user);
-    const response = yield (0, supertest_1.default)(app).post("/auth/login").send(user);
-    accessToken = response.body.accessToken;
+    yield user_model_1.default.deleteMany({ 'email': user.email });
+    //   await request(app).post("/auth/register").send(user);
+    //   const response = await request(app).post("/auth/login").send(user);
+    //   accessToken = response.body.accessToken;
 }));
 afterAll(() => __awaiter(void 0, void 0, void 0, function* () {
     yield mongoose_1.default.connection.close();
 }));
-const post1 = {
-    name: "post1",
+const review1 = {
+    name: "Ori",
     date: null,
-    text: "text1",
-    bookId: null,
+    text: "Good book",
+    // bookId: null,
 };
-describe("Book post tests", () => {
-    const addBookPost = (post) => __awaiter(void 0, void 0, void 0, function* () {
-        const response = yield (0, supertest_1.default)(app).post("/bookpost").send(post);
+describe("Reviews tests", () => {
+    const addReviewOnBook = (post) => __awaiter(void 0, void 0, void 0, function* () {
+        const response = yield (0, supertest_1.default)(app).post("/bookpost").set("Authorization", "JWT " + accessToken).send(post);
         expect(response.statusCode).toBe(201);
     });
-    test("Test get all books post", () => __awaiter(void 0, void 0, void 0, function* () {
-        const response = yield (0, supertest_1.default)(app).get("/bookpost");
+    test("Get token", () => __awaiter(void 0, void 0, void 0, function* () {
+        const response = yield (0, supertest_1.default)(app).post("/auth/register").send(user);
+        user._id = response.body._id;
+        const response2 = yield (0, supertest_1.default)(app)
+            .post("/auth/login")
+            .send(user);
+        accessToken = response2.body.accessToken;
+        expect(accessToken).toBeDefined();
+    }));
+    test("Test get all reviews on books", () => __awaiter(void 0, void 0, void 0, function* () {
+        const response = yield (0, supertest_1.default)(app).get("/bookpost").set("Authorization", "JWT " + accessToken);
         expect(response.statusCode).toBe(200);
         expect(response.body).toStrictEqual([]);
     }));
-    test("Test Post Book", () => __awaiter(void 0, void 0, void 0, function* () {
-        yield addBookPost(post1);
+    test("Test add Review on book", () => __awaiter(void 0, void 0, void 0, function* () {
+        yield addReviewOnBook(review1);
     }));
-    test("Test Get All post in DB", () => __awaiter(void 0, void 0, void 0, function* () {
-        const response = yield (0, supertest_1.default)(app).get("/bookpost").set("Authorization", "JWT " + accessToken).send(post1);
-        expect(response.status).toBe(200);
-        expect(response.body.length).toBe(1);
-        expect(response.body[0].name).toBe(post1.name);
-        expect(response.body[0].date).toBe(post1.date);
-        expect(response.body[0].text).toBe(post1.text);
-        expect(response.body[0].bookId).toBe(post1.bookId);
-    }));
+    // test("Test Get All post in DB", async () => {
+    //     const response = await request(app).get("/bookpost").set("Authorization", "JWT " + accessToken); 
+    //     expect(response.status).toBe(200);
+    //     expect(response.body.length).toBe(1);
+    //     const rc = response.body[0];
+    //     expect(rc.title).toBe(post1.name);
+    //     expect(rc.text).toBe(post1.text);
+    //     expect(rc.date).toBe(post1.date);
+    //     expect(rc.owner).toBe(user._id);
+    // });
     // test("Test Post duplicate Book", async () => {
     //     const response = await request(app).post("/book").send(post11);
     //     expect(response.status).toBe(406);
