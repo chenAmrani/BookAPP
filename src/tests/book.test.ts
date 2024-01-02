@@ -53,9 +53,6 @@ const book1: IBook = {
 
 
 
-
-
-
 describe("Book tests", () => {
     const addBook = async (book: IBook) => {
         const response = await request(app).post("/book").send(book);
