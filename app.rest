@@ -31,22 +31,33 @@ GET http://localhost:6969/book/658c6bbe41cb64ee84d31465
 #     "name": "book 1",
 #     "_id": "1234567890"
 # }
+
 ###
 
-# POST http://localhost:6969/auth/register
-# Content-Type: application/json
+POST http://localhost:6969/auth/register
+Content-Type: application/json
 
-# {
-#     "email": "test1@test.com",
-#     "password": "1234567890"
-# }
+{
+    "email": "test1@test.com",
+    "password": "123456789"
+}
 
-# ###
+###
 
-# POST http://localhost:6969/auth/login
-# Content-Type: application/json
+POST http://localhost:6969/auth/login
+Content-Type: application/json
 
-# {
-#     "email": "testUser@test.com",
-#     "password": "1234567890"
-# }
+{
+    "email": "testUser@test.com",
+    "password": "123456789"
+}
+
+###
+
+POST http://localhost:6969/auth/login
+Content-Type: application/json
+
+{
+    "email": "testUser@test.com",
+    "password": "123456789"
+}
