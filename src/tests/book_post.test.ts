@@ -71,9 +71,9 @@ describe("Book post tests", () => {
         expect(response.body).toStrictEqual([]);
     });
 
-    // test("Test Post Book", async () => {
-    //     await addBookPost(post1);
-    // });
+    test("Test Post Book", async () => {
+        await addBookPost(post1);
+    });
 
     test("Test Get All post in DB", async () => {
         const response = await request(app).get("/bookpost").set("Authorization", "JWT " + accessToken); 
@@ -84,9 +84,6 @@ describe("Book post tests", () => {
         expect(rc.text).toBe(post1.text);
         expect(rc.date).toBe(post1.date);
         expect(rc.owner).toBe(user._id);
-       
-        
-
     });
 
     // test("Test Post duplicate Book", async () => {
