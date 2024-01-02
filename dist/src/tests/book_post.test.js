@@ -16,11 +16,21 @@ const supertest_1 = __importDefault(require("supertest"));
 const app_1 = __importDefault(require("../app"));
 const mongoose_1 = __importDefault(require("mongoose"));
 const book_post_model_1 = __importDefault(require("../models/book_post_model"));
+const user_model_1 = __importDefault(require("../models/user_model"));
 let app;
+let accessToken;
+const user = {
+    email: "testBook@test.com",
+    password: "1234567890",
+};
 beforeAll(() => __awaiter(void 0, void 0, void 0, function* () {
     app = yield (0, app_1.default)();
     console.log("beforeAll");
     yield book_post_model_1.default.deleteMany();
+    user_model_1.default.deleteMany({ 'email': user.email });
+    yield (0, supertest_1.default)(app).post("/auth/register").send(user);
+    const response = yield (0, supertest_1.default)(app).post("/auth/login").send(user);
+    accessToken = response.body.accessToken;
 }));
 afterAll(() => __awaiter(void 0, void 0, void 0, function* () {
     yield mongoose_1.default.connection.close();
@@ -31,22 +41,21 @@ const post1 = {
     text: "text1",
     bookId: null,
 };
-describe("Book tests", () => {
-    const addBook = (post) => __awaiter(void 0, void 0, void 0, function* () {
-        const response = yield (0, supertest_1.default)(app).post("/bookPost").send(post);
-        expect(response.status).toBe(201);
-        expect(response.body.name).toBe("OK");
+describe("Book post tests", () => {
+    const addBookPost = (post) => __awaiter(void 0, void 0, void 0, function* () {
+        const response = yield (0, supertest_1.default)(app).post("/bookpost").send(post);
+        expect(response.statusCode).toBe(201);
     });
-    test("Test get all books", () => __awaiter(void 0, void 0, void 0, function* () {
-        const response = yield (0, supertest_1.default)(app).get("/bookPost");
-        expect(response.status).toBe(200);
+    test("Test get all books post", () => __awaiter(void 0, void 0, void 0, function* () {
+        const response = yield (0, supertest_1.default)(app).get("/bookpost");
+        expect(response.statusCode).toBe(200);
         expect(response.body).toStrictEqual([]);
     }));
     test("Test Post Book", () => __awaiter(void 0, void 0, void 0, function* () {
-        yield addBook(post1);
+        yield addBookPost(post1);
     }));
     test("Test Get All post in DB", () => __awaiter(void 0, void 0, void 0, function* () {
-        const response = yield (0, supertest_1.default)(app).get("/bookPost");
+        const response = yield (0, supertest_1.default)(app).get("/bookpost").set("Authorization", "JWT " + accessToken).send(post1);
         expect(response.status).toBe(200);
         expect(response.body.length).toBe(1);
         expect(response.body[0].name).toBe(post1.name);

@@ -1,6 +1,10 @@
-import BookPostModel, { IBookPost } from "../models/book_post_model";
-import createController from "./base_controller";
+import BookPost, { IBookPost } from "../models/book_post_model";
+import {BaseConstroller} from "./base_controller";
 
-const bookPostController = createController<IBookPost>(BookPostModel);
+class BookPostController extends BaseConstroller<IBookPost>{
+    constructor(){
+        super(BookPost)
+    }
+}
 
-export default bookPostController
+export default new BookPostController();
