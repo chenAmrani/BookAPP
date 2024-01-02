@@ -10,6 +10,7 @@ const mongoose_1 = __importDefault(require("mongoose"));
 const body_parser_1 = __importDefault(require("body-parser"));
 const book_routes_1 = __importDefault(require("./routes/book_routes"));
 const book_post_routes_1 = __importDefault(require("./routes/book_post_routes"));
+const auth_route_1 = __importDefault(require("./routes/auth_route"));
 const initApp = () => {
     const promise = new Promise((resolve) => {
         const db = mongoose_1.default.connection;
@@ -22,6 +23,7 @@ const initApp = () => {
             app.use(body_parser_1.default.urlencoded({ extended: true }));
             app.use("/book", book_routes_1.default);
             app.use("/bookpost", book_post_routes_1.default);
+            app.use("/auth", auth_route_1.default);
             resolve(app);
         });
     });
