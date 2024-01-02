@@ -9,6 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.BaseConstroller = void 0;
 class BaseConstroller {
     constructor(model) {
         this.model = model;
@@ -98,6 +99,7 @@ class BaseConstroller {
         });
     }
 }
+exports.BaseConstroller = BaseConstroller;
 const createController = (model) => {
     return new BaseConstroller(model);
 };

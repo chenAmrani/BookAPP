@@ -4,7 +4,8 @@ export interface IBookPost {
   name: string;
   date: Date;
   text: string;
-  bookId: typeof mongoose.Schema.Types.ObjectId;
+  owner:string;
+  // bookId: typeof mongoose.Schema.Types.ObjectId;
 }
 
 const bookPostSchema = new mongoose.Schema<IBookPost>({
@@ -21,10 +22,10 @@ const bookPostSchema = new mongoose.Schema<IBookPost>({
     type: String,
     required: true,
   },
-  bookId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Book",
-  },
+  // bookId: {
+  //   type: mongoose.Schema.Types.ObjectId,
+  //   ref: "Book",
+  // },
 });
 
 export default mongoose.model<IBookPost>("BookPost", bookPostSchema);

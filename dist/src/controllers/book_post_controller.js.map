@@ -1,1 +1,1 @@
-{"version":3,"file":"book_post_controller.js","sourceRoot":"","sources":["../../../src/controllers/book_post_controller.ts"],"names":[],"mappings":";;;;;AAAA,gFAAqE;AACrE,wEAAiD;AAEjD,MAAM,kBAAkB,GAAG,IAAA,yBAAgB,EAAY,yBAAa,CAAC,CAAC;AAEtE,kBAAe,kBAAkB,CAAA"}
+{"version":3,"file":"book_post_controller.js","sourceRoot":"","sources":["../../../src/controllers/book_post_controller.ts"],"names":[],"mappings":";;;;;AAAA,gFAAgE;AAChE,uDAAkD;AAElD,MAAM,kBAAmB,SAAQ,iCAA0B;IACvD;QACI,KAAK,CAAC,yBAAQ,CAAC,CAAA;IACnB,CAAC;CACJ;AAED,kBAAe,IAAI,kBAAkB,EAAE,CAAC"}

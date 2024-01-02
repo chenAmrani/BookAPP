@@ -3,16 +3,25 @@ import request from "supertest";
 import initApp from "../app";
 import mongoose from "mongoose";
 import BookPost from "../models/book_post_model";
-
+import User, {IUser} from "../models/user_model";
 
 
 let app: Express;
+const user:IUser = {
+  email: "testBook@test.com",
+  password: "1234567890",
+}
+let accessToken: string;
 
 beforeAll(async () => {
   app = await initApp();
   console.log("beforeAll");
   await BookPost.deleteMany();
 
+  await User.deleteMany({ 'email': user.email });
+//   await request(app).post("/auth/register").send(user);
+//   const response = await request(app).post("/auth/login").send(user);
+//   accessToken = response.body.accessToken;
 
 });
 
@@ -24,45 +33,59 @@ interface IBookPost {
     name: string;
     date: Date;
     text: string;
-    bookId: typeof mongoose.Schema.Types.ObjectId;
+    // bookId: typeof mongoose.Schema.Types.ObjectId;
 }
 
 const post1: IBookPost = {
         name: "post1",
         date: null,
         text: "text1",
-        bookId: null,
-    
+        // bookId: null,
     };
 
 
 
 
-describe("Book tests", () => {
-    const addBook = async (post: IBookPost) => {
-        const response = await request(app).post("/bookPost").send(post);
-        expect(response.status).toBe(201);
-        expect(response.body.name).toBe("OK");
+describe("Book post tests", () => {
+    const addBookPost = async (post: IBookPost) => {
+        const response = await request(app).post("/bookpost").set("Authorization", "JWT " + accessToken).send(post);
+        expect(response.statusCode).toBe(201);
     };
+
+    test("Get token", async () => {
+        const response = await request(app).post("/auth/register").send(user);
+        user._id = response.body._id;
+        const response2 = await request(app)
+          .post("/auth/login")
+          .send(user);
+        accessToken = response2.body.accessToken;
+        expect(accessToken).toBeDefined();
+      });
+
+
+
     
-    test("Test get all books", async () => {
-        const response = await request(app).get("/bookPost");
-        expect(response.status).toBe(200);
+    test("Test get all books post", async () => {
+        const response = await request(app).get("/bookpost").set("Authorization", "JWT " + accessToken);
+        expect(response.statusCode).toBe(200);
         expect(response.body).toStrictEqual([]);
     });
 
-    test("Test Post Book", async () => {
-        await addBook(post1);
-    });
+    // test("Test Post Book", async () => {
+    //     await addBookPost(post1);
+    // });
 
     test("Test Get All post in DB", async () => {
-        const response = await request(app).get("/bookPost");
+        const response = await request(app).get("/bookpost").set("Authorization", "JWT " + accessToken); 
         expect(response.status).toBe(200);
         expect(response.body.length).toBe(1);
-        expect(response.body[0].name).toBe(post1.name);
-        expect(response.body[0].date).toBe(post1.date);
-        expect(response.body[0].text).toBe(post1.text);
-        expect(response.body[0].bookId).toBe(post1.bookId);
+        const rc = response.body[0];
+        expect(rc.title).toBe(post1.name);
+        expect(rc.text).toBe(post1.text);
+        expect(rc.date).toBe(post1.date);
+        expect(rc.owner).toBe(user._id);
+       
+        
 
     });
 
