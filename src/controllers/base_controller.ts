@@ -12,11 +12,13 @@ export class BaseConstroller<ModelType>{
         console.log("getAllBooks");
         try{
             if(req.query.name){
-                const books =  await this.model.find();
+                const books =  await this.model.find({ name: req.query.name });
                 res.send(books);
+                console.log("the one book is: " , books);
             } else {
                 const books = await this.model.find();
                 res.send(books);
+                console.log("the all books is: " , books);
             }
         }catch(err){
             res.status(500).json({message: err.message});
@@ -33,36 +35,30 @@ export class BaseConstroller<ModelType>{
         }
     }
 
+
+    
     async post(req: Request, res: Response) {
-        console.log("postBook:", req.body);
-        const { name } = req.body;
-        try {
-            const existingBook = await this.model.findOne({ name });
-            if (existingBook) {
-                return res.status(406).json({ message: "Duplicate book entry" });
+        console.log("postBook:" + req.body);   
+        try {           
+            const existingBook = await this.model.findOne({ title: req.body.title, author: req.body.author });
+    
+            if (existingBook) {            
+                res.status(406).send("Book already exists in the database");
+            } else {
+                const newBook = await this.model.create(req.body);
+                res.status(201).send(newBook);
             }
-            const obj = await this.model.create(req.body);
-            res.status(201).send(obj);
         } catch (err) {
-            res.status(500).json({ message: err.message });
+            console.log(err);
+            res.status(406).send("fail: " + err.message);
         }
     }
     
-    // async post(req: Request, res: Response) {
-    //     console.log("postBook:" + req.body);
-    //     try {
-    //         const obj = await this.model.create(req.body);
-    //         res.status(201).send(obj);
-    //     } catch (err) {
-    //         console.log(err);
-    //         res.status(406).send("fail: " + err.message);
-    //     }
-    // }
 
 
 
     async putById(req: Request, res: Response) {
-        console.log("putStudent:" + req.body);
+        console.log("putBook:" + req.body);
         try {
             await this.model.findByIdAndUpdate(req.params.id, req.body);
             const obj = await this.model.findById(req.params.id);

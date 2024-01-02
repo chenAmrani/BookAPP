@@ -59,6 +59,6 @@ const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
 });
 exports.default = {
     register,
-    login,
+    login
 };
 //# sourceMappingURL=auth_controller.js.map
