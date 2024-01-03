@@ -7,7 +7,7 @@ export interface IOrder {
   orderDate: Date;
 }
 
-const reviewSchema = new mongoose.Schema<IOrder>({
+const orderSchema = new mongoose.Schema<IOrder>({
     user: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
@@ -28,4 +28,4 @@ const reviewSchema = new mongoose.Schema<IOrder>({
     },
 });
 
-export default mongoose.model<IOrder>("Review", reviewSchema);
+export default mongoose.model<IOrder>("Order", orderSchema);
