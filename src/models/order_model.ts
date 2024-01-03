@@ -1,7 +1,8 @@
 import mongoose from "mongoose";
 
 export interface IOrder {
-  user: typeof mongoose.Schema.Types.ObjectId;
+
+  user: typeof mongoose.Schema.Types.ObjectId,
   books: typeof mongoose.Schema.Types.ObjectId[];
   orderNumber: number;
   orderDate: Date;

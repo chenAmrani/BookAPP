@@ -11,6 +11,7 @@ const body_parser_1 = __importDefault(require("body-parser"));
 const book_routes_1 = __importDefault(require("./routes/book_routes"));
 const review_routes_1 = __importDefault(require("./routes/review_routes"));
 const auth_route_1 = __importDefault(require("./routes/auth_route"));
+const order_route_1 = __importDefault(require("./routes/order_route"));
 const initApp = () => {
     const promise = new Promise((resolve) => {
         const db = mongoose_1.default.connection;
@@ -24,6 +25,7 @@ const initApp = () => {
             app.use("/book", book_routes_1.default);
             app.use("/review", review_routes_1.default);
             app.use("/auth", auth_route_1.default);
+            app.use("/order", order_route_1.default);
             resolve(app);
         });
     });

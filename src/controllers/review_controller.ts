@@ -12,7 +12,7 @@ class ReviewController extends BaseController<IReview> {
         console.log("review:" + req.body);
         const _id = req.user._id;
         req.body.owner = _id;
-       super.post(req, res);
+        super.post(req, res);
         }
     }
     

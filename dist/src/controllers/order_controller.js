@@ -1,15 +1,16 @@
-import OrderModel, { IOrder} from "../models/order_model";
-import createController from "./base_controller";
-
-const orderController = createController<IOrder>(OrderModel);
-
-export default orderController
-
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const order_model_1 = __importDefault(require("../models/order_model"));
+const base_controller_1 = __importDefault(require("./base_controller"));
+const orderController = (0, base_controller_1.default)(order_model_1.default);
+exports.default = orderController;
 // class ReviewController extends BaseController<IOrder> {
 //     constructor() {
 //         super(Order);
 //     }
-
 //     async getAllOrders(req: Request, res: Response) {
 //         try {
 //           const orders = await this.model.find();
@@ -20,7 +21,6 @@ export default orderController
 //         //   super.get(req, res);
 //         }
 //       }
-
 //     //   async getOrderById(req: Request, res: Response) {
 //     //     try {
 //     //       const order = await this.model.findById(req.params.id);
@@ -34,7 +34,6 @@ export default orderController
 //     //     }
 //     //     super.get(req, res);
 //     //   }
-
 //       async createOrder(req: Request, res: Response) {
 //         try {
 //           const newOrder = await this.model.create(req.body);
@@ -54,7 +53,6 @@ export default orderController
 //         }
 //         super.putById(req, res);
 //       }
-    
 //       async deleteOrder(req: Request, res: Response) {
 //         try {
 //           await this.model.findByIdAndDelete(req.params.id);
@@ -65,6 +63,5 @@ export default orderController
 //         super.deleteById(req, res);
 //       }
 //     }
-
-
 // export default new ReviewController();
+//# sourceMappingURL=order_controller.js.map
