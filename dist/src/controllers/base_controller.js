@@ -16,17 +16,17 @@ class BaseConstroller {
     }
     get(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            console.log("getAllBooks");
+            console.log("getAll");
             try {
                 if (req.query.name) {
                     const books = yield this.model.find({ name: req.query.name });
-                    res.send(books);
                     console.log("the one book is: ", books);
+                    res.send(books);
                 }
                 else {
-                    const books = yield this.model.find();
-                    res.send(books);
+                    const books = yield this.model.find({});
                     console.log("the all books is: ", books);
+                    res.send(books);
                 }
             }
             catch (err) {
@@ -36,7 +36,7 @@ class BaseConstroller {
     }
     getById(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            console.log("getBookById:" + req.params.id);
+            console.log("getById:" + req.params.id);
             try {
                 const student = yield this.model.findById(req.params.id);
                 res.send(student);
@@ -48,7 +48,7 @@ class BaseConstroller {
     }
     post(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            console.log("postBook:" + req.body);
+            console.log("post:" + req.body);
             try {
                 const existingBook = yield this.model.findOne({ title: req.body.title, author: req.body.author });
                 if (existingBook) {
@@ -67,7 +67,7 @@ class BaseConstroller {
     }
     putById(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            console.log("putBook:" + req.body);
+            console.log("putById:" + req.body);
             try {
                 yield this.model.findByIdAndUpdate(req.params.id, req.body);
                 const obj = yield this.model.findById(req.params.id);

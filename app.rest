@@ -1,6 +1,7 @@
 ###
 
 GET http://localhost:6969/book
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NTk0MmEyZjA3YmMwOWY4MjVmM2Q5NjUiLCJpYXQiOjE3MDQyMjY3NTgsImV4cCI6MTcwNDIzMDM1OH0.YaIODr9eNcuPAhia7aPp7Yq5V05PnUhe27HOdO8CDZc
 
 ###
 

@@ -45,10 +45,17 @@ const review1: IReview = {
 
 
 describe("Reviews tests", () => {
-    const addReviewOnBook = async (post: IReview) => {
-        const response = await request(app).post("/review").set("Authorization", "JWT " + accessToken).send(post);
-        expect(response.statusCode).toBe(201);
-    };
+  const addReviewOnBook = async (review: IReview) => {
+    const response = await request(app)
+      .post("/review")
+      .set("Authorization", "JWT " + accessToken)
+      .send(review);
+    expect(response.statusCode).toBe(201);
+    expect(response.body.owner).toBe(user._id);
+    expect(response.body.title).toBe(review.name);
+    // expect(response.body.title).toBe(review.date);
+    expect(response.body.message).toBe(review.text);
+};
 
     test("Get token", async () => {
         const response = await request(app).post("/auth/register").send(user);
@@ -62,31 +69,26 @@ describe("Reviews tests", () => {
 
 
 
-    
-    test("Test get all reviews on books", async () => {
-        const response = await request(app).get("/review").set("Authorization", "JWT " + accessToken);
+      test("Test Get All Student posts - empty response", async () => {
+        const response = await request(app).get("/review");
         expect(response.statusCode).toBe(200);
         expect(response.body).toStrictEqual([]);
-    });
+      });
 
-    test("Test add Review on book", async () => {
-        await addReviewOnBook(review1);
-    });
+      test("Test Post Student post", async () => {
+        addReviewOnBook(review1);
+      });
 
-    // test("Test Get All post in DB", async () => {
-    //     const response = await request(app).get("/bookpost").set("Authorization", "JWT " + accessToken); 
-    //     expect(response.status).toBe(200);
-    //     expect(response.body.length).toBe(1);
-    //     const rc = response.body[0];
-    //     expect(rc.title).toBe(post1.name);
-    //     expect(rc.text).toBe(post1.text);
-    //     expect(rc.date).toBe(post1.date);
-    //     expect(rc.owner).toBe(user._id);
-    // });
+      test("Test Get All Students posts with one post in DB", async () => {
+        const response = await request(app).get("/studentpost");
+        expect(response.statusCode).toBe(200);
+        const rc = response.body[0];
+        expect(rc.title).toBe(review1.name);
+        //expect(rc.message).toBe(review1.date);
+        expect(rc.message).toBe(review1.text);
+        expect(rc.owner).toBe(user._id);
+      });
 
-    // test("Test Post duplicate Book", async () => {
-    //     const response = await request(app).post("/book").send(post11);
-    //     expect(response.status).toBe(406);
-    // });
+   
 
 });

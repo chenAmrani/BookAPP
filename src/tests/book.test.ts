@@ -59,7 +59,9 @@ const book1: IBook = {
 
 describe("Book tests", () => {
     const addBook = async (book: IBook) => {
-        const response = await request(app).post("/book").set("Authorization", "JWT " + accessToken).send(book);
+        const response = await request(app).post("/book")
+        .set("Authorization", "JWT " + accessToken)
+        .send(book);
         expect(response.status).toBe(201);
     
     };
@@ -71,12 +73,13 @@ describe("Book tests", () => {
     });
 
     test("Test Post Book", async () => {
-        addBook(book1);
+        await addBook(book1);
     });
 
     //to check if the book1 is added to the database
     test("Test Get All Books in DB", async () => {
         const response = await request(app).get("/book").set("Authorization", "JWT " + accessToken);     
+        console.log("the response is: " , response);
         expect(response.statusCode).toBe(200);
         expect(response.body.length).toBe(1);
         const rc = response.body[0];

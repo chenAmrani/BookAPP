@@ -9,16 +9,17 @@ export class BaseConstroller<ModelType>{
     }
 
     async get(req:Request, res:Response){
-        console.log("getAllBooks");
+        console.log("getAll");
         try{
             if(req.query.name){
                 const books =  await this.model.find({ name: req.query.name });
-                res.send(books);
                 console.log("the one book is: " , books);
-            } else {
-                const books = await this.model.find();
                 res.send(books);
+            } else {
+                const books = await this.model.find({});
                 console.log("the all books is: " , books);
+                res.send(books);
+                
             }
         }catch(err){
             res.status(500).json({message: err.message});
@@ -26,7 +27,7 @@ export class BaseConstroller<ModelType>{
     }
 
     async getById(req: Request, res: Response) {
-        console.log("getBookById:" + req.params.id);
+        console.log("getById:" + req.params.id);
         try {
             const student = await this.model.findById(req.params.id);
             res.send(student);
@@ -38,7 +39,7 @@ export class BaseConstroller<ModelType>{
 
     
     async post(req: Request, res: Response) {
-        console.log("postBook:" + req.body);   
+        console.log("post:" + req.body);   
         try {           
             const existingBook = await this.model.findOne({ title: req.body.title, author: req.body.author });
     
@@ -53,12 +54,15 @@ export class BaseConstroller<ModelType>{
             res.status(406).send("fail: " + err.message);
         }
     }
+
+
+    
     
 
 
 
     async putById(req: Request, res: Response) {
-        console.log("putBook:" + req.body);
+        console.log("putById:" + req.body);
         try {
             await this.model.findByIdAndUpdate(req.params.id, req.body);
             const obj = await this.model.findById(req.params.id);
@@ -68,6 +72,9 @@ export class BaseConstroller<ModelType>{
             res.status(406).send("fail: " + err.message);
         }
     }
+
+
+
 
     async deleteById(req: Request, res: Response) {
         console.log("deleteById:" + req.body);

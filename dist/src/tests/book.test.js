@@ -49,7 +49,9 @@ const book1 = {
 };
 describe("Book tests", () => {
     const addBook = (book) => __awaiter(void 0, void 0, void 0, function* () {
-        const response = yield (0, supertest_1.default)(app).post("/book").set("Authorization", "JWT " + accessToken).send(book);
+        const response = yield (0, supertest_1.default)(app).post("/book")
+            .set("Authorization", "JWT " + accessToken)
+            .send(book);
         expect(response.status).toBe(201);
     });
     test("Test Get All Books - empty response", () => __awaiter(void 0, void 0, void 0, function* () {
@@ -58,11 +60,12 @@ describe("Book tests", () => {
         expect(response.body).toStrictEqual([]);
     }));
     test("Test Post Book", () => __awaiter(void 0, void 0, void 0, function* () {
-        addBook(book1);
+        yield addBook(book1);
     }));
     //to check if the book1 is added to the database
     test("Test Get All Books in DB", () => __awaiter(void 0, void 0, void 0, function* () {
         const response = yield (0, supertest_1.default)(app).get("/book").set("Authorization", "JWT " + accessToken);
+        console.log("the response is: ", response);
         expect(response.statusCode).toBe(200);
         expect(response.body.length).toBe(1);
         const rc = response.body[0];
