@@ -9,7 +9,6 @@ class ReviewController extends BaseController<IReview> {
     }
 
     async post(req: AuthRequest, res: Response) {
-        console.log("----------------------------------------------------")
         console.log("review:" + req.body);
         const _id = req.user._id;
         req.body.owner = _id;

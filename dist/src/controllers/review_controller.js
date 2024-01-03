@@ -23,7 +23,6 @@ class ReviewController extends base_controller_1.BaseController {
             post: { get: () => super.post }
         });
         return __awaiter(this, void 0, void 0, function* () {
-            console.log("----------------------------------------------------");
             console.log("review:" + req.body);
             const _id = req.user._id;
             req.body.owner = _id;

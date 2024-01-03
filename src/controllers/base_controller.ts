@@ -36,7 +36,7 @@ export class BaseController<ModelType>{
 
     
     async post(req: Request, res: Response) {
-        console.log("review:" + req.body);
+        console.log("post book:" + req.body);
         try {
             const obj = await this.model.create(req.body);
             res.status(201).send(obj);
