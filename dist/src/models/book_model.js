@@ -48,5 +48,5 @@ const bookSchema = new mongoose_1.default.Schema({
         }
     ]
 });
-exports.default = mongoose_1.default.model("Books", bookSchema);
+exports.default = mongoose_1.default.model("Book", bookSchema);
 //# sourceMappingURL=book_model.js.map

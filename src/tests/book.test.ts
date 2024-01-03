@@ -8,6 +8,7 @@ import User from "../models/user_model";
 
 let app: Express;
 let accessToken: string;
+
 const user = {
   email: "testBook@test.com",
   password: "1234567890",
