@@ -4,9 +4,10 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "test": "tsc && jest --detectOpenHandles --forceExit --runInBand",
+    "test": "tsc && jest --detectOpenHandles --forceExit",
     "testAuth": "tsc && jest --detectOpenHandles --forceExit --runInBand ./src/tests/auth.test.ts",
     "testBook": "tsc && jest --detectOpenHandles --forceExit --runInBand ./src/tests/book.test.ts",
+    "testOrder": "tsc && jest --detectOpenHandles --forceExit --runInBand ./src/tests/order.test.ts",
     "testReview": "tsc && jest --detectOpenHandles --forceExit --runInBand ./src/tests/review.test.ts",
     "start": "tsc && nodemon ./dist/src/server.js",
     "dev": "nodemon ./src/server.ts"

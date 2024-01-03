@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { Model } from "mongoose";
 
-export class BaseConstroller<ModelType>{
+export class BaseController<ModelType>{
 
     model: Model<ModelType>
     constructor(model: Model<ModelType>) {
@@ -13,11 +13,9 @@ export class BaseConstroller<ModelType>{
         try{
             if(req.query.name){
                 const books =  await this.model.find({ name: req.query.name });
-                console.log("the one book is: " , books);
                 res.send(books);
             } else {
-                const books = await this.model.find({});
-                console.log("the all books is: " , books);
+                const books = await this.model.find();
                 res.send(books);
                 
             }
@@ -36,29 +34,17 @@ export class BaseConstroller<ModelType>{
         }
     }
 
-
     
     async post(req: Request, res: Response) {
-        console.log("post:" + req.body);   
-        try {           
-            const existingBook = await this.model.findOne({ title: req.body.title, author: req.body.author });
-    
-            if (existingBook) {            
-                res.status(406).send("Book already exists in the database");
-            } else {
-                const newBook = await this.model.create(req.body);
-                res.status(201).send(newBook);
-            }
+        console.log("post book:" + req.body);
+        try {
+            const obj = await this.model.create(req.body);
+            res.status(201).send(obj);
         } catch (err) {
             console.log(err);
             res.status(406).send("fail: " + err.message);
         }
     }
-
-
-    
-    
-
 
 
     async putById(req: Request, res: Response) {
@@ -89,7 +75,7 @@ export class BaseConstroller<ModelType>{
 }
 
 const createController = <ModelType>(model: Model<ModelType>) => {
-    return new BaseConstroller<ModelType>(model);
+    return new BaseController<ModelType>(model);
 }
 
 export default createController;

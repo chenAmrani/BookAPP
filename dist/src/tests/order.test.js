@@ -15,7 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const supertest_1 = __importDefault(require("supertest"));
 const app_1 = __importDefault(require("../app"));
 const mongoose_1 = __importDefault(require("mongoose"));
-const review_model_1 = __importDefault(require("../models/review_model"));
+const order_model_1 = __importDefault(require("../models/order_model"));
 const user_model_1 = __importDefault(require("../models/user_model"));
 let app;
 const user = {
@@ -23,70 +23,65 @@ const user = {
     password: "1234567890",
 };
 let accessToken;
-let bookId;
+let userId;
+let bookId1;
+let bookId2;
 beforeAll(() => __awaiter(void 0, void 0, void 0, function* () {
     app = yield (0, app_1.default)();
     console.log("beforeAll");
-    yield review_model_1.default.deleteMany();
+    yield order_model_1.default.deleteMany();
     yield user_model_1.default.deleteMany({ 'email': user.email });
     const response = yield (0, supertest_1.default)(app).post("/auth/register").send(user); //return the user_Id
-    user._id = response.body._id;
+    userId = response.body._id;
     const response2 = yield (0, supertest_1.default)(app).post("/auth/login").send(user);
     accessToken = response2.body.accessToken;
     const book1 = yield (0, supertest_1.default)(app).get("/book").set("Authorization", "JWT " + accessToken);
     console.log("DB books: ", book1.body);
-    bookId = book1.body[0]._id;
-    console.log("tihs is id: ", bookId);
+    bookId1 = book1.body[0]._id;
+    bookId2 = book1.body[1]._id;
+    console.log("tihs is id: ", bookId1);
+    console.log("tihs is id: ", bookId2);
 }));
 afterAll(() => __awaiter(void 0, void 0, void 0, function* () {
     yield mongoose_1.default.connection.close();
 }));
-const review1 = {
-    BookName: "Book1",
-    date: null,
-    text: "Good book",
-    owner: user._id,
-    bookId: bookId,
+const order1 = {
+    user: userId,
+    books: [bookId1, bookId2],
+    orderNumber: 1,
+    orderDate: null,
 };
-console.log("this is review1: ", review1);
-describe("Reviews tests", () => {
-    const addReviewOnBook = (review) => __awaiter(void 0, void 0, void 0, function* () {
+console.log("User: ", order1.user);
+console.log("Books: ", order1.books);
+describe("Order tests", () => {
+    const addNewOrder = (order) => __awaiter(void 0, void 0, void 0, function* () {
         const response = yield (0, supertest_1.default)(app)
-            .post("/review")
+            .post("/order")
             .set("Authorization", "JWT " + accessToken)
-            .send(review);
+            .send(order);
         expect(response.statusCode).toBe(201);
-        expect(response.body.owner).toBe(user._id);
-        expect(response.body.bookId).toBe(review.bookId);
-        expect(response.body.BookName).toBe(review.BookName);
-        expect(response.body.text).toBe(review.text);
+        console.log("this is response: ", response.body);
+        expect(response.body.user).toBe(order1.user);
+        expect(response.body.orderNumber).toBe(order.orderNumber);
     });
-    // test("Get token", async () => {
-    //     const response = await request(app).post("/auth/register").send(user);
-    //     user._id = response.body._id;
-    //     const response2 = await request(app)
-    //       .post("/auth/login")
-    //       .send(user);
-    //     accessToken = response2.body.accessToken;
-    //     expect(accessToken).toBeDefined();
-    //   });
-    test("Test Get All Student posts - empty response", () => __awaiter(void 0, void 0, void 0, function* () {
-        const response = yield (0, supertest_1.default)(app).get("/review");
+    test("Test Get All orders - empty response", () => __awaiter(void 0, void 0, void 0, function* () {
+        const response = yield (0, supertest_1.default)(app).get("/order");
+        console.log("this is response.body: ", response.body);
+        console.log("responseCode:", response.statusCode);
         expect(response.statusCode).toBe(200);
-        expect(response.body).toStrictEqual([]);
+        expect(response.body).toBe([]);
     }));
-    test("Test Post Review", () => __awaiter(void 0, void 0, void 0, function* () {
-        addReviewOnBook(review1);
+    test("Test add new orderr to DB", () => __awaiter(void 0, void 0, void 0, function* () {
+        addNewOrder(order1);
     }));
-    test("Test Get All reviews with one review in the DB", () => __awaiter(void 0, void 0, void 0, function* () {
-        const response = yield (0, supertest_1.default)(app).get("/review");
+    //after add order1 to DB we check if we have 1 order in the DB.
+    test("Test Get All order in the DB", () => __awaiter(void 0, void 0, void 0, function* () {
+        const response = yield (0, supertest_1.default)(app).get("/order");
         expect(response.statusCode).toBe(200);
         const rc = yield response.body[0];
         console.log("this is rc: ", rc);
-        expect(rc.BookName).toBe(review1.BookName);
-        expect(rc.bookId).toBe(review1.bookId);
-        expect(rc.text).toBe(review1.text);
-        expect(rc.owner).toBe(user._id);
+        expect(rc.user).toBe(order1.user);
+        expect(rc.number).toBe(order1.orderNumber);
     }));
 });
-//# sourceMappingURL=review.test.js.map
+//# sourceMappingURL=order.test.js.map

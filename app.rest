@@ -1,7 +1,7 @@
 ###
 
 GET http://localhost:6969/book
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NTk0MmEyZjA3YmMwOWY4MjVmM2Q5NjUiLCJpYXQiOjE3MDQyMjY3NTgsImV4cCI6MTcwNDIzMDM1OH0.YaIODr9eNcuPAhia7aPp7Yq5V05PnUhe27HOdO8CDZc
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NTk1NzBhNzBmZjI0NDY3ZmQ0MDliMjIiLCJpYXQiOjE3MDQyOTI2MTksImV4cCI6MTcwNDI5NjIxOX0.VTdm91FbuTCv3At-CVlDIUVG7JbZx9VP4WnKUcxTfac
 
 ###
 
@@ -16,11 +16,33 @@ GET http://localhost:6969/book/658c6bbe41cb64ee84d31465
 ###
 
 POST http://localhost:6969/book
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NTk1NzBhNzBmZjI0NDY3ZmQ0MDliMjIiLCJpYXQiOjE3MDQyOTI2MTksImV4cCI6MTcwNDI5NjIxOX0.VTdm91FbuTCv3At-CVlDIUVG7JbZx9VP4WnKUcxTfac
+
 Content-Type: application/json
+{
+   " name": "book1",
+    "year": 2020,
+    "image": "image1",
+    "pages": 100,
+    "price": 100,
+    "rating": 5,
+    "author": "author1",
+    "category": "category1",
+    "summary": "summary1",
+    "reviews": null,
+}
+
+###
+
+POST http://localhost:6969/review
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NTk1NzBhNzBmZjI0NDY3ZmQ0MDliMjIiLCJpYXQiOjE3MDQyOTMyMjksImV4cCI6MTcwNDI5NjgyOX0.84w76P3tdXVOpBLLtKP-1aN6KIz0xdTsF9L908eGavs
+Content-Type: application/json 
 
 {
-    "name": "book 1",
-    "_id": "1234567891"
+    "BookName": "Book1",
+    "text": "Good book",
+    "owner": "659545451de24fb89dabdb55",
+    "bookId": "65946f74874feabd96c7c7bd"
 }
 
 # ###
@@ -49,8 +71,8 @@ POST http://localhost:6969/auth/login
 Content-Type: application/json
 
 {
-    "email": "testUser@test.com",
-    "password": "123456789"
+    "email": "testReview@test.com",
+    "password": "1234567890"
 }
 
 # ###

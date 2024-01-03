@@ -9,8 +9,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.BaseConstroller = void 0;
-class BaseConstroller {
+exports.BaseController = void 0;
+class BaseController {
     constructor(model) {
         this.model = model;
     }
@@ -20,12 +20,10 @@ class BaseConstroller {
             try {
                 if (req.query.name) {
                     const books = yield this.model.find({ name: req.query.name });
-                    console.log("the one book is: ", books);
                     res.send(books);
                 }
                 else {
-                    const books = yield this.model.find({});
-                    console.log("the all books is: ", books);
+                    const books = yield this.model.find();
                     res.send(books);
                 }
             }
@@ -48,16 +46,10 @@ class BaseConstroller {
     }
     post(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            console.log("post:" + req.body);
+            console.log("post book:" + req.body);
             try {
-                const existingBook = yield this.model.findOne({ title: req.body.title, author: req.body.author });
-                if (existingBook) {
-                    res.status(406).send("Book already exists in the database");
-                }
-                else {
-                    const newBook = yield this.model.create(req.body);
-                    res.status(201).send(newBook);
-                }
+                const obj = yield this.model.create(req.body);
+                res.status(201).send(obj);
             }
             catch (err) {
                 console.log(err);
@@ -93,9 +85,9 @@ class BaseConstroller {
         });
     }
 }
-exports.BaseConstroller = BaseConstroller;
+exports.BaseController = BaseController;
 const createController = (model) => {
-    return new BaseConstroller(model);
+    return new BaseController(model);
 };
 exports.default = createController;
 //# sourceMappingURL=base_controller.js.map
