@@ -36,8 +36,18 @@ export class BaseController<ModelType>{
 
     
     async post(req: Request, res: Response) {
-        console.log("post book:" + req.body);
+        console.log("post book: " + req.body);
         try {
+            const existingBook = await this.model.findOne({
+                name: req.body.name,
+                author: req.body.author,
+            });
+
+            if (existingBook) {
+                res.status(406).send("Book already exists");
+                return;
+            }
+
             const obj = await this.model.create(req.body);
             res.status(201).send(obj);
         } catch (err) {

@@ -47,8 +47,9 @@ describe("Auth tests", () => {
     }));
     test("Test Register missing password", () => __awaiter(void 0, void 0, void 0, function* () {
         const response = yield (0, supertest_1.default)(app)
-            .post("/auth/register")
-            .send({ 'email': user.email });
+            .post("/auth/register").send({
+            email: "test@test.com",
+        });
         expect(response.statusCode).toBe(400);
     }));
     test("Test Login", () => __awaiter(void 0, void 0, void 0, function* () {
@@ -61,8 +62,7 @@ describe("Auth tests", () => {
         expect(accessToken).toBeDefined();
     }));
     test("Test forbidden access without token", () => __awaiter(void 0, void 0, void 0, function* () {
-        const response = yield (0, supertest_1.default)(app)
-            .get("/book");
+        const response = yield (0, supertest_1.default)(app).get("/book");
         expect(response.statusCode).toBe(401);
     }));
     test("Test access with valid token", () => __awaiter(void 0, void 0, void 0, function* () {

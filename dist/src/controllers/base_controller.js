@@ -46,8 +46,16 @@ class BaseController {
     }
     post(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            console.log("post book:" + req.body);
+            console.log("post book: " + req.body);
             try {
+                const existingBook = yield this.model.findOne({
+                    name: req.body.name,
+                    author: req.body.author,
+                });
+                if (existingBook) {
+                    res.status(406).send("Book already exists");
+                    return;
+                }
                 const obj = yield this.model.create(req.body);
                 res.status(201).send(obj);
             }

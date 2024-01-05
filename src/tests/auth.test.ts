@@ -40,8 +40,9 @@ describe("Auth tests", () => {
 
   test("Test Register missing password", async () => {
     const response = await request(app)
-      .post("/auth/register")
-      .send({'email': user.email});
+      .post("/auth/register").send({
+        email: "test@test.com",
+      });
     expect(response.statusCode).toBe(400);
   });
 
@@ -54,9 +55,9 @@ describe("Auth tests", () => {
     refreshToken = response.body.refreshTokens;
     expect(accessToken).toBeDefined();
   });
+
   test("Test forbidden access without token", async () => {
-    const response = await request(app)
-      .get("/book");
+    const response = await request(app).get("/book");
     expect(response.statusCode).toBe(401);
 
   });
@@ -76,7 +77,6 @@ describe("Auth tests", () => {
 
   jest.setTimeout(10000);
   test("Test access after timeout of token", async () => {
-    
     await new Promise(resolve => setTimeout(() => resolve("its free the promis"), 5000));
     
       const response = await request(app)

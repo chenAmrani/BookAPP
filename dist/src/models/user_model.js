@@ -17,6 +17,16 @@ const userSchema = new mongoose_1.default.Schema({
         type: [String],
         required: false,
     },
+    role: {
+        type: String,
+        required: true,
+        enum: ['admin', 'author', 'reader'], // Enumerate the roles
+        default: 'reader', // Default role for new users
+    },
+    books: [{
+            type: mongoose_1.default.Schema.Types.ObjectId,
+            ref: "Book"
+        }]
 });
 exports.default = mongoose_1.default.model("User", userSchema);
 //# sourceMappingURL=user_model.js.map

@@ -18,19 +18,29 @@ const mongoose_1 = __importDefault(require("mongoose"));
 const book_model_1 = __importDefault(require("../models/book_model"));
 const user_model_1 = __importDefault(require("../models/user_model"));
 let app;
-let accessToken;
-const user = {
-    email: "testBook@test.com",
-    password: "1234567890",
+let authorAccessToken;
+let readerAccessToken;
+const authorUser = {
+    email: "author@test.com",
+    password: "authorpass",
+    role: "author"
+};
+const readerUser = {
+    email: "reader@test.com",
+    password: "readerpass",
+    role: "reader"
 };
 beforeAll(() => __awaiter(void 0, void 0, void 0, function* () {
     app = yield (0, app_1.default)();
     console.log("beforeAll");
     yield book_model_1.default.deleteMany();
-    user_model_1.default.deleteMany({ 'email': user.email });
-    yield (0, supertest_1.default)(app).post("/auth/register").send(user);
-    const response = yield (0, supertest_1.default)(app).post("/auth/login").send(user);
-    accessToken = response.body.accessToken;
+    yield user_model_1.default.deleteMany({});
+    yield (0, supertest_1.default)(app).post("/auth/register").send(authorUser);
+    const authorResponse = yield (0, supertest_1.default)(app).post("/auth/login").send(authorUser);
+    authorAccessToken = authorResponse.body.accessToken;
+    yield (0, supertest_1.default)(app).post("/auth/register").send(readerUser);
+    const readerResponse = yield (0, supertest_1.default)(app).post("/auth/login").send(readerUser);
+    readerAccessToken = readerResponse.body.accessToken;
 }));
 afterAll(() => __awaiter(void 0, void 0, void 0, function* () {
     yield mongoose_1.default.connection.close();
@@ -48,31 +58,45 @@ const book1 = {
     reviews: null,
 };
 describe("Book tests", () => {
-    const addBook = (book) => __awaiter(void 0, void 0, void 0, function* () {
-        const response = yield (0, supertest_1.default)(app).post("/book")
+    const addBook = (book, accessToken) => __awaiter(void 0, void 0, void 0, function* () {
+        const response = yield (0, supertest_1.default)(app)
+            .post("/book")
             .set("Authorization", "JWT " + accessToken)
             .send(book);
         expect(response.status).toBe(201);
     });
     test("Test Get All Books - empty response", () => __awaiter(void 0, void 0, void 0, function* () {
-        const response = yield (0, supertest_1.default)(app).get("/book").set("Authorization", "JWT " + accessToken);
+        const response = yield (0, supertest_1.default)(app)
+            .get("/book")
+            .set("Authorization", "JWT " + authorAccessToken);
         expect(response.statusCode).toBe(200);
         expect(response.body).toStrictEqual([]);
     }));
-    test("Test Post Book", () => __awaiter(void 0, void 0, void 0, function* () {
-        yield addBook(book1);
+    test("Test Author Adding Book", () => __awaiter(void 0, void 0, void 0, function* () {
+        yield addBook(book1, authorAccessToken);
     }));
-    //to check if the book1 is added to the database
+    test("Test Reader Adding Book", () => __awaiter(void 0, void 0, void 0, function* () {
+        const response = yield (0, supertest_1.default)(app)
+            .post("/book")
+            .set("Authorization", "JWT " + readerAccessToken)
+            .send(book1);
+        expect(response.statusCode).toBe(403); // Expecting Forbidden access
+    }));
+    // Check if the book1 is added to the database
     test("Test Get All Books in DB", () => __awaiter(void 0, void 0, void 0, function* () {
-        const response = yield (0, supertest_1.default)(app).get("/book").set("Authorization", "JWT " + accessToken);
-        console.log("the response is: ", response);
+        const response = yield (0, supertest_1.default)(app)
+            .get("/book")
+            .set("Authorization", "JWT " + authorAccessToken);
         expect(response.statusCode).toBe(200);
         expect(response.body.length).toBe(1);
         const rc = response.body[0];
         expect(rc.name).toBe(book1.name);
     }));
-    test("Test Post duplicate book", () => __awaiter(void 0, void 0, void 0, function* () {
-        const response = yield (0, supertest_1.default)(app).post("/book").set("Authorization", "JWT " + accessToken).send(book1);
+    test("Test Post Duplicate Book", () => __awaiter(void 0, void 0, void 0, function* () {
+        const response = yield (0, supertest_1.default)(app)
+            .post("/book")
+            .set("Authorization", "JWT " + authorAccessToken)
+            .send(book1);
         expect(response.statusCode).toBe(406);
     }));
 });

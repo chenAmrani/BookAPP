@@ -18,6 +18,7 @@ const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const register = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const email = req.body.email;
     const password = req.body.password;
+    const role = req.body.role;
     if (!email || !password) {
         return res.status(400).send("missing email or password");
     }
@@ -28,7 +29,7 @@ const register = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         }
         const salt = yield bcrypt_1.default.genSalt(10);
         const encryptedPassword = yield bcrypt_1.default.hash(password, salt);
-        const rs2 = yield user_model_1.default.create({ 'email': email, 'password': encryptedPassword });
+        const rs2 = yield user_model_1.default.create({ 'email': email, 'password': encryptedPassword, 'role': role });
         return res.status(201).send(rs2);
     }
     catch (err) {
