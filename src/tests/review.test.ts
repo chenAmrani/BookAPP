@@ -10,6 +10,7 @@ let app: Express;
 const user: IUser = {
   email: "testReview@test.com",
   password: "1234567890",
+  role: "reader",
 }
 let accessToken: "";
 
@@ -63,18 +64,6 @@ describe("Reviews tests", () => {
     expect(response.body.text).toBe(review.text);
 };
 
-    // test("Get token", async () => {
-    //     const response = await request(app).post("/auth/register").send(user);
-    //     user._id = response.body._id;
-    //     const response2 = await request(app)
-    //       .post("/auth/login")
-    //       .send(user);
-    //     accessToken = response2.body.accessToken;
-    //     expect(accessToken).toBeDefined();
-    //   });
-
-
-
       test("Test Get All Student posts - empty response", async () => {
         const response = await request(app).get("/review");
         expect(response.statusCode).toBe(200);
@@ -82,7 +71,7 @@ describe("Reviews tests", () => {
       });
 
       test("Test Post Review", async () => {
-          addReviewOnBook(review1);
+          await addReviewOnBook(review1);
       });
 
       test("Test Get All reviews with one review in the DB", async () => {
@@ -95,4 +84,7 @@ describe("Reviews tests", () => {
         expect(rc.text).toBe(review1.text);
         expect(rc.owner).toBe(user._id);
       });
+
+     
+   //האם צריך לבדוק האם חוזרת תגובה לפני ID
 });

@@ -6,7 +6,7 @@ import bodyParser from "body-parser";
 import bookRoute from "./routes/book_routes";
 import reviewRoute from "./routes/review_routes";
 import authRoute from "./routes/auth_route";
-import orderRoutr from "./routes/order_route";
+
 
 
 const initApp = (): Promise<Express> => {
@@ -23,7 +23,6 @@ const initApp = (): Promise<Express> => {
       app.use("/book", bookRoute);
       app.use("/review", reviewRoute);
       app.use("/auth",authRoute);
-      app.use("/order",orderRoutr);
       resolve(app);
     });
   });

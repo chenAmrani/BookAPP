@@ -21,6 +21,7 @@ let app;
 const user = {
     email: "testReview@test.com",
     password: "1234567890",
+    role: "reader",
 };
 let accessToken;
 let bookId;
@@ -61,22 +62,13 @@ describe("Reviews tests", () => {
         expect(response.body.BookName).toBe(review.BookName);
         expect(response.body.text).toBe(review.text);
     });
-    // test("Get token", async () => {
-    //     const response = await request(app).post("/auth/register").send(user);
-    //     user._id = response.body._id;
-    //     const response2 = await request(app)
-    //       .post("/auth/login")
-    //       .send(user);
-    //     accessToken = response2.body.accessToken;
-    //     expect(accessToken).toBeDefined();
-    //   });
     test("Test Get All Student posts - empty response", () => __awaiter(void 0, void 0, void 0, function* () {
         const response = yield (0, supertest_1.default)(app).get("/review");
         expect(response.statusCode).toBe(200);
         expect(response.body).toStrictEqual([]);
     }));
     test("Test Post Review", () => __awaiter(void 0, void 0, void 0, function* () {
-        addReviewOnBook(review1);
+        yield addReviewOnBook(review1);
     }));
     test("Test Get All reviews with one review in the DB", () => __awaiter(void 0, void 0, void 0, function* () {
         const response = yield (0, supertest_1.default)(app).get("/review");
@@ -88,5 +80,6 @@ describe("Reviews tests", () => {
         expect(rc.text).toBe(review1.text);
         expect(rc.owner).toBe(user._id);
     }));
+    //האם צריך לבדוק האם חוזרת תגובה לפני ID
 });
 //# sourceMappingURL=review.test.js.map
