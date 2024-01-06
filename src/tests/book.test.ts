@@ -8,6 +8,14 @@ import User from "../models/user_model";
 let app: Express;
 let authorAccessToken: string;
 let readerAccessToken: string;
+let adminAccessToken: string;
+
+
+const adminUser = {
+  email: "admin@test.com",
+  password: "adminpass",
+  role: "admin"
+};
 
 const authorUser = {
   email: "author@test.com",
@@ -20,6 +28,7 @@ const readerUser = {
   password: "readerpass",
   role: "reader"
 };
+let createdBookId: string;
 
 beforeAll(async () => {
   app = await initApp();
@@ -27,6 +36,10 @@ beforeAll(async () => {
   await Book.deleteMany();
   
   await User.deleteMany({});
+
+  await request(app).post("/auth/register").send(adminUser);
+  const adminResponse = await request(app).post("/auth/login").send(adminUser);
+  adminAccessToken = adminResponse.body.accessToken;
   
   await request(app).post("/auth/register").send(authorUser);
   const authorResponse = await request(app).post("/auth/login").send(authorUser);
@@ -66,6 +79,18 @@ const book1: IBook = {
   summary: "summary1",
   reviews: null,
 };
+const book2: IBook = {
+  name: "book2",
+  year: 2020,
+  image: "image2",
+  pages: 100,
+  price: 100,
+  rating: 5,
+  author: "admin1",
+  category: "category1",
+  summary: "summary1",
+  reviews: null,
+};
 
 describe("Book tests", () => {
   const addBook = async (book: IBook, accessToken: string) => {
@@ -74,6 +99,7 @@ describe("Book tests", () => {
       .set("Authorization", "JWT " + accessToken)
       .send(book);
     expect(response.status).toBe(201);
+    createdBookId = response.body._id;
   };
 
   test("Test Get All Books - empty response", async () => {
@@ -87,8 +113,11 @@ describe("Book tests", () => {
   test("Test Author Adding Book", async () => {
     await addBook(book1, authorAccessToken);
   });
+  test("Test Admin Adding Book", async () => {
+    await addBook(book2, adminAccessToken);
+  });
 
-  test("Test Reader Adding Book", async () => {
+  test("Test Reader Adding Book - not allowed", async () => {
     const response = await request(app)
       .post("/book")
       .set("Authorization", "JWT " + readerAccessToken)
@@ -100,12 +129,19 @@ describe("Book tests", () => {
   test("Test Get All Books in DB", async () => {
     const response = await request(app)
       .get("/book")
-      .set("Authorization", "JWT " + authorAccessToken);
+      .set("Authorization", "JWT " + readerAccessToken);
     expect(response.statusCode).toBe(200);
-    expect(response.body.length).toBe(1);
+    expect(response.body.length).toBe(2);
     const rc = response.body[0];
     expect(rc.name).toBe(book1.name);
   });
+  // test("Test Author Getting His Books", async () => {
+  //   const response = await request(app)
+  //     .get("/book")
+  //     .set("Authorization", "JWT " + authorAccessToken);
+  //   expect(response.statusCode).toBe(200);
+  //   expect(response.body.length).toBe(1);
+  // });
 
   test("Test Post Duplicate Book", async () => {
     const response = await request(app)
@@ -114,4 +150,15 @@ describe("Book tests", () => {
       .send(book1);
     expect(response.statusCode).toBe(406);
   });
+
+  test("Test Admin Deleting Book", async () => {
+    expect(createdBookId).toBeDefined(); // Ensure book ID is available
+
+    const deleteResponse = await request(app)
+      .delete(`/book/${createdBookId}`)
+      .set("Authorization", "JWT " + adminAccessToken);
+
+    expect(deleteResponse.statusCode).toBe(200);
+  });
+
 });

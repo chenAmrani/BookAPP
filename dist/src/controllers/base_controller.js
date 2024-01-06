@@ -16,15 +16,23 @@ class BaseController {
     }
     get(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            console.log("getAll");
+            console.log('getAll');
             try {
                 if (req.query.name) {
-                    const books = yield this.model.find({ name: req.query.name });
-                    res.send(books);
+                    const obj = yield this.model.find({ name: req.query.name });
+                    res.send(obj);
                 }
                 else {
-                    const books = yield this.model.find();
-                    res.send(books);
+                    if (req.user && req.user.role === 'admin') {
+                        // Access to all books for admin
+                        const allObjects = yield this.model.find();
+                        res.send(allObjects);
+                    }
+                    else {
+                        // Access to books based on user or default behavior
+                        const obj = yield this.model.find({ /* Your condition here */});
+                        res.send(obj);
+                    }
                 }
             }
             catch (err) {
