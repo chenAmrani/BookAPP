@@ -58,11 +58,8 @@ describe("Auth tests", () => {
             .post("/auth/login")
             .send(user);
         expect(response.statusCode).toBe(200);
-        console.log("the response is: ", response.body);
         accessToken = response.body.accessToken;
         refreshToken = response.body.refreshToken;
-        console.log("the access token after log in is: ", accessToken);
-        console.log("the refresh token after log in is: ", refreshToken);
         expect(accessToken).toBeDefined();
     }));
     test("Test forbidden access without token", () => __awaiter(void 0, void 0, void 0, function* () {
