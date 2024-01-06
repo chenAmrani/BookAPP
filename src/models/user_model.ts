@@ -5,6 +5,7 @@ export interface IUser {
   email: string;
   password: string;
   _id?: string;
+  image?: string;
   refreshTokens?: string[];
   role: string;
   books?: typeof mongoose.Schema.Types.ObjectId[];
@@ -19,6 +20,10 @@ const userSchema = new mongoose.Schema<IUser>({
     type: String,
     required: true,
   }, 
+  image: {
+    type: String,
+    required: false,
+  },
   refreshTokens: {
     type: [String],
     required: false,
