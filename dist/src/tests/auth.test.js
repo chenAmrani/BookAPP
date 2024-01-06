@@ -18,9 +18,9 @@ const mongoose_1 = __importDefault(require("mongoose"));
 const user_model_1 = __importDefault(require("../models/user_model"));
 let app;
 const user = {
-    email: "testUser@test.com",
+    email: "Admin@test.com",
     password: "123456789",
-    role: "reader",
+    role: "admin",
 };
 beforeAll(() => __awaiter(void 0, void 0, void 0, function* () {
     app = yield (0, app_1.default)();
@@ -58,8 +58,11 @@ describe("Auth tests", () => {
             .post("/auth/login")
             .send(user);
         expect(response.statusCode).toBe(200);
+        console.log("the response is: ", response.body);
         accessToken = response.body.accessToken;
-        refreshToken = response.body.refreshTokens;
+        refreshToken = response.body.refreshToken;
+        console.log("the access token after log in is: ", accessToken);
+        console.log("the refresh token after log in is: ", refreshToken);
         expect(accessToken).toBeDefined();
     }));
     test("Test forbidden access without token", () => __awaiter(void 0, void 0, void 0, function* () {

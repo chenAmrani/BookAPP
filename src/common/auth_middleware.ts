@@ -10,12 +10,14 @@ export interface AuthRequest extends Request {
 const authMiddleware = async (req: AuthRequest, res: Response, next: NextFunction) => {
   const authHeader = req.headers['authorization'];
   const token = authHeader && authHeader.split(' ')[1]; // Bearer <token>
+  console.log("token: " + token);
   if (!token) return res.sendStatus(401);
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET) as { _id: string };
-
+    console.log("chen decoded: " + decoded._id);
     const user = await User.findById(decoded._id).select('_id role');
+
 
     if (!user) {
       return res.sendStatus(401);

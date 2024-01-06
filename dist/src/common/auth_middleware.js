@@ -17,10 +17,12 @@ const user_model_1 = __importDefault(require("../models/user_model"));
 const authMiddleware = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const authHeader = req.headers['authorization'];
     const token = authHeader && authHeader.split(' ')[1]; // Bearer <token>
+    console.log("token: " + token);
     if (!token)
         return res.sendStatus(401);
     try {
         const decoded = jsonwebtoken_1.default.verify(token, process.env.JWT_SECRET);
+        console.log("chen decoded: " + decoded._id);
         const user = yield user_model_1.default.findById(decoded._id).select('_id role');
         if (!user) {
             return res.sendStatus(401);

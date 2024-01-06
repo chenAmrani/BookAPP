@@ -83,13 +83,18 @@ const logout = async (req: Request, res: Response) => {
 }
 
 const refresh = async (req: Request, res: Response) => {
+    console.log("the request that i get is: "+ req.headers['authorization']);
     const authHeader = req.headers['authorization'];
-    const refreshToken = authHeader && authHeader.split(' ')[1]; // Bearer <token>
+    console.log("authHeader: " + authHeader);
+    const refreshToken = await authHeader && authHeader.split(' ')[1]; // Bearer <token>
+    console.log("refreshToken: " + refreshToken);
     if (refreshToken == null) return res.sendStatus(401);
     jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET, async (err, user: { '_id': string }) => {
         if (err) {
             console.log(err);
+            console.log("the problem is here")
             return res.sendStatus(401);
+            
         }
         try {
             const userDb = await User.findOne({ '_id': user._id });
@@ -98,8 +103,8 @@ const refresh = async (req: Request, res: Response) => {
                 await userDb.save();
                 return res.sendStatus(401);
             }
-            const accessToken = jwt.sign({ '_id': user._id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRATION });
-            const newRefreshToken = jwt.sign({ '_id': user._id }, process.env.JWT_REFRESH_SECRET);
+            const accessToken = await jwt.sign({ '_id': user._id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRATION });
+            const newRefreshToken = await jwt.sign({ '_id': user._id }, process.env.JWT_REFRESH_SECRET);
             userDb.refreshTokens = userDb.refreshTokens.filter(t => t !== refreshToken);
             userDb.refreshTokens.push(newRefreshToken);
             await userDb.save();
