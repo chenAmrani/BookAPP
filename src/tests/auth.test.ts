@@ -6,9 +6,9 @@ import User from "../models/user_model";
 
 let app: Express;
 const user = {
-  email: "testUser@test.com",
+  email: "Admin@test.com",
   password: "123456789",
-  role: "reader",
+  role: "admin",
 }
 beforeAll(async () => {
   app = await initApp();
@@ -53,7 +53,7 @@ describe("Auth tests", () => {
     .send(user);
     expect(response.statusCode).toBe(200);
     accessToken = response.body.accessToken;
-    refreshToken = response.body.refreshTokens;
+    refreshToken = response.body.refreshToken;
     expect(accessToken).toBeDefined();
   });
 
@@ -86,11 +86,11 @@ describe("Auth tests", () => {
       expect(response.statusCode).not.toBe(200);
     });
 
-    test("Test refresh token", async () => {
+    test ("Test refresh token", async () => {
       const response = await request(app)
-        .get("/auth/refresh")
-        .set("Authorization", "JWT " + refreshToken)
-        .send();
+          .get("/auth/refresh")
+          .set("Authorization", "JWT " + refreshToken)
+          .send();
       expect(response.statusCode).toBe(200);
       expect(response.body.accessToken).toBeDefined();
       expect(response.body.refreshToken).toBeDefined();

@@ -1,10 +1,8 @@
 ###
 
-GET http://localhost:6969/book
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NTk1NzBhNzBmZjI0NDY3ZmQ0MDliMjIiLCJpYXQiOjE3MDQyOTI2MTksImV4cCI6MTcwNDI5NjIxOX0.VTdm91FbuTCv3At-CVlDIUVG7JbZx9VP4WnKUcxTfac
-
+GET http://localhost:6969/auth/refresh
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NTk5MWJiZDY5N2NkNWUxNzcwNzViMjEiLCJpYXQiOjE3MDQ1MzY4MTB9.D9zqhUosQqfdvjJCxCq1jcyWXBfvoqFteBslD6ZFkwM
 ###
-
 GET http://localhost:6969/book?name=book1
 
 
@@ -16,8 +14,7 @@ GET http://localhost:6969/book/658c6bbe41cb64ee84d31465
 ###
 
 POST http://localhost:6969/book
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NTk1NzBhNzBmZjI0NDY3ZmQ0MDliMjIiLCJpYXQiOjE3MDQyOTI2MTksImV4cCI6MTcwNDI5NjIxOX0.VTdm91FbuTCv3At-CVlDIUVG7JbZx9VP4WnKUcxTfac
-
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NTk5MWJiZDY5N2NkNWUxNzcwNzViMjEiLCJpYXQiOjE3MDQ1MzY2MzgsImV4cCI6MTcwNDU0MDIzOH0.yj0nf5LD0aN3OXw_M4xlKZGOO7p02WT2Z8dlQ3JcnJk
 Content-Type: application/json
 {
    " name": "book1",
@@ -35,7 +32,7 @@ Content-Type: application/json
 ###
 
 POST http://localhost:6969/review
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NTk1NzBhNzBmZjI0NDY3ZmQ0MDliMjIiLCJpYXQiOjE3MDQyOTMyMjksImV4cCI6MTcwNDI5NjgyOX0.84w76P3tdXVOpBLLtKP-1aN6KIz0xdTsF9L908eGavs
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NTk5MWJiZDY5N2NkNWUxNzcwNzViMjEiLCJpYXQiOjE3MDQ1MzY2ODgsImV4cCI6MTcwNDU0MDI4OH0.0g8-mg_6NV9Tx9EqjYI01h80WVsbU5U84UKlUhznYZc
 Content-Type: application/json 
 
 {
@@ -71,8 +68,8 @@ POST http://localhost:6969/auth/login
 Content-Type: application/json
 
 {
-    "email": "testReview@test.com",
-    "password": "1234567890"
+  "email": "author@test.com",
+  "password": "authorpass"
 }
 
 # ###
@@ -84,3 +81,10 @@ Content-Type: application/json
 #     "email": "testUser@test.com",
 #     "password": "123456789"
 # }
+
+
+###
+GET http://localhost:6969/user
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NTk5MTdiMWRjMGRhMGQxZTUyYTAzNzIiLCJpYXQiOjE3MDQ1MzIwODMsImV4cCI6MTcwNDUzMjA4Nn0.-Bfn-t5KYY3rL6FKFfADuq6j1-Tb6iJcrFsbYBJW2eg
+
+

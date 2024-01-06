@@ -97,13 +97,17 @@ const logout = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     }));
 });
 const refresh = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    console.log("the request that i get is: " + req.headers['authorization']);
     const authHeader = req.headers['authorization'];
-    const refreshToken = authHeader && authHeader.split(' ')[1]; // Bearer <token>
+    console.log("authHeader: " + authHeader);
+    const refreshToken = (yield authHeader) && authHeader.split(' ')[1]; // Bearer <token>
+    console.log("refreshToken: " + refreshToken);
     if (refreshToken == null)
         return res.sendStatus(401);
     jsonwebtoken_1.default.verify(refreshToken, process.env.JWT_REFRESH_SECRET, (err, user) => __awaiter(void 0, void 0, void 0, function* () {
         if (err) {
             console.log(err);
+            console.log("the problem is here");
             return res.sendStatus(401);
         }
         try {
@@ -113,8 +117,8 @@ const refresh = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
                 yield userDb.save();
                 return res.sendStatus(401);
             }
-            const accessToken = jsonwebtoken_1.default.sign({ '_id': user._id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRATION });
-            const newRefreshToken = jsonwebtoken_1.default.sign({ '_id': user._id }, process.env.JWT_REFRESH_SECRET);
+            const accessToken = yield jsonwebtoken_1.default.sign({ '_id': user._id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRATION });
+            const newRefreshToken = yield jsonwebtoken_1.default.sign({ '_id': user._id }, process.env.JWT_REFRESH_SECRET);
             userDb.refreshTokens = userDb.refreshTokens.filter(t => t !== refreshToken);
             userDb.refreshTokens.push(newRefreshToken);
             yield userDb.save();
