@@ -19,8 +19,8 @@ const register = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const email = req.body.email;
     const password = req.body.password;
     const role = req.body.role;
-    if (!email || !password) {
-        return res.status(400).send("missing email or password");
+    if (!email || !password || !role) {
+        return res.status(400).send("missing email or password or role");
     }
     try {
         const rs = yield user_model_1.default.findOne({ 'email': email });
@@ -33,7 +33,7 @@ const register = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         return res.status(201).send(rs2);
     }
     catch (err) {
-        return res.status(400).send("error missing email or password");
+        return res.status(400).send("error missing email or password or role");
     }
 });
 const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -51,11 +51,22 @@ const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         if (!match) {
             return res.status(401).send("email or password incorrect");
         }
-        const accessToken = jsonwebtoken_1.default.sign({ _id: user._id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRATION });
-        return res.status(200).send({ 'accessToken': accessToken });
+        const accessToken = jsonwebtoken_1.default.sign({ '_id': user._id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRATION });
+        const refreshToken = jsonwebtoken_1.default.sign({ '_id': user._id }, process.env.JWT_REFRESH_SECRET);
+        if (user.refreshTokens == null) {
+            user.refreshTokens = [refreshToken];
+        }
+        else {
+            user.refreshTokens.push(refreshToken);
+        }
+        yield user.save();
+        return res.status(200).send({
+            'accessToken': accessToken,
+            'refreshToken': refreshToken
+        });
     }
     catch (err) {
-        return res.status(400).send("error missing email or password");
+        return res.status(400).send("error");
     }
 });
 const logout = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -102,8 +113,8 @@ const refresh = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
                 yield userDb.save();
                 return res.sendStatus(401);
             }
-            const accessToken = jsonwebtoken_1.default.sign({ _id: user._id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRATION });
-            const newRefreshToken = jsonwebtoken_1.default.sign({ _id: user._id }, process.env.JWT_REFRESH_SECRET);
+            const accessToken = jsonwebtoken_1.default.sign({ '_id': user._id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRATION });
+            const newRefreshToken = jsonwebtoken_1.default.sign({ '_id': user._id }, process.env.JWT_REFRESH_SECRET);
             userDb.refreshTokens = userDb.refreshTokens.filter(t => t !== refreshToken);
             userDb.refreshTokens.push(newRefreshToken);
             yield userDb.save();

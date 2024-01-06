@@ -20,6 +20,7 @@ let app;
 const user = {
     email: "testUser@test.com",
     password: "123456789",
+    role: "reader",
 };
 beforeAll(() => __awaiter(void 0, void 0, void 0, function* () {
     app = yield (0, app_1.default)();
@@ -62,18 +63,18 @@ describe("Auth tests", () => {
         expect(accessToken).toBeDefined();
     }));
     test("Test forbidden access without token", () => __awaiter(void 0, void 0, void 0, function* () {
-        const response = yield (0, supertest_1.default)(app).get("/book");
+        const response = yield (0, supertest_1.default)(app).get("/user"); //check if its need to be user
         expect(response.statusCode).toBe(401);
     }));
     test("Test access with valid token", () => __awaiter(void 0, void 0, void 0, function* () {
         const response = yield (0, supertest_1.default)(app)
-            .get("/book")
+            .get("/user")
             .set("Authorization", "JWT " + accessToken);
         expect(response.statusCode).toBe(200);
     }));
     test("Test access with invalid token", () => __awaiter(void 0, void 0, void 0, function* () {
         const response = yield (0, supertest_1.default)(app)
-            .get("/book")
+            .get("/user")
             .set("Authorization", "JWT 1" + accessToken);
         expect(response.statusCode).toBe(401);
     }));
@@ -81,7 +82,7 @@ describe("Auth tests", () => {
     test("Test access after timeout of token", () => __awaiter(void 0, void 0, void 0, function* () {
         yield new Promise(resolve => setTimeout(() => resolve("its free the promis"), 5000));
         const response = yield (0, supertest_1.default)(app)
-            .get("/book")
+            .get("/user")
             .set("Authorization", "JWT " + accessToken);
         expect(response.statusCode).not.toBe(200);
     }));
@@ -96,7 +97,7 @@ describe("Auth tests", () => {
         const newAccessToken = response.body.accessToken;
         newRefreshToken = response.body.refreshToken;
         const response2 = yield (0, supertest_1.default)(app)
-            .get("/book")
+            .get("/user")
             .set("Authorization", "JWT " + newAccessToken);
         expect(response2.statusCode).toBe(200);
     }));

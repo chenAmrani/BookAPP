@@ -7,8 +7,8 @@ const register = async (req: Request, res: Response) => {
     const email = req.body.email;
     const password = req.body.password;
     const role = req.body.role;
-    if (!email || !password) {
-        return res.status(400).send("missing email or password");
+    if (!email || !password || !role) {
+        return res.status(400).send("missing email or password or role");
     }
     try {
         const rs = await User.findOne({ 'email': email });
@@ -20,7 +20,7 @@ const register = async (req: Request, res: Response) => {
         const rs2 = await User.create({ 'email': email, 'password': encryptedPassword, 'role':role });
         return res.status(201).send(rs2);
     } catch (err) {
-        return res.status(400).send("error missing email or password");
+        return res.status(400).send("error missing email or password or role");
     }
 }
 
@@ -40,11 +40,20 @@ const login = async (req: Request, res: Response) => {
             return res.status(401).send("email or password incorrect");
         }
 
-        const accessToken = jwt.sign({ _id: user._id }, process.env.JWT_SECRET,
-             { expiresIn: process.env.JWT_EXPIRATION });
-        return res.status(200).send({ 'accessToken': accessToken });
+        const accessToken = jwt.sign({ '_id': user._id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRATION });
+        const refreshToken = jwt.sign({ '_id': user._id }, process.env.JWT_REFRESH_SECRET);
+        if (user.refreshTokens == null) {
+            user.refreshTokens = [refreshToken];
+        } else {
+            user.refreshTokens.push(refreshToken);
+        }
+        await user.save();
+        return res.status(200).send({
+            'accessToken': accessToken,
+            'refreshToken': refreshToken
+        });
     } catch (err) {
-        return res.status(400).send("error missing email or password");
+        return res.status(400).send("error");
     }
 }
 
@@ -89,8 +98,8 @@ const refresh = async (req: Request, res: Response) => {
                 await userDb.save();
                 return res.sendStatus(401);
             }
-            const accessToken = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRATION });
-            const newRefreshToken = jwt.sign({ _id: user._id }, process.env.JWT_REFRESH_SECRET);
+            const accessToken = jwt.sign({ '_id': user._id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRATION });
+            const newRefreshToken = jwt.sign({ '_id': user._id }, process.env.JWT_REFRESH_SECRET);
             userDb.refreshTokens = userDb.refreshTokens.filter(t => t !== refreshToken);
             userDb.refreshTokens.push(newRefreshToken);
             await userDb.save();
@@ -103,6 +112,7 @@ const refresh = async (req: Request, res: Response) => {
         }
     });
 }
+
 
 export default {
     register,
