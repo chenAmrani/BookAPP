@@ -72,6 +72,24 @@ Content-Type: application/json
   "password": "authorpass"
 }
 
+
+### 
+POST http://localhost:6969/auth/register
+Content-Type: application/json
+
+{
+    "name": "reader1",
+    "email": "reader@test.com",
+    "password": "readerpass",
+    "role": "reader"
+}
+
+
+
+
+
+
+
 # ###
 
 # POST http://localhost:6969/auth/login

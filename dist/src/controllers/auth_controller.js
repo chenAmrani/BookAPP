@@ -98,7 +98,6 @@ const logout = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     }));
 });
 const refresh = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    console.log("the request that i get is: " + req.headers['authorization']);
     const authHeader = req.headers['authorization'];
     const refreshToken = (yield authHeader) && authHeader.split(' ')[1]; // Bearer <token>
     if (refreshToken == null)

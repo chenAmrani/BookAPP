@@ -12,18 +12,21 @@ let adminAccessToken: string;
 
 
 const adminUser = {
+  name: "admin1",
   email: "admin@test.com",
   password: "adminpass",
   role: "admin"
 };
 
 const authorUser = {
+  name: "author1",
   email: "author@test.com",
   password: "authorpass",
   role: "author"
 };
 
 const readerUser = {
+  name: "reader1",
   email: "reader@test.com",
   password: "readerpass",
   role: "reader"

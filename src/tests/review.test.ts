@@ -8,6 +8,7 @@ import User, {IUser} from "../models/user_model";
 let app: Express;
 
 const user: IUser = {
+  name: "testReview",
   email: "testReview@test.com",
   password: "1234567890",
   role: "reader",

@@ -1,19 +1,32 @@
-import { AuthRequest } from './auth_middleware';
-import { Response, NextFunction } from 'express';
+import { Request, Response, NextFunction } from 'express';
+import User from '../models/user_model';
 
-const verifyOwnership = (req: AuthRequest, res: Response, next: NextFunction) => {
-  const { user } = req;
-  
-  if (!user) {
-    return res.sendStatus(401); 
+interface CustomRequest extends Request {
+    locals: {
+      currentUserId?: string;
+    };
   }
 
+const verifyUserOwnership = async (req: CustomRequest, res: Response, next: NextFunction) => {
+    try {
+        const { id } = req.body;
+        const currentUserId = req.locals?.currentUserId;
 
-  if (user._id !== req.params.userId) {
-    return res.sendStatus(403); // Forbidden - User does not own the content
-  }
+        if (!id || !currentUserId) {
+            return res.status(400).send('User ID and current user ID are required for verification');
+        }
 
-  next(); 
-};
+        const user = await User.findById(id);
+    
+        if (!user || user._id.toString() !== currentUserId) {
+            return res.status(403).send('You do not have permission to modify this user');
+        }
 
-export default verifyOwnership;
+        next();
+    } catch (err) {
+        console.error('Error in verifyUserOwnership:', err);
+        res.status(500).send('Internal Server Error -> verifyUserOwnership');
+    }
+}
+
+export default verifyUserOwnership;

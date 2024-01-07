@@ -64,6 +64,7 @@ const updateUser = async (req: Request, res: Response): Promise<void> => {
     );
 
     if (!updatedUser) {
+      console.log("the problem is here!!!!!!!!!!!!!!!!!!!!!!!!!!");
       res.status(404).send('User not found');
       return;
     }
