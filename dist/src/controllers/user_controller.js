@@ -60,6 +60,7 @@ const updateUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         const encryptedPassword = yield bcrypt_1.default.hash(password, salt);
         const updatedUser = yield user_model_1.default.findByIdAndUpdate(id, { name, email, encryptedPassword }, { new: true });
         if (!updatedUser) {
+            console.log("the problem is here!!!!!!!!!!!!!!!!!!!!!!!!!!");
             res.status(404).send('User not found');
             return;
         }

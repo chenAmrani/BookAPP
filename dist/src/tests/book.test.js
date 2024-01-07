@@ -22,16 +22,19 @@ let authorAccessToken;
 let readerAccessToken;
 let adminAccessToken;
 const adminUser = {
+    name: "admin1",
     email: "admin@test.com",
     password: "adminpass",
     role: "admin"
 };
 const authorUser = {
+    name: "author1",
     email: "author@test.com",
     password: "authorpass",
     role: "author"
 };
 const readerUser = {
+    name: "reader1",
     email: "reader@test.com",
     password: "readerpass",
     role: "reader"
@@ -101,7 +104,7 @@ describe("Book tests", () => {
     test("Test Admin Adding Book", () => __awaiter(void 0, void 0, void 0, function* () {
         yield addBook(book2, adminAccessToken);
     }));
-    test("Test Reader Adding Book", () => __awaiter(void 0, void 0, void 0, function* () {
+    test("Test Reader Adding Book - not allowed", () => __awaiter(void 0, void 0, void 0, function* () {
         const response = yield (0, supertest_1.default)(app)
             .post("/book")
             .set("Authorization", "JWT " + readerAccessToken)
@@ -112,7 +115,7 @@ describe("Book tests", () => {
     test("Test Get All Books in DB", () => __awaiter(void 0, void 0, void 0, function* () {
         const response = yield (0, supertest_1.default)(app)
             .get("/book")
-            .set("Authorization", "JWT " + authorAccessToken);
+            .set("Authorization", "JWT " + readerAccessToken);
         expect(response.statusCode).toBe(200);
         expect(response.body.length).toBe(2);
         const rc = response.body[0];

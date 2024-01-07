@@ -14,7 +14,7 @@ router.get("/", auth_middleware_1.default, book_controller_1.default.get.bind(bo
 router.get("/:id", auth_middleware_1.default, book_controller_1.default.getById.bind(book_controller_1.default));
 router.post("/", auth_middleware_1.default, author_middleware_1.default, book_controller_1.default.post.bind(book_controller_1.default));
 router.put("/:id", auth_middleware_1.default, admin_middleware_1.default, book_controller_1.default.putById.bind(book_controller_1.default));
-router.put("/:id", auth_middleware_1.default, veifyOwenership_midleeware_1.default, book_controller_1.default.putById.bind(book_controller_1.default));
+router.put("/:id", auth_middleware_1.default, book_controller_1.default.putById.bind(book_controller_1.default));
 router.delete("/:id", auth_middleware_1.default, admin_middleware_1.default, book_controller_1.default.deleteById.bind(book_controller_1.default));
 router.delete("/:id", auth_middleware_1.default, veifyOwenership_midleeware_1.default, book_controller_1.default.deleteById.bind(book_controller_1.default));
 exports.default = router;

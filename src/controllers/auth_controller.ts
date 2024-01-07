@@ -7,8 +7,9 @@ const register = async (req: Request, res: Response) => {
     const email = req.body.email;
     const password = req.body.password;
     const role = req.body.role;
-    if (!email || !password || !role) {
-        return res.status(400).send("missing email or password or role");
+    const name = req.body.name;
+    if (!email || !password || !role || !name) {
+        return res.status(400).send("missing email or password or role or name");
     }
     try {
         const rs = await User.findOne({ 'email': email });
@@ -17,7 +18,7 @@ const register = async (req: Request, res: Response) => {
         }
         const salt = await bcrypt.genSalt(10);
         const encryptedPassword = await bcrypt.hash(password, salt);
-        const rs2 = await User.create({ 'email': email, 'password': encryptedPassword, 'role':role });
+        const rs2 = await User.create({ 'email': email, 'password': encryptedPassword, 'role':role , 'name':name });
         return res.status(201).send(rs2);
     } catch (err) {
         return res.status(400).send("error missing email or password or role");
@@ -83,16 +84,12 @@ const logout = async (req: Request, res: Response) => {
 }
 
 const refresh = async (req: Request, res: Response) => {
-    console.log("the request that i get is: "+ req.headers['authorization']);
     const authHeader = req.headers['authorization'];
-    console.log("authHeader: " + authHeader);
     const refreshToken = await authHeader && authHeader.split(' ')[1]; // Bearer <token>
-    console.log("refreshToken: " + refreshToken);
     if (refreshToken == null) return res.sendStatus(401);
     jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET, async (err, user: { '_id': string }) => {
         if (err) {
             console.log(err);
-            console.log("the problem is here")
             return res.sendStatus(401);
             
         }

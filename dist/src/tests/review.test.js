@@ -19,6 +19,7 @@ const review_model_1 = __importDefault(require("../models/review_model"));
 const user_model_1 = __importDefault(require("../models/user_model"));
 let app;
 const user = {
+    name: "testReview",
     email: "testReview@test.com",
     password: "1234567890",
     role: "reader",

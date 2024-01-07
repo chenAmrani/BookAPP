@@ -15,7 +15,7 @@ router.post("/",authMiddleware,authorMiddleware, bookController.post.bind(bookCo
 
 
 router.put("/:id", authMiddleware,adminMiddleware, bookController.putById.bind(bookController));
-router.put("/:id", authMiddleware,verifyOwnership, bookController.putById.bind(bookController));
+router.put("/:id", authMiddleware,bookController.putById.bind(bookController));
 
 
 router.delete("/:id",authMiddleware,adminMiddleware, bookController.deleteById.bind(bookController));
