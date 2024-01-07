@@ -19,8 +19,9 @@ const register = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const email = req.body.email;
     const password = req.body.password;
     const role = req.body.role;
-    if (!email || !password || !role) {
-        return res.status(400).send("missing email or password or role");
+    const name = req.body.name;
+    if (!email || !password || !role || !name) {
+        return res.status(400).send("missing email or password or role or name");
     }
     try {
         const rs = yield user_model_1.default.findOne({ 'email': email });
@@ -29,7 +30,7 @@ const register = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         }
         const salt = yield bcrypt_1.default.genSalt(10);
         const encryptedPassword = yield bcrypt_1.default.hash(password, salt);
-        const rs2 = yield user_model_1.default.create({ 'email': email, 'password': encryptedPassword, 'role': role });
+        const rs2 = yield user_model_1.default.create({ 'email': email, 'password': encryptedPassword, 'role': role, 'name': name });
         return res.status(201).send(rs2);
     }
     catch (err) {
@@ -99,15 +100,12 @@ const logout = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
 const refresh = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     console.log("the request that i get is: " + req.headers['authorization']);
     const authHeader = req.headers['authorization'];
-    console.log("authHeader: " + authHeader);
     const refreshToken = (yield authHeader) && authHeader.split(' ')[1]; // Bearer <token>
-    console.log("refreshToken: " + refreshToken);
     if (refreshToken == null)
         return res.sendStatus(401);
     jsonwebtoken_1.default.verify(refreshToken, process.env.JWT_REFRESH_SECRET, (err, user) => __awaiter(void 0, void 0, void 0, function* () {
         if (err) {
             console.log(err);
-            console.log("the problem is here");
             return res.sendStatus(401);
         }
         try {
