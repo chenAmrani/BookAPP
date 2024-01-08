@@ -124,8 +124,6 @@ describe("Book tests", () => {
         expect(response.status).toBe(201);
         createdBookId2 = response.body._id;
     }));
-<<<<<<< HEAD
-=======
     test("Test Admin Adding Book", () => __awaiter(void 0, void 0, void 0, function* () {
         const response = yield (0, supertest_1.default)(app)
             .post("/book/admin")
@@ -134,7 +132,6 @@ describe("Book tests", () => {
         expect(response.status).toBe(201);
         //createdBookId3 = response.body._id;
     }));
->>>>>>> 3d23a1aae057c5212f8f42ede82819eae9d5c187
     test("Test Reader Adding Book - not allowed", () => __awaiter(void 0, void 0, void 0, function* () {
         const response = yield (0, supertest_1.default)(app)
             .post("/book")
