@@ -76,11 +76,14 @@ class BaseController {
     putById(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                console.log("im here");
-                yield this.model.findByIdAndUpdate(req.params.id, req.body);
-                const obj = yield this.model.findById(req.body._id);
-                console.log("The obj is: " + req.body._id);
-                res.status(200).send(obj);
+                const { id, obj } = req.body;
+                const updatedBook = yield this.model.findByIdAndUpdate(id, obj, { new: true });
+                // await this.model.findByIdAndUpdate(req.params.id, req.body, { new: true });
+                // await this.model.findByIdAndUpdate(req.params.id, req.body);
+                // const obj = await this.model.findById(req.body._id);
+                // console.log("The objjjj is: " + obj);
+                console.log("The updatedBook is: " + updatedBook);
+                res.status(200).send(updatedBook);
             }
             catch (err) {
                 console.log(err);
