@@ -13,25 +13,26 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
-const user_model_1 = __importDefault(require("../models/user_model"));
 const authMiddleware = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const authHeader = req.headers['authorization'];
     const token = authHeader && authHeader.split(' ')[1]; // Bearer <token>
-    console.log("token: " + token);
     if (!token)
         return res.sendStatus(401);
     try {
-        const decoded = jsonwebtoken_1.default.verify(token, process.env.JWT_SECRET);
-        console.log("chen decoded: " + decoded._id);
-        const user = yield user_model_1.default.findById(decoded._id).select('_id role');
-        if (!user) {
-            return res.sendStatus(401);
-        }
-        req.user = { _id: user._id, role: user.role }; // Set user object in the request
-        next();
+        jsonwebtoken_1.default.verify(token, process.env.JWT_SECRET, (err, user) => {
+            if (err) {
+                //console.error('Token Verification Error:', err);
+                return res.status(401).json({ error: 'Token is not valid' });
+            }
+            req.user = user;
+            req.locals = req.locals || {};
+            req.locals.currentUserId = user._id;
+            next();
+        });
     }
     catch (err) {
-        return res.sendStatus(401);
+        console.error('Unexpected Error:', err);
+        res.status(500).send('Internal Server Error');
     }
 });
 exports.default = authMiddleware;

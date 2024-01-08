@@ -54,7 +54,7 @@ class BaseController {
     }
     post(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            console.log("post book: " + req.body);
+            // console.log("post book: " + req.body);
             try {
                 const existingBook = yield this.model.findOne({
                     name: req.body.name,
@@ -75,10 +75,11 @@ class BaseController {
     }
     putById(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            console.log("putById:" + req.body);
             try {
+                console.log("im here");
                 yield this.model.findByIdAndUpdate(req.params.id, req.body);
-                const obj = yield this.model.findById(req.params.id);
+                const obj = yield this.model.findById(req.body._id);
+                console.log("The obj is: " + req.body._id);
                 res.status(200).send(obj);
             }
             catch (err) {
@@ -89,13 +90,12 @@ class BaseController {
     }
     deleteById(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            console.log("deleteById:" + req.body);
+            // console.log("deleteById:" + req.body);
             try {
                 yield this.model.findByIdAndDelete(req.params.id);
                 res.status(200).send("OK");
             }
             catch (err) {
-                console.log(err);
                 res.status(406).send("fail: " + err.message);
             }
         });

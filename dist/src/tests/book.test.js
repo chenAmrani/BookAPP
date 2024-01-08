@@ -22,21 +22,26 @@ let authorAccessToken;
 let readerAccessToken;
 let adminAccessToken;
 const adminUser = {
+    name: "name1",
     email: "admin@test.com",
     password: "adminpass",
     role: "admin"
 };
 const authorUser = {
+    name: "name1",
     email: "author@test.com",
     password: "authorpass",
     role: "author"
 };
 const readerUser = {
+    name: "name1",
     email: "reader@test.com",
     password: "readerpass",
     role: "reader"
 };
 let createdBookId;
+let createdBookId2;
+//let createdBookId3: string;
 beforeAll(() => __awaiter(void 0, void 0, void 0, function* () {
     app = yield (0, app_1.default)();
     console.log("beforeAll");
@@ -45,7 +50,9 @@ beforeAll(() => __awaiter(void 0, void 0, void 0, function* () {
     yield (0, supertest_1.default)(app).post("/auth/register").send(adminUser);
     const adminResponse = yield (0, supertest_1.default)(app).post("/auth/login").send(adminUser);
     adminAccessToken = adminResponse.body.accessToken;
-    yield (0, supertest_1.default)(app).post("/auth/register").send(authorUser);
+    // console.log("adminAccessToken" + adminAccessToken);
+    const response = yield (0, supertest_1.default)(app).post("/auth/register").send(authorUser);
+    authorUser._id = response.body._id;
     const authorResponse = yield (0, supertest_1.default)(app).post("/auth/login").send(authorUser);
     authorAccessToken = authorResponse.body.accessToken;
     yield (0, supertest_1.default)(app).post("/auth/register").send(readerUser);
@@ -62,7 +69,7 @@ const book1 = {
     pages: 100,
     price: 100,
     rating: 5,
-    author: "author1",
+    author: authorUser._id,
     category: "category1",
     summary: "summary1",
     reviews: null,
@@ -74,20 +81,24 @@ const book2 = {
     pages: 100,
     price: 100,
     rating: 5,
-    author: "admin1",
+    author: adminUser._id,
+    category: "category1",
+    summary: "summary1",
+    reviews: null,
+};
+const book3 = {
+    name: "book3",
+    year: 2020,
+    image: "image2",
+    pages: 100,
+    price: 100,
+    rating: 5,
+    author: adminUser._id,
     category: "category1",
     summary: "summary1",
     reviews: null,
 };
 describe("Book tests", () => {
-    const addBook = (book, accessToken) => __awaiter(void 0, void 0, void 0, function* () {
-        const response = yield (0, supertest_1.default)(app)
-            .post("/book")
-            .set("Authorization", "JWT " + accessToken)
-            .send(book);
-        expect(response.status).toBe(201);
-        createdBookId = response.body._id;
-    });
     test("Test Get All Books - empty response", () => __awaiter(void 0, void 0, void 0, function* () {
         const response = yield (0, supertest_1.default)(app)
             .get("/book")
@@ -96,11 +107,34 @@ describe("Book tests", () => {
         expect(response.body).toStrictEqual([]);
     }));
     test("Test Author Adding Book", () => __awaiter(void 0, void 0, void 0, function* () {
-        yield addBook(book1, authorAccessToken);
+        const response = yield (0, supertest_1.default)(app)
+            .post("/book/")
+            .set("Authorization", "JWT " + authorAccessToken)
+            .send(book1);
+        console.log("book1: ", book1);
+        expect(response.status).toBe(201);
+        createdBookId = response.body._id;
+        console.log("createdBookId: ", createdBookId);
     }));
     test("Test Admin Adding Book", () => __awaiter(void 0, void 0, void 0, function* () {
-        yield addBook(book2, adminAccessToken);
+        const response = yield (0, supertest_1.default)(app)
+            .post("/book/admin")
+            .set("Authorization", "JWT " + adminAccessToken)
+            .send(book2);
+        expect(response.status).toBe(201);
+        createdBookId2 = response.body._id;
     }));
+<<<<<<< HEAD
+=======
+    test("Test Admin Adding Book", () => __awaiter(void 0, void 0, void 0, function* () {
+        const response = yield (0, supertest_1.default)(app)
+            .post("/book/admin")
+            .set("Authorization", "JWT " + adminAccessToken)
+            .send(book3);
+        expect(response.status).toBe(201);
+        //createdBookId3 = response.body._id;
+    }));
+>>>>>>> 3d23a1aae057c5212f8f42ede82819eae9d5c187
     test("Test Reader Adding Book - not allowed", () => __awaiter(void 0, void 0, void 0, function* () {
         const response = yield (0, supertest_1.default)(app)
             .post("/book")
@@ -114,7 +148,7 @@ describe("Book tests", () => {
             .get("/book")
             .set("Authorization", "JWT " + readerAccessToken);
         expect(response.statusCode).toBe(200);
-        expect(response.body.length).toBe(2);
+        expect(response.body.length).toBe(3);
         const rc = response.body[0];
         expect(rc.name).toBe(book1.name);
     }));
@@ -125,6 +159,14 @@ describe("Book tests", () => {
     //   expect(response.statusCode).toBe(200);
     //   expect(response.body.length).toBe(1);
     // });
+    // test("Test Get My Books - Success", async () => {
+    //   const response = await request(app).get("/user/books")
+    //   .set("Authorization", "JWT " + authorAccessToken);
+    //   const rc = response.body[0];
+    //   //console.log(rc)
+    //   expect(response.statusCode).toBe(200);
+    //   expect(rc.email).toBe(authorUser.email);
+    // });
     test("Test Post Duplicate Book", () => __awaiter(void 0, void 0, void 0, function* () {
         const response = yield (0, supertest_1.default)(app)
             .post("/book")
@@ -133,11 +175,57 @@ describe("Book tests", () => {
         expect(response.statusCode).toBe(406);
     }));
     test("Test Admin Deleting Book", () => __awaiter(void 0, void 0, void 0, function* () {
-        expect(createdBookId).toBeDefined(); // Ensure book ID is available
+        expect(createdBookId2).toBeDefined(); // Ensure book ID is available
+        // console.log("bookid:", createdBookId2);
         const deleteResponse = yield (0, supertest_1.default)(app)
-            .delete(`/book/${createdBookId}`)
+            .delete(`/book/admin/delete/${createdBookId2}`)
             .set("Authorization", "JWT " + adminAccessToken);
         expect(deleteResponse.statusCode).toBe(200);
     }));
+    // test("Test Author Update Own Book - Success", async () => {
+    //   // Assuming createdBookId is defined and contains a valid book ID
+    //   const updatedBookDetails = {
+    //     id: authorUser._id,
+    //     book:{
+    //     bookId: createdBookId,
+    //     name: "updateBookName",
+    //     year: 2020,
+    //     image: "image1",
+    //     pages: 100,
+    //     price: 100,
+    //     rating: 5,
+    //     author: authorUser._id,
+    //     category: "category1",
+    //     summary: "summary1",
+    //     reviews: null,
+    //     }
+    //   };
+    // console.log("authorUser._id: " , authorUser._id);
+    //   const response = await request(app)
+    //     .put(`/book/updateOwnBook/${createdBookId}`) 
+    //     .set("Authorization", "JWT " + authorAccessToken) 
+    //     .send(updatedBookDetails);
+    //   expect(response.statusCode).toBe(200);
+    // });
+    // test("Test Author Update admin Book - not Success", async () => {
+    //   // Assuming createdBookId is defined and contains a valid book ID
+    //   const updatedBookDetails2 = {
+    //     name: "newBook",
+    //     year: 2020,
+    //     image: "image1",
+    //     pages: 100,
+    //     price: 100,
+    //     rating: 5,
+    //     author: adminUser._id,
+    //     category: "category1",
+    //     summary: "summary1",
+    //     reviews: null,
+    //   };
+    //   const response = await request(app)
+    //     .put(`/book/updateOwnBook/${createdBookId3}`) 
+    //     .set("Authorization", "JWT " + authorAccessToken) 
+    //     .send(updatedBookDetails2);
+    //   expect(response.statusCode).toBe(403);
+    // });
 });
 //# sourceMappingURL=book.test.js.map

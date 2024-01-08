@@ -50,6 +50,7 @@ const updateUser = async (req: Request, res: Response): Promise<void> => {
     const { name, email, password } = req.body.user;
 
     if (!name && !email && !password) {
+      
       res.status(400).send('At least one field (name, email, or password) is required for update');
       return;
     }
@@ -105,6 +106,7 @@ const updateOwnProfile = async (req: CustomRequest, res: Response): Promise<void
     const { currentUserId } = req.locals;
 
     if (!currentUserId) {
+      console.log("this is here");
       res.status(400).send('User ID is required for updating the profile');
       return;
     }

@@ -48,7 +48,7 @@ export class BaseController<ModelType>{
 
     
     async post(req: Request, res: Response) {
-        console.log("post book: " + req.body);
+        // console.log("post book: " + req.body);
         try {
             const existingBook = await this.model.findOne({
                 name: req.body.name,
@@ -61,6 +61,7 @@ export class BaseController<ModelType>{
             }
 
             const obj = await this.model.create(req.body);
+            
             res.status(201).send(obj);
         } catch (err) {
             console.log(err);
@@ -70,10 +71,11 @@ export class BaseController<ModelType>{
 
 
     async putById(req: Request, res: Response) {
-        console.log("putById:" + req.body);
         try {
+            console.log("im here");
             await this.model.findByIdAndUpdate(req.params.id, req.body);
-            const obj = await this.model.findById(req.params.id);
+            const obj = await this.model.findById(req.body._id);
+            console.log("The obj is: " + req.body._id);
             res.status(200).send(obj);
         } catch (err) {
             console.log(err);
@@ -84,13 +86,13 @@ export class BaseController<ModelType>{
 
 
 
+
     async deleteById(req: Request, res: Response) {
-        console.log("deleteById:" + req.body);
+        // console.log("deleteById:" + req.body);
         try {
             await this.model.findByIdAndDelete(req.params.id);
             res.status(200).send("OK");
         } catch (err) {
-            console.log(err);
             res.status(406).send("fail: " + err.message);
         }
     }

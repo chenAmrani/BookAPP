@@ -19,6 +19,7 @@ const review_model_1 = __importDefault(require("../models/review_model"));
 const user_model_1 = __importDefault(require("../models/user_model"));
 let app;
 const user = {
+    name: "Moshe Amrani",
     email: "testReview@test.com",
     password: "1234567890",
     role: "reader",
@@ -80,6 +81,5 @@ describe("Reviews tests", () => {
         expect(rc.text).toBe(review1.text);
         expect(rc.owner).toBe(user._id);
     }));
-    //האם צריך לבדוק האם חוזרת תגובה לפני ID
 });
 //# sourceMappingURL=review.test.js.map

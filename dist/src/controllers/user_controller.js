@@ -92,6 +92,7 @@ const deleteUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
 const updateOwnProfile = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { currentUserId } = req.locals;
     if (!currentUserId) {
+        console.log("this is here");
         res.status(400).send('User ID is required for updating the profile');
         return;
     }

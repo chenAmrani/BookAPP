@@ -1,33 +1,40 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
-import User from '../models/user_model';
+import {IUser} from '../models/user_model';
 
 
 export interface AuthRequest extends Request {
-  user?: { _id: string; role: string };
+  user?: {
+       _id: string;
+};
+  locals?: {
+    currentUserId?: string;
+  };
+ 
 }
 
 const authMiddleware = async (req: AuthRequest, res: Response, next: NextFunction) => {
   const authHeader = req.headers['authorization'];
   const token = authHeader && authHeader.split(' ')[1]; // Bearer <token>
-  console.log("token: " + token);
   if (!token) return res.sendStatus(401);
 
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET) as { _id: string };
-    console.log("chen decoded: " + decoded._id);
-    const user = await User.findById(decoded._id).select('_id role');
+    jwt.verify(token, process.env.JWT_SECRET, (err, user:IUser) => {
+        if (err) {
+            //console.error('Token Verification Error:', err);
+            return res.status(401).json({ error: 'Token is not valid' });
+        }
 
+        req.user = user as { _id: string };
+        req.locals = req.locals || {};
+        req.locals.currentUserId = user._id;
+        next();
+    });
+} catch (err) {
+    console.error('Unexpected Error:', err);
+    res.status(500).send('Internal Server Error');
+}
+}
 
-    if (!user) {
-      return res.sendStatus(401);
-    }
-
-    req.user = { _id: user._id, role: user.role }; // Set user object in the request
-    next();
-  } catch (err) {
-    return res.sendStatus(401);
-  }
-};
 
 export default authMiddleware;

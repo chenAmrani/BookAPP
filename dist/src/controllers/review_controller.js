@@ -14,6 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const review_model_1 = __importDefault(require("../models/review_model"));
 const base_controller_1 = require("./base_controller");
+//import book_model from "../models/book_model";
 class ReviewController extends base_controller_1.BaseController {
     constructor() {
         super(review_model_1.default);
@@ -26,6 +27,10 @@ class ReviewController extends base_controller_1.BaseController {
             console.log("review:" + req.body);
             const _id = req.user._id;
             req.body.owner = _id;
+            // const bookID = req.body.bookId;  // Assuming bookID is the review ObjectId
+            // const book = await book_model.findById({ '_id': bookID});
+            // await book.reviews.push(bookID);
+            // await book.save();
             _super.post.call(this, req, res);
         });
     }
