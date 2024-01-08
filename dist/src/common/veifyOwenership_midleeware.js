@@ -13,16 +13,25 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const user_model_1 = __importDefault(require("../models/user_model"));
+const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const verifyUserOwnership = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
     try {
+        const authHeader = req.headers['authorization'];
+        const token = authHeader && authHeader.split(' ')[1];
+        if (token == null) {
+            return res.sendStatus(401).send("missing authorization header");
+        }
+        console.log('req.body:', req.body);
         const { id } = req.body;
         const currentUserId = (_a = req.locals) === null || _a === void 0 ? void 0 : _a.currentUserId;
         console.log('id:', id);
         if (!id || !currentUserId) {
             return res.status(400).send('User ID and current user ID are required for verification');
         }
-        const user = yield user_model_1.default.findById(id);
+        const decoded = jsonwebtoken_1.default.decode(token);
+        const userId = decoded._id;
+        const user = yield user_model_1.default.findOne({ _id: userId });
         if (!user || user._id.toString() !== currentUserId) {
             return res.status(403).send('You do not have permission to modify this user');
         }

@@ -15,6 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const book_model_1 = __importDefault(require("../models/book_model"));
 // import createController from "./base_controller";
 const base_controller_1 = require("./base_controller");
+const user_model_1 = __importDefault(require("../models/user_model"));
 class bookController extends base_controller_1.BaseController {
     constructor() {
         super(book_model_1.default);
@@ -27,7 +28,9 @@ class bookController extends base_controller_1.BaseController {
             // console.log("bookpost:" + req.body);
             const _id = req.user._id;
             req.body.author = _id;
-            //
+            const user = yield user_model_1.default.findById({ '_id': req.user._id });
+            user.books.push(req.body._id);
+            yield user.save();
             _super.post.call(this, req, res);
         });
     }
@@ -36,10 +39,10 @@ class bookController extends base_controller_1.BaseController {
             putById: { get: () => super.putById }
         });
         return __awaiter(this, void 0, void 0, function* () {
-            // console.log("updatebook:" + req.body);
+            // console.log("bookput:" + req.body);
+            const _id = req.params.id;
+            req.body._id = _id;
             _super.putById.call(this, req, res);
-            // console.log("THE ID AUTHOR:" + req.body.author);
-            // console.log("THE ID USER:" + req.user._id);
         });
     }
 }

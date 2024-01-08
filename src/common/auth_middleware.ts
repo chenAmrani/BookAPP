@@ -4,11 +4,13 @@ import {IUser} from '../models/user_model';
 
 
 export interface AuthRequest extends Request {
-  user?: { _id: string;};
+  user?: {
+       _id: string;
+};
   locals?: {
     currentUserId?: string;
   };
-
+ 
 }
 
 const authMiddleware = async (req: AuthRequest, res: Response, next: NextFunction) => {
