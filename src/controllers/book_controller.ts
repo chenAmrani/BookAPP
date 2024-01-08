@@ -13,22 +13,16 @@ class bookController extends BaseController<IBook> {
         // console.log("bookpost:" + req.body);
         const _id = req.user._id;
         req.body.author = _id;
-        //
         super.post(req, res);
-        }
+    }
 
     async putById(req: AuthRequest, res: Response) {
-        // console.log("updatebook:" + req.body);
-        
-
-            super.putById(req, res);
-      
-        // console.log("THE ID AUTHOR:" + req.body.author);
-        // console.log("THE ID USER:" + req.user._id);
-        
-        
-        
+        // console.log("bookput:" + req.body);
+        const _id = req.params.id;
+        req.body._id = _id;
+        super.putById(req, res);
     }
+  
 }
 
    

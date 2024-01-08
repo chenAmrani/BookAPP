@@ -70,18 +70,18 @@ export class BaseController<ModelType>{
 
 
     async putById(req: Request, res: Response) {
-        
         try {
-            
+            console.log("im here");
             await this.model.findByIdAndUpdate(req.params.id, req.body);
-            
             const obj = await this.model.findById(req.body._id);
+            console.log("The obj is: " + req.body._id);
             res.status(200).send(obj);
         } catch (err) {
             console.log(err);
             res.status(406).send("fail: " + err.message);
         }
     }
+
 
 
 

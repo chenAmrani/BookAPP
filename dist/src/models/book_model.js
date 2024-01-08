@@ -30,8 +30,9 @@ const bookSchema = new mongoose_1.default.Schema({
         required: true
     },
     author: {
-        type: String,
-        required: true
+        type: mongoose_1.default.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true,
     },
     category: {
         type: String,

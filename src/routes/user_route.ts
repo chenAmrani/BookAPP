@@ -17,7 +17,7 @@ router.delete("/:id",authMiddleware,verifyOwenershipMiddleware,UserController.de
 
 
 //updating the user profile by himself.
-router.put('/updateOwnProfile', authMiddleware,verifyOwenershipMiddleware,UserController.updateOwnProfile);
+router.put("/updateOwnProfile", authMiddleware,verifyOwenershipMiddleware,UserController.updateOwnProfile);
 
 
 

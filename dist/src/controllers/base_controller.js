@@ -76,8 +76,10 @@ class BaseController {
     putById(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
+                console.log("im here");
                 yield this.model.findByIdAndUpdate(req.params.id, req.body);
                 const obj = yield this.model.findById(req.body._id);
+                console.log("The obj is: " + req.body._id);
                 res.status(200).send(obj);
             }
             catch (err) {
