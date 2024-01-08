@@ -21,18 +21,41 @@ class bookController extends base_controller_1.BaseController {
         super(book_model_1.default);
     }
     post(req, res) {
-        const _super = Object.create(null, {
-            post: { get: () => super.post }
-        });
         return __awaiter(this, void 0, void 0, function* () {
-            // console.log("bookpost:" + req.body);
-            const _id = req.user._id;
-            req.body.author = _id;
-            const user = yield user_model_1.default.findById({ '_id': req.user._id });
-            user.books.push(req.body._id);
-            //need to check why the book is not add to the books array of the user. its add null.
-            yield user.save();
-            _super.post.call(this, req, res);
+            try {
+                const _id = req.user._id;
+                req.body.author = _id;
+                const existingBook = yield this.model.findOne({
+                    name: req.body.name,
+                    author: req.body.author,
+                });
+                if (existingBook) {
+                    res.status(406).send("Book already exists");
+                    return;
+                }
+                const createdBook = yield this.model.create(req.body);
+                console.log("this is the real deal: ", createdBook.id);
+                if (createdBook) {
+                    const user = yield user_model_1.default.findById(_id);
+                    if (user) {
+                        user.books.push(createdBook.id);
+                        yield user.save();
+                    }
+                    else {
+                        res.status(404).send("User not found");
+                        return;
+                    }
+                }
+                else {
+                    res.status(500).send("Error creating book");
+                    return;
+                }
+                res.status(201).send(createdBook);
+            }
+            catch (error) {
+                console.log(error);
+                res.status(500).json({ message: error.message });
+            }
         });
     }
     putById(req, res) {
