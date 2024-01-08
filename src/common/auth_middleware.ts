@@ -5,7 +5,7 @@ import {IUser} from '../models/user_model';
 
 export interface AuthRequest extends Request {
   user?: { _id: string;};
-  locals: {
+  locals?: {
     currentUserId?: string;
   };
 

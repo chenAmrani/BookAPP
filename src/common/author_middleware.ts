@@ -4,9 +4,6 @@ import User from '../models/user_model';
 
 export interface AuthRequest extends Request {
   user?: { _id: string};
-  locals?: {
-    currentUserId?: string;
-};
 }
 
 const authMiddleware = async (req: AuthRequest, res: Response, next: NextFunction) => {
@@ -18,14 +15,16 @@ const authMiddleware = async (req: AuthRequest, res: Response, next: NextFunctio
   
     const decoded = jwt.decode(token) as { _id: string } | null;
     const userId = decoded._id;
+    
     const user = await User.findOne({_id : userId})
-    if(user.role.match('author')||user.role.match('admin'))
+
+    if(user.role.match('author'))
     {
       next();
     }
 
     else {
-      return res.status(403).send("Not author");
+      return res.status(403).send("Not admin or author");
     }
 
 
