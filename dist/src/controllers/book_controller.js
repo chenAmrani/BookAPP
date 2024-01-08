@@ -34,7 +34,7 @@ class bookController extends base_controller_1.BaseController {
                     return;
                 }
                 const createdBook = yield this.model.create(req.body);
-                console.log("this is the real deal: ", createdBook.id);
+                // console.log("this is the real deal: ", createdBook.id)
                 if (createdBook) {
                     const user = yield user_model_1.default.findById(_id);
                     if (user) {
