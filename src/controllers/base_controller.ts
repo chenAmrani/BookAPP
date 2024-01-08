@@ -61,6 +61,7 @@ export class BaseController<ModelType>{
             }
 
             const obj = await this.model.create(req.body);
+            
             res.status(201).send(obj);
         } catch (err) {
             console.log(err);

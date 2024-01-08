@@ -111,6 +111,7 @@ describe("Book tests", () => {
             .post("/book/")
             .set("Authorization", "JWT " + authorAccessToken)
             .send(book1);
+        console.log("book1: ", book1);
         expect(response.status).toBe(201);
         createdBookId = response.body._id;
         console.log("createdBookId: ", createdBookId);
@@ -183,6 +184,7 @@ describe("Book tests", () => {
         const updatedBookDetails = {
             id: authorUser._id,
             book: {
+                bookId: createdBookId,
                 name: "updateBookName",
                 year: 2020,
                 image: "image1",
