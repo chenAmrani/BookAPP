@@ -207,7 +207,6 @@ describe("Book tests", () => {
     const updatedBookDetails = {
       id: authorUser._id,
       book:{
-      bookId: createdBookId,
       name: "updateBookName",
       year: 2020,
       image: "image1",

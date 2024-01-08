@@ -30,6 +30,7 @@ class bookController extends base_controller_1.BaseController {
             req.body.author = _id;
             const user = yield user_model_1.default.findById({ '_id': req.user._id });
             user.books.push(req.body._id);
+            //need to check why the book is not add to the books array of the user. its add null.
             yield user.save();
             _super.post.call(this, req, res);
         });
