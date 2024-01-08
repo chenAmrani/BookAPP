@@ -3,7 +3,7 @@ import initApp from "../app";
 import mongoose from "mongoose";
 import Book from "../models/book_model";
 import { Express } from "express";
-import User from "../models/user_model";
+import User , {IUser} from "../models/user_model";
 
 let app: Express;
 let authorAccessToken: string;
@@ -11,27 +11,29 @@ let readerAccessToken: string;
 let adminAccessToken: string;
 
 
-const adminUser = {
-  name: "admin1",
+const adminUser : IUser = {
+  name:"name1",
   email: "admin@test.com",
   password: "adminpass",
   role: "admin"
 };
 
-const authorUser = {
-  name: "author1",
+const authorUser : IUser = {
+  name:"name1",
   email: "author@test.com",
   password: "authorpass",
   role: "author"
 };
 
-const readerUser = {
-  name: "reader1",
+const readerUser : IUser = {
+  name:"name1",
   email: "reader@test.com",
   password: "readerpass",
   role: "reader"
 };
 let createdBookId: string;
+let createdBookId2: string;
+let createdBookId3: string;
 
 beforeAll(async () => {
   app = await initApp();
@@ -43,8 +45,10 @@ beforeAll(async () => {
   await request(app).post("/auth/register").send(adminUser);
   const adminResponse = await request(app).post("/auth/login").send(adminUser);
   adminAccessToken = adminResponse.body.accessToken;
+  // console.log("adminAccessToken" + adminAccessToken);
   
-  await request(app).post("/auth/register").send(authorUser);
+  const response = await request(app).post("/auth/register").send(authorUser);
+  authorUser._id = response.body._id;
   const authorResponse = await request(app).post("/auth/login").send(authorUser);
   authorAccessToken = authorResponse.body.accessToken;
 
@@ -77,7 +81,7 @@ const book1: IBook = {
   pages: 100,
   price: 100,
   rating: 5,
-  author: "author1",
+  author: authorUser._id,
   category: "category1",
   summary: "summary1",
   reviews: null,
@@ -89,21 +93,27 @@ const book2: IBook = {
   pages: 100,
   price: 100,
   rating: 5,
-  author: "admin1",
+  author: adminUser._id,
+  category: "category1",
+  summary: "summary1",
+  reviews: null,
+};
+
+const book3: IBook = {
+  name: "book3",
+  year: 2020,
+  image: "image2",
+  pages: 100,
+  price: 100,
+  rating: 5,
+  author: adminUser._id,
   category: "category1",
   summary: "summary1",
   reviews: null,
 };
 
 describe("Book tests", () => {
-  const addBook = async (book: IBook, accessToken: string) => {
-    const response = await request(app)
-      .post("/book")
-      .set("Authorization", "JWT " + accessToken)
-      .send(book);
-    expect(response.status).toBe(201);
-    createdBookId = response.body._id;
-  };
+
 
   test("Test Get All Books - empty response", async () => {
     const response = await request(app)
@@ -114,11 +124,30 @@ describe("Book tests", () => {
   });
 
   test("Test Author Adding Book", async () => {
-    await addBook(book1, authorAccessToken);
+    const response = await request(app)
+    .post("/book/")
+    .set("Authorization", "JWT " + authorAccessToken)
+    .send(book1);
+  expect(response.status).toBe(201);
+  createdBookId = response.body._id;
+  console.log("createdBookId: " , createdBookId);
   });
   test("Test Admin Adding Book", async () => {
-    await addBook(book2, adminAccessToken);
+     const response = await request(app)
+      .post("/book/admin")
+      .set("Authorization", "JWT " + adminAccessToken)
+      .send(book2);
+    expect(response.status).toBe(201);
+    createdBookId2 = response.body._id;
   });
+  test("Test Admin Adding Book", async () => {
+    const response = await request(app)
+     .post("/book/admin")
+     .set("Authorization", "JWT " + adminAccessToken)
+     .send(book3);
+   expect(response.status).toBe(201);
+   createdBookId3 = response.body._id;
+ });
 
   test("Test Reader Adding Book - not allowed", async () => {
     const response = await request(app)
@@ -134,7 +163,7 @@ describe("Book tests", () => {
       .get("/book")
       .set("Authorization", "JWT " + readerAccessToken);
     expect(response.statusCode).toBe(200);
-    expect(response.body.length).toBe(2);
+    expect(response.body.length).toBe(3);
     const rc = response.body[0];
     expect(rc.name).toBe(book1.name);
   });
@@ -144,6 +173,14 @@ describe("Book tests", () => {
   //     .set("Authorization", "JWT " + authorAccessToken);
   //   expect(response.statusCode).toBe(200);
   //   expect(response.body.length).toBe(1);
+  // });
+  // test("Test Get My Books - Success", async () => {
+  //   const response = await request(app).get("/user/books")
+  //   .set("Authorization", "JWT " + authorAccessToken);
+  //   const rc = response.body[0];
+  //   //console.log(rc)
+  //   expect(response.statusCode).toBe(200);
+  //   expect(rc.email).toBe(authorUser.email);
   // });
 
   test("Test Post Duplicate Book", async () => {
@@ -155,13 +192,64 @@ describe("Book tests", () => {
   });
 
   test("Test Admin Deleting Book", async () => {
-    expect(createdBookId).toBeDefined(); // Ensure book ID is available
-
+    expect(createdBookId2).toBeDefined(); // Ensure book ID is available
+    // console.log("bookid:", createdBookId2);
     const deleteResponse = await request(app)
-      .delete(`/book/${createdBookId}`)
+      .delete(`/book/admin/delete/${createdBookId2}`)
       .set("Authorization", "JWT " + adminAccessToken);
 
     expect(deleteResponse.statusCode).toBe(200);
   });
+  test("Test Author Update Own Book - Success", async () => {
+    // Assuming createdBookId is defined and contains a valid book ID
+    const updatedBookDetails = {
+      name: "newBook",
+      year: 2020,
+      image: "image1",
+      pages: 100,
+      price: 100,
+      rating: 5,
+      author: authorUser._id,
+      category: "category1",
+      summary: "summary1",
+      reviews: null,
+    };
+    
+  console.log("authorUser._id: " , authorUser._id);
+    const response = await request(app)
+      .put(`/book/${createdBookId}`) 
+      .set("Authorization", "JWT " + authorAccessToken) 
+      .send(updatedBookDetails);
+  
+    expect(response.statusCode).toBe(200);
+    
+  });
 
+
+
+  test("Test Author Update admin Book - not Success", async () => {
+    // Assuming createdBookId is defined and contains a valid book ID
+    const updatedBookDetails2 = {
+      name: "newBook",
+      year: 2020,
+      image: "image1",
+      pages: 100,
+      price: 100,
+      rating: 5,
+      author: adminUser._id,
+      category: "category1",
+      summary: "summary1",
+      reviews: null,
+    };
+    
+  
+    const response = await request(app)
+      .put(`/book/${createdBookId3}`) 
+      .set("Authorization", "JWT " + authorAccessToken) 
+      .send(updatedBookDetails2);
+  
+    expect(response.statusCode).toBe(403);
+    
+  });
+  
 });

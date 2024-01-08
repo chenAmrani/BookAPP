@@ -23,11 +23,11 @@ const authMiddleware = (req, res, next) => __awaiter(void 0, void 0, void 0, fun
     const decoded = jsonwebtoken_1.default.decode(token);
     const userId = decoded._id;
     const user = yield user_model_1.default.findOne({ _id: userId });
-    if (user.role.match('author') || user.role.match('admin')) {
+    if (user.role.match('author')) {
         next();
     }
     else {
-        return res.status(403).send("Not author");
+        return res.status(403).send("Not admin or author");
     }
 });
 exports.default = authMiddleware;

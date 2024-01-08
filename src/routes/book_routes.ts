@@ -7,18 +7,20 @@ import adminMiddleware from "../common/admin_middleware";
 import verifyOwnership from "../common/veifyOwenership_midleeware";
 
 
+
 router.get("/", authMiddleware, bookController.get.bind(bookController));
 router.get("/:id",authMiddleware, bookController.getById.bind(bookController));
 
 
+// Allow admin to edit and delete any book
+router.put("/admin/update/:id", authMiddleware,adminMiddleware, bookController.putById.bind(bookController));
+router.delete("/admin/delete/:id",authMiddleware,adminMiddleware, bookController.deleteById.bind(bookController));
+router.post("/admin",authMiddleware,adminMiddleware, bookController.post.bind(bookController));
+
+//Allow auther to add,delete and edit his book
+router.put("/:id", authMiddleware,verifyOwnership, bookController.putById.bind(bookController));
+router.delete("/:id",authMiddleware,verifyOwnership, bookController.deleteById.bind(bookController));
 router.post("/",authMiddleware,authorMiddleware, bookController.post.bind(bookController));
 
 
-router.put("/:id", authMiddleware,adminMiddleware, bookController.putById.bind(bookController));
-router.put("/:id", authMiddleware,bookController.putById.bind(bookController));
-
-
-router.delete("/:id",authMiddleware,adminMiddleware, bookController.deleteById.bind(bookController));
-router.delete("/:id",authMiddleware,verifyOwnership, bookController.deleteById.bind(bookController));
-
-export default router; 
+export default router;

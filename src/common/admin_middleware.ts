@@ -15,6 +15,7 @@ const authMiddleware = async (req: AuthRequest, res: Response, next: NextFunctio
   
     const decoded = jwt.decode(token) as { _id: string } | null;
     const userId = decoded._id;
+    
     const user = await User.findOne({_id : userId})
     if(user.role.match('admin'))
     {

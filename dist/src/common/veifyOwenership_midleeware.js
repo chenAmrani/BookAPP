@@ -18,6 +18,7 @@ const verifyUserOwnership = (req, res, next) => __awaiter(void 0, void 0, void 0
     try {
         const { id } = req.body;
         const currentUserId = (_a = req.locals) === null || _a === void 0 ? void 0 : _a.currentUserId;
+        console.log('id:', id);
         if (!id || !currentUserId) {
             return res.status(400).send('User ID and current user ID are required for verification');
         }
