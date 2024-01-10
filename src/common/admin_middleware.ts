@@ -21,6 +21,7 @@ const authMiddleware = async (req: AuthRequest, res: Response, next: NextFunctio
     {
       next();
     }
+  
 
     else {
       return res.status(403).send("Not admin");
