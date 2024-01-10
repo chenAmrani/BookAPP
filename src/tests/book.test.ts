@@ -33,7 +33,7 @@ const readerUser : IUser = {
 };
 let createdBookId: string;
 let createdBookId2: string;
-//let createdBookId3: string;
+let createdBookId3: string;
 
 beforeAll(async () => {
   app = await initApp();
@@ -202,60 +202,60 @@ describe("Book tests", () => {
 
     expect(deleteResponse.statusCode).toBe(200);
   });
-  // test("Test Author Update Own Book - Success", async () => {
-  //   // Assuming createdBookId is defined and contains a valid book ID
-  //   const updatedBookDetails = {
-  //     id: authorUser._id,
-  //     book:{
-  //     bookId: createdBookId,
-  //     name: "updateBookName",
-  //     year: 2020,
-  //     image: "image1",
-  //     pages: 100,
-  //     price: 100,
-  //     rating: 5,
-  //     author: authorUser._id,
-  //     category: "category1",
-  //     summary: "summary1",
-  //     reviews: null,
-  //     }
-  //   };
+  test("Test Author Update Own Book - Success", async () => {
+    // Assuming createdBookId is defined and contains a valid book ID
+    const updatedBookDetails = {
+      id: authorUser._id,
+      book:{
+      bookId: createdBookId,
+      name: "updateBookName",
+      year: 2020,
+      image: "image1",
+      pages: 100,
+      price: 100,
+      rating: 5,
+      author: authorUser._id,
+      category: "category1",
+      summary: "summary1",
+      reviews: null,
+      }
+    };
     
-  // console.log("authorUser._id: " , authorUser._id);
-  //   const response = await request(app)
-  //     .put(`/book/updateOwnBook/${createdBookId}`) 
-  //     .set("Authorization", "JWT " + authorAccessToken) 
-  //     .send(updatedBookDetails);
+  console.log("authorUser._id: " , authorUser._id);
+    const response = await request(app)
+      .put(`/book/updateOwnBook/${createdBookId}`) 
+      .set("Authorization", "JWT " + authorAccessToken) 
+      .send(updatedBookDetails);
   
-  //   expect(response.statusCode).toBe(200);
+    expect(response.statusCode).toBe(200);
     
-  // });
+  });
 
 
 
-  // test("Test Author Update admin Book - not Success", async () => {
-  //   // Assuming createdBookId is defined and contains a valid book ID
-  //   const updatedBookDetails2 = {
-  //     name: "newBook",
-  //     year: 2020,
-  //     image: "image1",
-  //     pages: 100,
-  //     price: 100,
-  //     rating: 5,
-  //     author: adminUser._id,
-  //     category: "category1",
-  //     summary: "summary1",
-  //     reviews: null,
-  //   };
+  test("Test Author Update admin Book - not Success", async () => {
+    // Assuming createdBookId is defined and contains a valid book ID
+    const updatedBookDetails2 = {
+      name: "newBook",
+      year: 2020,
+      image: "image1",
+      pages: 100,
+      price: 100,
+      rating: 5,
+      author: adminUser._id,
+      category: "category1",
+      summary: "summary1",
+      reviews: null,
+    };
     
   
-  //   const response = await request(app)
-  //     .put(`/book/updateOwnBook/${createdBookId3}`) 
-  //     .set("Authorization", "JWT " + authorAccessToken) 
-  //     .send(updatedBookDetails2);
+    const response = await request(app)
+      .put(`/book/updateOwnBook/${createdBookId3}`) 
+      .set("Authorization", "JWT " + authorAccessToken) 
+      .send(updatedBookDetails2);
   
-  //   expect(response.statusCode).toBe(403);
+    expect(response.statusCode).toBe(403);
     
-  // });
+  });
   
 });

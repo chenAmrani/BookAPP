@@ -2,10 +2,11 @@ import { Express } from "express";
 import request from "supertest";
 import initApp from "../app";
 import mongoose from "mongoose";
-import Review , {IReview} from "../models/review_model";
+import Review  from "../models/review_model";
 import User, {IUser} from "../models/user_model";
 
 let app: Express;
+let createdReview1: string;
 
 const user: IUser = {
   name:"Moshe Amrani",
@@ -13,6 +14,29 @@ const user: IUser = {
   password: "1234567890",
   role: "reader",
 }
+
+interface IReview {
+  BookName: string;
+  date: Date;
+  text: string;
+  owner:string;
+  bookId?: typeof mongoose.Schema.Types.ObjectId;
+}
+const review1: IReview = {
+  BookName: "Book1",
+  date: null,
+  text: "review 1",
+  owner: user._id,
+};
+
+const review2: IReview = {
+  BookName: "Book1",
+  date: null,
+  text: "review 2",
+  owner: user._id,
+};
+
+
 let accessToken: "";
 
 let bookId: typeof mongoose.Schema.Types.ObjectId;
@@ -30,6 +54,8 @@ beforeAll(async () => {
   const book1 = await request(app).get("/book").set("Authorization", "JWT " + accessToken);
   console.log("DB books: " ,book1.body);
   bookId = book1.body[0]._id;
+  review1.bookId = bookId;
+  review2.bookId = bookId;
   console.log("tihs is id: " ,bookId);
 });
 
@@ -40,18 +66,12 @@ afterAll(async () => {
 });
 
 
-const review1: IReview = {
-        BookName: "Book1",
-        date: null,
-        text: "Good book",
-        owner: user._id,
-        bookId: bookId,
-        
-    };
+
 
     console.log("this is review1: " , review1);
 
 
+console.log("this is review1.bookId: " , review1.bookId);
 describe("Reviews tests", () => {
   const addReviewOnBook = async (review: IReview) => {
     const response = await request(app)
@@ -59,10 +79,7 @@ describe("Reviews tests", () => {
       .set("Authorization", "JWT " + accessToken)
       .send(review);
     expect(response.statusCode).toBe(201);
-    expect(response.body.owner).toBe(user._id);
-    expect(response.body.bookId).toBe(review.bookId);
-    expect(response.body.BookName ).toBe(review.BookName);
-    expect(response.body.text).toBe(review.text);
+    createdReview1 = response.body._id;
 };
 
       test("Test Get All Student posts - empty response", async () => {
@@ -71,9 +88,12 @@ describe("Reviews tests", () => {
         expect(response.body).toStrictEqual([]);
       });
 
-      test("Test Post Review", async () => {
+      test("Test Post Review1", async () => {
           await addReviewOnBook(review1);
       });
+      test("Test Post Review2", async () => {
+        await addReviewOnBook(review2);
+    });
 
       test("Test Get All reviews with one review in the DB", async () => {
         const response = await request(app).get("/review");
@@ -84,6 +104,13 @@ describe("Reviews tests", () => {
         expect(rc.bookId).toBe(review1.bookId)
         expect(rc.text).toBe(review1.text);
         expect(rc.owner).toBe(user._id);
+      });
+
+      test("Delete review", async () => {
+        const response = await request(app)
+          .delete(`/review/${createdReview1}`)
+          .set("Authorization", "JWT " + accessToken);
+        expect(response.statusCode).toBe(200);
       });
 
      

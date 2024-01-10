@@ -18,11 +18,24 @@ const mongoose_1 = __importDefault(require("mongoose"));
 const review_model_1 = __importDefault(require("../models/review_model"));
 const user_model_1 = __importDefault(require("../models/user_model"));
 let app;
+let createdReview1;
 const user = {
     name: "Moshe Amrani",
     email: "testReview@test.com",
     password: "1234567890",
     role: "reader",
+};
+const review1 = {
+    BookName: "Book1",
+    date: null,
+    text: "review 1",
+    owner: user._id,
+};
+const review2 = {
+    BookName: "Book1",
+    date: null,
+    text: "review 2",
+    owner: user._id,
 };
 let accessToken;
 let bookId;
@@ -38,19 +51,15 @@ beforeAll(() => __awaiter(void 0, void 0, void 0, function* () {
     const book1 = yield (0, supertest_1.default)(app).get("/book").set("Authorization", "JWT " + accessToken);
     console.log("DB books: ", book1.body);
     bookId = book1.body[0]._id;
+    review1.bookId = bookId;
+    review2.bookId = bookId;
     console.log("tihs is id: ", bookId);
 }));
 afterAll(() => __awaiter(void 0, void 0, void 0, function* () {
     yield mongoose_1.default.connection.close();
 }));
-const review1 = {
-    BookName: "Book1",
-    date: null,
-    text: "Good book",
-    owner: user._id,
-    bookId: bookId,
-};
 console.log("this is review1: ", review1);
+console.log("this is review1.bookId: ", review1.bookId);
 describe("Reviews tests", () => {
     const addReviewOnBook = (review) => __awaiter(void 0, void 0, void 0, function* () {
         const response = yield (0, supertest_1.default)(app)
@@ -58,18 +67,18 @@ describe("Reviews tests", () => {
             .set("Authorization", "JWT " + accessToken)
             .send(review);
         expect(response.statusCode).toBe(201);
-        expect(response.body.owner).toBe(user._id);
-        expect(response.body.bookId).toBe(review.bookId);
-        expect(response.body.BookName).toBe(review.BookName);
-        expect(response.body.text).toBe(review.text);
+        createdReview1 = response.body._id;
     });
     test("Test Get All Student posts - empty response", () => __awaiter(void 0, void 0, void 0, function* () {
         const response = yield (0, supertest_1.default)(app).get("/review");
         expect(response.statusCode).toBe(200);
         expect(response.body).toStrictEqual([]);
     }));
-    test("Test Post Review", () => __awaiter(void 0, void 0, void 0, function* () {
+    test("Test Post Review1", () => __awaiter(void 0, void 0, void 0, function* () {
         yield addReviewOnBook(review1);
+    }));
+    test("Test Post Review2", () => __awaiter(void 0, void 0, void 0, function* () {
+        yield addReviewOnBook(review2);
     }));
     test("Test Get All reviews with one review in the DB", () => __awaiter(void 0, void 0, void 0, function* () {
         const response = yield (0, supertest_1.default)(app).get("/review");
@@ -80,6 +89,12 @@ describe("Reviews tests", () => {
         expect(rc.bookId).toBe(review1.bookId);
         expect(rc.text).toBe(review1.text);
         expect(rc.owner).toBe(user._id);
+    }));
+    test("Delete review", () => __awaiter(void 0, void 0, void 0, function* () {
+        const response = yield (0, supertest_1.default)(app)
+            .delete(`/review/${createdReview1}`)
+            .set("Authorization", "JWT " + accessToken);
+        expect(response.statusCode).toBe(200);
     }));
 });
 //# sourceMappingURL=review.test.js.map

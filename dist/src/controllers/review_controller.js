@@ -14,24 +14,70 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const review_model_1 = __importDefault(require("../models/review_model"));
 const base_controller_1 = require("./base_controller");
+const book_model_1 = __importDefault(require("../models/book_model"));
 //import book_model from "../models/book_model";
 class ReviewController extends base_controller_1.BaseController {
     constructor() {
         super(review_model_1.default);
     }
     post(req, res) {
-        const _super = Object.create(null, {
-            post: { get: () => super.post }
-        });
         return __awaiter(this, void 0, void 0, function* () {
-            console.log("review:" + req.body);
             const _id = req.user._id;
             req.body.owner = _id;
-            // const bookID = req.body.bookId;  // Assuming bookID is the review ObjectId
-            // const book = await book_model.findById({ '_id': bookID});
-            // await book.reviews.push(bookID);
-            // await book.save();
-            _super.post.call(this, req, res);
+            console.log("hiiiiiiiiiiiiiiii");
+            console.log("req.body: ", req.body);
+            const createReview = yield review_model_1.default.create(req.body);
+            const bookId = createReview.bookId;
+            console.log("createReview: ", createReview);
+            console.log("the book id is: ", bookId.toString());
+            if (createReview) {
+                const book = yield book_model_1.default.findById(bookId.toString());
+                console.log("book: ", book);
+                if (book) {
+                    console.log("The id of the created reviwe  " + createReview.id);
+                    if (!book.reviews) {
+                        book.reviews = [];
+                    }
+                    book.reviews.push(createReview.id);
+                    yield book.save();
+                    res.status(201).send(createReview);
+                }
+                else {
+                    res.status(404).send("book not found");
+                    return;
+                }
+            }
+            else {
+                res.status(500).send("Error creating review");
+                return;
+            }
+        });
+    }
+    catch(error) {
+        console.log(error);
+        //res.status(500).json({ message: error.message });
+    }
+    deleteById(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                console.log("req.params.id: ", req.params.id);
+                const review = yield review_model_1.default.findById(req.params.id);
+                if (!review) {
+                    res.status(404).send("Review not found");
+                    return;
+                }
+                const book = yield book_model_1.default.findById(review.bookId);
+                if (!book) {
+                    res.status(404).send("Book not found");
+                    return;
+                }
+                yield book_model_1.default.updateOne({ _id: book._id }, { $pull: { reviews: req.params.id } });
+                yield review_model_1.default.findByIdAndDelete(req.params.id);
+                res.status(200).send("OK");
+            }
+            catch (err) {
+                res.status(406).send("Fail: " + err.message);
+            }
         });
     }
 }
