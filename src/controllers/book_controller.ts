@@ -53,12 +53,26 @@ class bookController extends BaseController<IBook> {
         }
 
         
-    async putById(req: AuthRequest, res: Response) {
-        // console.log("bookput:" + req.body);
-        const _id = req.params.id;
-        req.body._id = _id;
-        super.putById(req, res);
-    }
+        async putById(req: AuthRequest, res: Response) {
+            try {
+                const id = req.params.id;
+                console.log("The id is: " + id);
+                const obj = req.body;
+                console.log("The obj is: " + obj);
+                const updatedBook = await this.model.findByIdAndUpdate(id, obj, { new: true });
+                console.log("The updatedBook is: " + updatedBook);
+                // await this.model.findByIdAndUpdate(req.params.id, req.body, { new: true });
+                // await this.model.findByIdAndUpdate(req.params.id, req.body);
+                // const obj = await this.model.findById(req.body._id);
+                // console.log("The objjjj is: " + obj);
+                console.log("The updatedBook is: " + updatedBook);
+                res.status(200).send(updatedBook);
+    
+            } catch (err) {
+                console.log(err);
+                res.status(406).send("fail: " + err.message);
+            }
+        }
 }
 
    

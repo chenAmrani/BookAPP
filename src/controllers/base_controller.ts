@@ -38,7 +38,6 @@ export class BaseController<ModelType>{
     }
 
     async getById(req: Request, res: Response) {
-        console.log("getById:" + req.params.id);
         try {
             const student = await this.model.findById(req.params.id);
             res.send(student);
@@ -74,7 +73,10 @@ export class BaseController<ModelType>{
     async putById(req: Request, res: Response) {
         try {
             const { id, obj } = req.body;
+            console.log("The id is: " + id);
+            console.log("The obj is: " + obj);
             const updatedBook = await this.model.findByIdAndUpdate(id, obj, { new: true });
+            console.log("The updatedBook is: " + updatedBook);
             // await this.model.findByIdAndUpdate(req.params.id, req.body, { new: true });
             // await this.model.findByIdAndUpdate(req.params.id, req.body);
             // const obj = await this.model.findById(req.body._id);

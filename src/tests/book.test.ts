@@ -34,33 +34,6 @@ const readerUser : IUser = {
 let createdBookId: string;
 let createdBookId2: string;
 let createdBookId3: string;
-
-beforeAll(async () => {
-  app = await initApp();
-  console.log("beforeAll");
-  await Book.deleteMany();
-  
-  await User.deleteMany({});
-
-  await request(app).post("/auth/register").send(adminUser);
-  const adminResponse = await request(app).post("/auth/login").send(adminUser);
-  adminAccessToken = adminResponse.body.accessToken;
-  // console.log("adminAccessToken" + adminAccessToken);
-  
-  const response = await request(app).post("/auth/register").send(authorUser);
-  authorUser._id = response.body._id;
-  const authorResponse = await request(app).post("/auth/login").send(authorUser);
-  authorAccessToken = authorResponse.body.accessToken;
-
-  await request(app).post("/auth/register").send(readerUser);
-  const readerResponse = await request(app).post("/auth/login").send(readerUser);
-  readerAccessToken = readerResponse.body.accessToken;
-});
-
-afterAll(async () => {
-  await mongoose.connection.close();
-});
-
 interface IBook {
   id?: string;
   name: string;
@@ -69,7 +42,7 @@ interface IBook {
   pages: number;
   price: number;
   rating: number;
-  author: string;
+  author?: string;
   category: string;
   summary: string;
   reviews: typeof mongoose.Schema.Types.ObjectId;
@@ -82,7 +55,6 @@ const book1: IBook = {
   pages: 100,
   price: 100,
   rating: 5,
-  author: authorUser._id,
   category: "category1",
   summary: "summary1",
   reviews: null,
@@ -94,7 +66,6 @@ const book2: IBook = {
   pages: 100,
   price: 100,
   rating: 5,
-  author: adminUser._id,
   category: "category1",
   summary: "summary1",
   reviews: null,
@@ -107,11 +78,43 @@ const book3: IBook = {
   pages: 100,
   price: 100,
   rating: 5,
-  author: adminUser._id,
   category: "category1",
   summary: "summary1",
   reviews: null,
 };
+
+
+beforeAll(async () => {
+  app = await initApp();
+  console.log("beforeAll");
+  await Book.deleteMany();
+  
+  await User.deleteMany({});
+
+  const adminResponse = await request(app).post("/auth/register").send(adminUser);
+  const adminAcscessToken = await request(app).post("/auth/login").send(adminUser);
+  adminUser._id = adminResponse.body._id;
+  adminAccessToken = adminAcscessToken.body.accessToken;
+  console.log("adminUser._id: " , adminUser._id);
+  book2.author = adminUser._id;
+  book3.author = adminUser._id;
+  console.log("adminAccessToken" + adminAccessToken);
+  
+  const response = await request(app).post("/auth/register").send(authorUser);
+  authorUser._id = response.body._id;
+  const authorResponse = await request(app).post("/auth/login").send(authorUser);
+  authorAccessToken = authorResponse.body.accessToken;
+  book1.author = authorUser._id;
+
+  await request(app).post("/auth/register").send(readerUser);
+  const readerResponse = await request(app).post("/auth/login").send(readerUser);
+  readerAccessToken = readerResponse.body.accessToken;
+});
+
+afterAll(async () => {
+  await mongoose.connection.close();
+});
+
 
 describe("Book tests", () => {
 
@@ -136,7 +139,7 @@ describe("Book tests", () => {
   });
   test("Test Admin Adding Book", async () => {
      const response = await request(app)
-      .post("/book/admin")
+      .post("/book/admin/")
       .set("Authorization", "JWT " + adminAccessToken)
       .send(book2);
     expect(response.status).toBe(201);
@@ -160,7 +163,7 @@ describe("Book tests", () => {
   });
 
   // Check if the book1 is added to the database
-  test("Test Get All Books in DB", async () => {
+  test("Test Get All Books in DB - 3 books before delete book2", async () => {
     const response = await request(app)
       .get("/book")
       .set("Authorization", "JWT " + readerAccessToken);
@@ -205,9 +208,6 @@ describe("Book tests", () => {
   test("Test Author Update Own Book - Success", async () => {
     // Assuming createdBookId is defined and contains a valid book ID
     const updatedBookDetails = {
-      id: authorUser._id,
-      book:{
-      bookId: createdBookId,
       name: "updateBookName",
       year: 2020,
       image: "image1",
@@ -218,7 +218,6 @@ describe("Book tests", () => {
       category: "category1",
       summary: "summary1",
       reviews: null,
-      }
     };
     
   console.log("authorUser._id: " , authorUser._id);
@@ -234,7 +233,6 @@ describe("Book tests", () => {
 
 
   test("Test Author Update admin Book - not Success", async () => {
-    // Assuming createdBookId is defined and contains a valid book ID
     const updatedBookDetails2 = {
       name: "newBook",
       year: 2020,

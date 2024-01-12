@@ -102,7 +102,7 @@ const deleteUser = async (req: Request, res: Response): Promise<void> => {
 
 
 const updateOwnProfile = async (req: CustomRequest, res: Response): Promise<void> => {
-
+    console.log("req.locals`:", req.locals);
     const { currentUserId } = req.locals;
 
     if (!currentUserId) {
