@@ -72,12 +72,7 @@ const updateUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
 });
 const deleteUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { id } = req.params;
-        if (!id) {
-            res.status(400).send('User ID is required for deletion');
-            return;
-        }
-        const deletedUser = yield user_model_1.default.findByIdAndDelete(id);
+        const deletedUser = yield user_model_1.default.findByIdAndDelete(req.params.id);
         if (!deletedUser) {
             res.status(404).send('User not found');
             return;

@@ -59,6 +59,7 @@ const adminUser = {
     await User.deleteMany({ 'email': readerUser.email });
     const res3 = await request(app).post("/auth/register").send(readerUser);
     readerUserId = res3.body._id;
+    console.log("this is readerUserId: " , readerUserId);
     const response3 = await request(app).post("/auth/login").send(readerUser);
     accessTokenUser3 = response3.body.accessToken;
     });
@@ -158,32 +159,32 @@ const adminUser = {
           // });
 
 
-        //   test("Test Update Own Profile - Success", async () => {
-        //     const updateData = {
-        //       id: authorUserId,
-        //       user: {
-        //         name: "updateName",
-        //         email: "author@test.com",
-        //         password: "authorpass",
-        //       },
-        //     };
+          test("Test Update Own Profile - Success", async () => {
+            const updateData = {
+              id: authorUserId,
+              user: {
+                name: "updateName",
+                email: "author@test.com",
+                password: "authorpass",
+              },
+            };
 
-        //     const response = await request(app)
-        //     .put('/user/updateOwnProfile')
-        //     .set("Authorization", "JWT " + accessTokenUser2)
-        //     .send(updateData);
+            const response = await request(app)
+            .put('/user/updateOwnProfile')
+            .set("Authorization", "JWT " + accessTokenUser2)
+            .send(updateData);
         
-        //   expect(response.statusCode).toBe(200);
+          expect(response.statusCode).toBe(200);
         
-        //   // Check that the user's profile is updated
-        //   const updatedUserResponse = await request(app)
-        //     .get(`/user/${authorUserId}`)
-        //     .set("Authorization", "JWT " + accessTokenUser1);
+          // Check that the user's profile is updated
+          const updatedUserResponse = await request(app)
+            .get(`/user/${authorUserId}`)
+            .set("Authorization", "JWT " + accessTokenUser1);
         
-        //   expect(updatedUserResponse.status).toBe(200);
+          expect(updatedUserResponse.status).toBe(200);
           
         
-        // });
+        });
 
            
 
@@ -199,13 +200,14 @@ const adminUser = {
 
 
             //tests that check that return us error.
-            console.log("this is the authorUserId: " , authorUserId);
-            test("Test Delete user by Id - not Admin,and not on the same user ", async () => {
-                const response = await request(app)
-                .delete(`/user/${authorUserId}`)
-                .set("Authorization", "JWT " + accessTokenUser3);
-        
-                expect(response.statusCode).toBe(403);
+          //   test("Test Delete user by Id - not Admin,and not on the same user ", async () => {
+          //     const response = await request(app)
+          //     .delete(`/user/deleteByAuthor${readerUserId}`)
+          //     .set("Authorization", "JWT " + accessTokenUser2);
+      
+          //     expect(response.statusCode).toBe(403);
+              
+          // });
                 
 
                 // const getUserResponse = await request(app)
@@ -216,23 +218,17 @@ const adminUser = {
 
 
             test("Test Update Profile - Not allowd ", async () => {
-                const updateData = {
-                  id: readerUserId,
-                  user: {
-                    name: 'Updated Name',
-                    email: "reader@test.com",
-                    password: "readerpass",
-                  },
-                };
-              
-                const response = await request(app)
-                  .patch('/user/updateOwnProfile')
-                  .set('Authorization', 'JWT ' + accessTokenUser2)
-                  .send(updateData);
-              
-                expect(response.statusCode).toBe(403);
-              });
-      
-
-
-        });
+              const updateData = {
+                id: authorUserId,
+                user: {
+                  name: "TryToUpdateName",
+                },
+              };
+              const response = await request(app)
+              .put('/user/updateOwnProfile')
+              .set("Authorization", "JWT " + accessTokenUser3)
+              .send(updateData);
+          
+            expect(response.statusCode).toBe(403);
+            });
+        

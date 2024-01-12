@@ -16,7 +16,7 @@ router.put("/update", auth_middleware_1.default, admin_middleware_1.default, use
 router.delete("/delete/:id", auth_middleware_1.default, admin_middleware_1.default, user_controller_1.default.deleteUser);
 //author
 router.get("/books", auth_middleware_1.default, user_controller_1.default.getMyBooks);
-router.delete("/:id", auth_middleware_1.default, veifyUserOwenr_midleeware_1.default, user_controller_1.default.deleteUser);
+router.delete("/deleteByAuthor/:id", auth_middleware_1.default, veifyUserOwenr_midleeware_1.default, user_controller_1.default.deleteUser);
 //updating the user profile by himself.
 router.put("/updateOwnProfile", auth_middleware_1.default, veifyUserOwenr_midleeware_1.default, user_controller_1.default.updateOwnProfile);
 //get user by email

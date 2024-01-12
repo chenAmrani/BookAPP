@@ -80,13 +80,9 @@ const updateUser = async (req: Request, res: Response): Promise<void> => {
 
 const deleteUser = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { id } = req.params;
-    if (!id) {
-      res.status(400).send('User ID is required for deletion');
-      return;
-    }
+    
 
-    const deletedUser = await User.findByIdAndDelete(id);
+    const deletedUser = await User.findByIdAndDelete(req.params.id);
 
     if (!deletedUser) {
       res.status(404).send('User not found');

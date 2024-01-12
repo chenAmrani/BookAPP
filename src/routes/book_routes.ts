@@ -4,7 +4,7 @@ import bookController from "../controllers/book_controller";
 import authMiddleware from "../common/auth_middleware";
 import authorMiddleware from "../common/author_middleware";
 import adminMiddleware from "../common/admin_middleware";
-import verifyBookOwner from "../common/verifyBookOwner";
+import verifyBookOwner from "../common/verifyOwnerBook";
 
 
 

@@ -13,7 +13,7 @@ router.delete("/delete/:id",authMiddleware,adminMiddleware,UserController.delete
 
 //author
 router.get("/books",authMiddleware,UserController.getMyBooks);
-router.delete("/:id",authMiddleware,verifyUserOwenerMiddleware,UserController.deleteUser);
+router.delete("/deleteByAuthor/:id",authMiddleware,verifyUserOwenerMiddleware,UserController.deleteUser);
 
 
 //updating the user profile by himself.

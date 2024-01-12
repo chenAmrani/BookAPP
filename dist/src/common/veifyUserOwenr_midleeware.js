@@ -18,13 +18,16 @@ const verifyUserOwner = (req, res, next) => __awaiter(void 0, void 0, void 0, fu
     try {
         const { id } = req.body;
         const currentUserId = (_a = req.locals) === null || _a === void 0 ? void 0 : _a.currentUserId;
-        console.log("this is the id: " + id);
-        console.log("this is the currentUserId: " + currentUserId);
+        console.log("this is the id test 2: " + id);
+        console.log("this is the currentUserId test 2: " + currentUserId);
         if (!id || !currentUserId) {
+            console.log("you have a problem here");
             return res.status(400).send('User ID and current user ID are required for verification');
         }
         const user = yield user_model_1.default.findById(id);
+        console.log("this is the user: " + user);
         if (!user || user._id.toString() !== currentUserId) {
+            console.log("im hereeeeeeeeeeee1");
             return res.status(403).send('You do not have permission to modify this user');
         }
         next();
