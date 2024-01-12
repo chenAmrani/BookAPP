@@ -4,7 +4,7 @@ import bookController from "../controllers/book_controller";
 import authMiddleware from "../common/auth_middleware";
 import authorMiddleware from "../common/author_middleware";
 import adminMiddleware from "../common/admin_middleware";
-import verifyOwnership from "../common/veifyOwenership_midleeware";
+import verifyBookOwner from "../common/verifyBookOwner";
 
 
 
@@ -18,8 +18,8 @@ router.delete("/admin/delete/:id",authMiddleware,adminMiddleware, bookController
 router.post("/admin",authMiddleware,adminMiddleware, bookController.post.bind(bookController));
 
 //Allow auther to add,delete and edit his book
-router.put("/updateOwnBook/:id", authMiddleware,verifyOwnership, bookController.putById.bind(bookController));
-router.delete("/:id",authMiddleware,verifyOwnership, bookController.deleteById.bind(bookController));
+router.put("/updateOwnBook/:id", authMiddleware,verifyBookOwner, bookController.putById.bind(bookController));
+router.delete("/:id",authMiddleware,verifyBookOwner, bookController.deleteById.bind(bookController));
 router.post("/",authMiddleware,authorMiddleware, bookController.post.bind(bookController));
 
 

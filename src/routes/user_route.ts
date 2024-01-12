@@ -1,7 +1,7 @@
 import express from "express";
 import UserController from '../controllers/user_controller';
 import authMiddleware from '../common/auth_middleware';
-import verifyOwenershipMiddleware from '../common/veifyOwenership_midleeware';
+import verifyUserOwenerMiddleware from '../common/veifyUserOwenr_midleeware';
 import adminMiddleware from '../common/admin_middleware';
 
 const router = express.Router();
@@ -13,11 +13,11 @@ router.delete("/delete/:id",authMiddleware,adminMiddleware,UserController.delete
 
 //author
 router.get("/books",authMiddleware,UserController.getMyBooks);
-router.delete("/:id",authMiddleware,verifyOwenershipMiddleware,UserController.deleteUser);
+router.delete("/:id",authMiddleware,verifyUserOwenerMiddleware,UserController.deleteUser);
 
 
 //updating the user profile by himself.
-router.put("/updateOwnProfile", authMiddleware,verifyOwenershipMiddleware,UserController.updateOwnProfile);
+router.put("/updateOwnProfile", authMiddleware,verifyUserOwenerMiddleware,UserController.updateOwnProfile);
 
 
 

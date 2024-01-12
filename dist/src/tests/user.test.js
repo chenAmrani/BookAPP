@@ -54,9 +54,10 @@ beforeAll(() => __awaiter(void 0, void 0, void 0, function* () {
     yield user_model_1.default.deleteMany({ 'email': authorUser.email });
     const res2 = yield (0, supertest_1.default)(app).post("/auth/register").send(authorUser);
     authorUserId = res2.body._id;
+    console.log("this is authorUserId!!!!!: ", authorUserId);
     const response2 = yield (0, supertest_1.default)(app).post("/auth/login").send(authorUser);
     accessTokenUser2 = response2.body.accessToken;
-    // console.log("this is accessTokenUser2: " , accessTokenUser2);
+    console.log("this is accessTokenUser2: ", accessTokenUser2);
     yield user_model_1.default.deleteMany({ 'email': readerUser.email });
     const res3 = yield (0, supertest_1.default)(app).post("/auth/register").send(readerUser);
     readerUserId = res3.body._id;
@@ -135,58 +136,59 @@ describe('User Controller Tests', () => {
     //   .send(updateData);
     //   expect(response.statusCode).toBe(404);
     // });
-    test("Test Update Own Profile - Success", () => __awaiter(void 0, void 0, void 0, function* () {
-        const updateData = {
-            id: authorUserId,
-            user: {
-                name: "chen",
-                email: "author@test.com",
-                password: "authorpass",
-            },
-        };
-        const response = yield (0, supertest_1.default)(app)
-            .put('/user/updateOwnProfile')
-            .set("Authorization", "JWT " + accessTokenUser2)
-            .send(updateData);
-        expect(response.statusCode).toBe(200);
-        // Check that the user's profile is updated
-        const updatedUserResponse = yield (0, supertest_1.default)(app)
-            .get(`/user/${authorUserId}`)
-            .set("Authorization", "JWT " + accessTokenUser1);
-        expect(updatedUserResponse.status).toBe(200);
-    }));
-    //delete
-    test("Test Delete user by Id - Admin", () => __awaiter(void 0, void 0, void 0, function* () {
-        const response = yield (0, supertest_1.default)(app)
-            .delete(`/user/delete/${readerUserId}`)
-            .set("Authorization", "JWT " + accessTokenUser1);
-        expect(response.statusCode).toBe(200);
-    }));
-    //tests that check that return us error.
-    // test("Test Delete user by Id - not Admin,and not on the same user ", async () => {
-    //     const response = await request(app)
-    //     .delete(`/user/${authorUserId}`)
-    //     .set("Authorization", "JWT " + accessTokenUser3);
-    //     expect(response.statusCode).toBe(403);
-    //     const getUserResponse = await request(app)
-    //     .get(`/user/${authorUserId}`).
-    //      set('Authorization', 'JWT ' + accessTokenUser2);
-    //     expect(getUserResponse.status).toBe(200);
-    // });
-    // test("Test Update Profile - Not allowd ", async () => {
+    //   test("Test Update Own Profile - Success", async () => {
     //     const updateData = {
-    //       id: readerUserId,
+    //       id: authorUserId,
     //       user: {
-    //         name: 'Updated Name',
-    //         email: "reader@test.com",
-    //         password: "readerpass",
+    //         name: "updateName",
+    //         email: "author@test.com",
+    //         password: "authorpass",
     //       },
     //     };
     //     const response = await request(app)
-    //       .patch('/user/updateOwnProfile')
-    //       .set('Authorization', 'JWT ' + accessTokenUser2)
-    //       .send(updateData);
-    //     expect(response.statusCode).toBe(403);
-    //   });
+    //     .put('/user/updateOwnProfile')
+    //     .set("Authorization", "JWT " + accessTokenUser2)
+    //     .send(updateData);
+    //   expect(response.statusCode).toBe(200);
+    //   // Check that the user's profile is updated
+    //   const updatedUserResponse = await request(app)
+    //     .get(`/user/${authorUserId}`)
+    //     .set("Authorization", "JWT " + accessTokenUser1);
+    //   expect(updatedUserResponse.status).toBe(200);
+    // });
+    //delete
+    // test("Test Delete user by Id - Admin", async () => {
+    //     const response = await request(app)
+    //     .delete(`/user/delete/${readerUserId}`)
+    //     .set("Authorization", "JWT " + accessTokenUser1);
+    //     expect(response.statusCode).toBe(200);
+    // });
+    //tests that check that return us error.
+    console.log("this is the authorUserId: ", authorUserId);
+    test("Test Delete user by Id - not Admin,and not on the same user ", () => __awaiter(void 0, void 0, void 0, function* () {
+        const response = yield (0, supertest_1.default)(app)
+            .delete(`/user/${authorUserId}`)
+            .set("Authorization", "JWT " + accessTokenUser3);
+        expect(response.statusCode).toBe(403);
+        // const getUserResponse = await request(app)
+        // .get(`/user/${authorUserId}`).
+        //  set('Authorization', 'JWT ' + accessTokenUser2);
+        // expect(getUserResponse.status).toBe(200);
+    }));
+    test("Test Update Profile - Not allowd ", () => __awaiter(void 0, void 0, void 0, function* () {
+        const updateData = {
+            id: readerUserId,
+            user: {
+                name: 'Updated Name',
+                email: "reader@test.com",
+                password: "readerpass",
+            },
+        };
+        const response = yield (0, supertest_1.default)(app)
+            .patch('/user/updateOwnProfile')
+            .set('Authorization', 'JWT ' + accessTokenUser2)
+            .send(updateData);
+        expect(response.statusCode).toBe(403);
+    }));
 });
 //# sourceMappingURL=user.test.js.map

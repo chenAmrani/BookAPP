@@ -59,14 +59,25 @@ class bookController extends base_controller_1.BaseController {
         });
     }
     putById(req, res) {
-        const _super = Object.create(null, {
-            putById: { get: () => super.putById }
-        });
         return __awaiter(this, void 0, void 0, function* () {
-            // console.log("bookput:" + req.body);
-            const _id = req.params.id;
-            req.body._id = _id;
-            _super.putById.call(this, req, res);
+            try {
+                const id = req.params.id;
+                console.log("The id is: " + id);
+                const obj = req.body;
+                console.log("The obj is: " + obj);
+                const updatedBook = yield this.model.findByIdAndUpdate(id, obj, { new: true });
+                console.log("The updatedBook is: " + updatedBook);
+                // await this.model.findByIdAndUpdate(req.params.id, req.body, { new: true });
+                // await this.model.findByIdAndUpdate(req.params.id, req.body);
+                // const obj = await this.model.findById(req.body._id);
+                // console.log("The objjjj is: " + obj);
+                console.log("The updatedBook is: " + updatedBook);
+                res.status(200).send(updatedBook);
+            }
+            catch (err) {
+                console.log(err);
+                res.status(406).send("fail: " + err.message);
+            }
         });
     }
 }

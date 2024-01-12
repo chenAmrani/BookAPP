@@ -90,6 +90,7 @@ const deleteUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     }
 });
 const updateOwnProfile = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    console.log("req.locals`:", req.locals);
     const { currentUserId } = req.locals;
     if (!currentUserId) {
         console.log("this is here");

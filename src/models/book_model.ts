@@ -7,7 +7,7 @@ export interface IBook {
   pages: number;
   price: number;
   rating: number;
-  author: mongoose.Schema.Types.ObjectId;
+  author?: mongoose.Schema.Types.ObjectId;
   category: string;
   summary: string;
   reviews: typeof mongoose.Schema.Types.ObjectId[];
