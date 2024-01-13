@@ -35,6 +35,4 @@ const authMiddleware = async (req: AuthRequest, res: Response, next: NextFunctio
     res.status(500).send('Internal Server Error');
 }
 }
-
-
 export default authMiddleware;

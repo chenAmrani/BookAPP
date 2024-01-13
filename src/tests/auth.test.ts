@@ -6,6 +6,7 @@ import User from "../models/user_model";
 
 let app: Express;
 const user = {
+  name: "name1",
   email: "Admin@test.com",
   password: "123456789",
   role: "admin",
@@ -111,7 +112,7 @@ describe("Auth tests", () => {
       .send();
     expect(response.statusCode).not.toBe(200);
 
-    //verify that the new token is not valid as well
+
     const response1 = await request(app)
       .get("/auth/refresh")
       .set("Authorization", "JWT " + newRefreshToken)

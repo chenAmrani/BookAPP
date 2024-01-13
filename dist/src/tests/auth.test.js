@@ -18,6 +18,7 @@ const mongoose_1 = __importDefault(require("mongoose"));
 const user_model_1 = __importDefault(require("../models/user_model"));
 let app;
 const user = {
+    name: "name1",
     email: "Admin@test.com",
     password: "123456789",
     role: "admin",
