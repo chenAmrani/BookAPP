@@ -25,7 +25,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>10/10</span>
+                <span class='fraction'>16/16</span>
             </div>
         
             
@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>10/10</span>
+                <span class='fraction'>16/16</span>
             </div>
         
             
@@ -79,46 +79,73 @@
 <a name='L14'></a><a href='#L14'>14</a>
 <a name='L15'></a><a href='#L15'>15</a>
 <a name='L16'></a><a href='#L16'>16</a>
-<a name='L17'></a><a href='#L17'>17</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-yes">3x</span>
+<a name='L17'></a><a href='#L17'>17</a>
+<a name='L18'></a><a href='#L18'>18</a>
+<a name='L19'></a><a href='#L19'>19</a>
+<a name='L20'></a><a href='#L20'>20</a>
+<a name='L21'></a><a href='#L21'>21</a>
+<a name='L22'></a><a href='#L22'>22</a>
+<a name='L23'></a><a href='#L23'>23</a>
+<a name='L24'></a><a href='#L24'>24</a>
+<a name='L25'></a><a href='#L25'>25</a>
+<a name='L26'></a><a href='#L26'>26</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import express from "express";
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span></td><td class="text"><pre class="prettyprint lang-js">import express from "express";
 const router = express.Router();
 import bookController from "../controllers/book_controller";
 import authMiddleware from "../common/auth_middleware";
+import authorMiddleware from "../common/author_middleware";
+import adminMiddleware from "../common/admin_middleware";
+import verifyBookOwner from "../common/verifyOwnerBook";
+&nbsp;
+&nbsp;
 &nbsp;
 router.get("/", authMiddleware, bookController.get.bind(bookController));
-&nbsp;
 router.get("/:id",authMiddleware, bookController.getById.bind(bookController));
 &nbsp;
-router.post("/",authMiddleware, bookController.post.bind(bookController));
 &nbsp;
-router.put("/:id", authMiddleware, bookController.putById.bind(bookController));
+// Allow admin to edit and delete any book
+router.put("/admin/update/:id", authMiddleware,adminMiddleware, bookController.putById.bind(bookController));
+router.delete("/admin/delete/:id",authMiddleware,adminMiddleware, bookController.deleteById.bind(bookController));
+router.post("/admin",authMiddleware,adminMiddleware, bookController.post.bind(bookController));
 &nbsp;
-router.delete("/:id",authMiddleware, bookController.deleteById.bind(bookController));
+//Allow auther to add,delete and edit his book
+router.put("/updateOwnBook/:id", authMiddleware,verifyBookOwner, bookController.putById.bind(bookController));
+router.delete("/:id",authMiddleware,verifyBookOwner, bookController.deleteById.bind(bookController));
+router.post("/",authMiddleware,authorMiddleware, bookController.post.bind(bookController));
 &nbsp;
-export default router; 
-&nbsp;</pre></td></tr></table></pre>
+&nbsp;
+export default router;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
             </div><!-- /wrapper -->
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2024-01-02T14:35:13.725Z
+                at 2024-01-13T07:54:12.175Z
             </div>
         <script src="../../prettify.js"></script>
         <script>
