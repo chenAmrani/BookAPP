@@ -114,7 +114,7 @@ const adminUser = {
             .send(updateData);
       
             expect(response.statusCode).toBe(200);
-            // expect(response.body.name).toBe("Chen Amrani");
+            
           });
 
 
@@ -176,7 +176,7 @@ const adminUser = {
         
           expect(response.statusCode).toBe(200);
         
-          // Check that the user's profile is updated
+          
           const updatedUserResponse = await request(app)
             .get(`/user/${authorUserId}`)
             .set("Authorization", "JWT " + accessTokenUser1);
