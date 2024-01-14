@@ -108,7 +108,6 @@ describe("Auth tests", () => {
             .set("Authorization", "JWT " + refreshToken)
             .send();
         expect(response.statusCode).not.toBe(200);
-        //verify that the new token is not valid as well
         const response1 = yield (0, supertest_1.default)(app)
             .get("/auth/refresh")
             .set("Authorization", "JWT " + newRefreshToken)

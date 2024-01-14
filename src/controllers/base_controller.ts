@@ -39,8 +39,8 @@ export class BaseController<ModelType>{
 
     async getById(req: Request, res: Response) {
         try {
-            const student = await this.model.findById(req.params.id);
-            res.send(student);
+            const book = await this.model.findById(req.params.id);
+            res.send(book)  ;
         } catch (err) {
             res.status(500).json({ message: err.message });
         }
