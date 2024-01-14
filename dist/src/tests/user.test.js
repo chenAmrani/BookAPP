@@ -104,7 +104,6 @@ describe('User Controller Tests', () => {
             .set("Authorization", "JWT " + accessTokenUser1)
             .send(updateData);
         expect(response.statusCode).toBe(200);
-        // expect(response.body.name).toBe("Chen Amrani");
     }));
     test("Test Update - not Admin , and not on the same user", () => __awaiter(void 0, void 0, void 0, function* () {
         const updateData = {
@@ -151,7 +150,6 @@ describe('User Controller Tests', () => {
             .set("Authorization", "JWT " + accessTokenUser2)
             .send(updateData);
         expect(response.statusCode).toBe(200);
-        // Check that the user's profile is updated
         const updatedUserResponse = yield (0, supertest_1.default)(app)
             .get(`/user/${authorUserId}`)
             .set("Authorization", "JWT " + accessTokenUser1);
