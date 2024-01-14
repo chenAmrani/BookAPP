@@ -59,7 +59,7 @@ import authMiddleware from "../common/auth_middleware";
 
 /**
  * @swagger
- * /reviews:
+ * /review:
  *   get:
  *     summary: Get a list of all reviews
  *     tags: [Reviews]
@@ -105,7 +105,7 @@ import authMiddleware from "../common/auth_middleware";
 
 /**
  * @swagger
- * /reviews/{id}:
+ * /review/{id}:
  *   get:
  *     summary: Get details of a specific review
  *     tags: [Reviews]

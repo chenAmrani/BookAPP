@@ -47,7 +47,7 @@ import authController from "../controllers/auth_controller";
  *         name: 'bob'
  *         email: 'bob@gmail.com'
  *         password: '123456'
- *         role: 'admin'
+ *         role: 'author'
  */
 
 /**
@@ -82,18 +82,18 @@ router.post("/register", authController.register);
 *       Tokens:
 *           type: object
 *           required:
-*               - accessToken
-*               - refreshToken
+*             - accessToken
+*             - refreshToken
 *           properties:
-*               accessToken:
-*                   type: string
-*                   description: The JWT access token
-*               refreshToken:
-*                   type: string
-*                   description: The JWT refresh token
+*             accessToken:
+*               type: string
+*               description: The JWT access token
+*             refreshToken:
+*               type: string
+*               description: The JWT refresh token
 *           example:
-*               accessToken: '123cd123x1xx1'
-*               refreshToken: '134r2134cr1x3c'
+*             accessToken: '123cd123x1xx1'
+*             refreshToken: '134r2134cr1x3c'
 */
 
 
