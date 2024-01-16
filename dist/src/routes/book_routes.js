@@ -85,7 +85,7 @@ const verifyBookOwner_1 = __importDefault(require("../common/verifyBookOwner"));
  *         pages: 100
  *         price: 100
  *         rating: 5
- *         author: '65a582820b50e365c925d0cf'
+ *         author: '65a639239dd9ed21c708bbe3'
  *         category: 'category1'
  *         summary: 'summary1'
  *         reviews: []
