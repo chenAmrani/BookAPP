@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 
+
 export interface IBook {
   name: string;
   year: number;
@@ -7,10 +8,10 @@ export interface IBook {
   pages: number;
   price: number;
   rating: number;
-  author?: mongoose.Schema.Types.ObjectId;
+  author: mongoose.Schema.Types.ObjectId;
   category: string;
   summary: string;
-  reviews: typeof mongoose.Schema.Types.ObjectId[];
+  reviews: (typeof mongoose.Schema.Types.ObjectId)[];
 }
 
 const bookSchema = new mongoose.Schema<IBook>({
@@ -18,13 +19,13 @@ const bookSchema = new mongoose.Schema<IBook>({
     type: String,
     required: true,
   },
-  year:{
+  year: {
     type: Number,
-    required: true
+    required: true,
   },
-  image:{
+  image: {
     type: String,
-    required: true
+    required: true,
   },
   pages: {
     type: Number,
@@ -32,32 +33,80 @@ const bookSchema = new mongoose.Schema<IBook>({
   },
   price: {
     type: Number,
-    required: true
+    required: true,
   },
-  rating:{
+  rating: {
     type: Number,
-    required: true
+    required: true,
   },
-  author:{
+  author: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
+    ref: "User",
     required: true,
   },
   category: {
     type: String,
     required: true,
   },
-    summary:{
-        type: String,
-        required: true
+  summary: {
+    type: String,
+    required: true,
+  },
+  reviews: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Review",
     },
-    reviews:[
-        {
-          type:mongoose.Schema.Types.ObjectId,
-          ref:"Review"
-        }
-    ]
-
+  ],
 });
 
-export default mongoose.model<IBook>("Book", bookSchema);
+export const BookModel = mongoose.model<IBook>("Book", bookSchema);
+export default BookModel;
+
+// const book1: IBook = {
+//   name: "book1",
+//   year: 2020,
+//   image:
+//     "https://wizkids.co.il/cdn/shop/products/76813c8d0218cab5137b190541dce431_x700.gif?v=1514210268",
+//   pages: 100,
+//   price: 100,
+//   rating: 5,
+//   category: "category1",
+//   summary: "summary1",
+//   reviews: null,
+//   author:
+//     "65a6b6822338056d8466021e" as unknown as mongoose.Schema.Types.ObjectId,
+// };
+// const book2: IBook = {
+//   name: "book2",
+//   year: 2020,
+//   image:
+//     "https://wizkids.co.il/cdn/shop/products/8b9cdfc1f6c4258a1e02cccd3ce2ca68_x700.gif?v=1514210271",
+//   pages: 100,
+//   price: 100,
+//   rating: 5,
+//   category: "category1",
+//   summary: "summary1",
+//   reviews: null,
+//   author:
+//     "65a6b6822338056d8466021e" as unknown as mongoose.Schema.Types.ObjectId,
+// };
+
+// const book3: IBook = {
+//   name: "book3",
+//   year: 2020,
+//   image:
+//     "https://wizkids.co.il/cdn/shop/products/b3a33a4adbc50af32c796ac8debd7bc9_x700.gif?v=1514210274",
+//   pages: 100,
+//   price: 100,
+//   rating: 5,
+//   category: "category1",
+//   summary: "summary1",
+//   author:
+//     "65a6b6822338056d8466021e" as unknown as mongoose.Schema.Types.ObjectId,
+//   reviews: null,
+// };
+
+// const books = [book1, book2, book3];
+
+// BookModel.insertMany(books);

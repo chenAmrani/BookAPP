@@ -140,7 +140,7 @@ router.get("/:id", bookController.getById.bind(bookController));
  * /book/admin/update/{id}:
  *   put:
  *     summary: Update details of a specific book (Admin)
- *     tags: 
+ *     tags:
  *       - Book
  *     requestBody:
  *       required: false
@@ -155,7 +155,7 @@ router.get("/:id", bookController.getById.bind(bookController));
  *         name: id
  *         description: ID of the book
  *         required: true
- *         type: string 
+ *         type: string
  *     responses:
  *       200:
  *         description: Updated details of the book
@@ -171,7 +171,12 @@ router.get("/:id", bookController.getById.bind(bookController));
  *         description: Book not found
  */
 
-router.put("/admin/update/:id", authMiddleware,adminMiddleware, bookController.putById.bind(bookController));
+router.put(
+  "/admin/update/:id",
+  authMiddleware,
+  adminMiddleware,
+  bookController.putById.bind(bookController)
+);
 
 /**
  * @swagger
@@ -205,15 +210,19 @@ router.put("/admin/update/:id", authMiddleware,adminMiddleware, bookController.p
  *         description: Book not found
  */
 
-router.delete("/admin/delete/:id", authMiddleware, adminMiddleware, bookController.deleteById.bind(bookController));
-
+router.delete(
+  "/admin/delete/:id",
+  authMiddleware,
+  adminMiddleware,
+  bookController.deleteById.bind(bookController)
+);
 
 /**
  * @swagger
  * /book/updateOwnBook/{id}:
  *   put:
  *     summary: Update details of a specific book (Author)
-  *     tags: 
+ *     tags:
  *       - Book
  *     requestBody:
  *       required: false
@@ -228,7 +237,7 @@ router.delete("/admin/delete/:id", authMiddleware, adminMiddleware, bookControll
  *         name: id
  *         description: ID of the book
  *         required: true
- *         type: string 
+ *         type: string
  *     responses:
  *       200:
  *         description: Updated details of the book
@@ -243,8 +252,12 @@ router.delete("/admin/delete/:id", authMiddleware, adminMiddleware, bookControll
  *       404:
  *         description: Book not found
  */
-router.put("/updateOwnBook/:id", authMiddleware, verifyBookOwner, bookController.putById.bind(bookController));
-
+router.put(
+  "/updateOwnBook/:id",
+  authMiddleware,
+  verifyBookOwner,
+  bookController.putById.bind(bookController)
+);
 
 /**
  * @swagger
@@ -259,7 +272,7 @@ router.put("/updateOwnBook/:id", authMiddleware, verifyBookOwner, bookController
  *                   schema:
  *                       $ref: '#/components/schemas/Book'
  *       security:
- *           - bearerAuth: []     
+ *           - bearerAuth: []
  *     responses:
  *       200:
  *         description: Book deleted successfully
@@ -271,7 +284,12 @@ router.put("/updateOwnBook/:id", authMiddleware, verifyBookOwner, bookController
  *         description: Book not found
  */
 
- router.delete("/:id",authMiddleware,verifyBookOwner, bookController.deleteById.bind(bookController));
+router.delete(
+  "/:id",
+  authMiddleware,
+  verifyBookOwner,
+  bookController.deleteById.bind(bookController)
+);
 
 /**
  * @swagger
@@ -299,11 +317,18 @@ router.put("/updateOwnBook/:id", authMiddleware, verifyBookOwner, bookController
  *       406:
  *         description: Book already exists
  */
-router.post("/",authMiddleware,authorMiddleware, bookController.post.bind(bookController));
+router.post(
+  "/",
+  authMiddleware,
+  authorMiddleware,
+  bookController.post.bind(bookController)
+);
 
-router.post("/admin",authMiddleware,adminMiddleware, bookController.post.bind(bookController));
-
-
-
+router.post(
+  "/admin",
+  authMiddleware,
+  adminMiddleware,
+  bookController.post.bind(bookController)
+);
 
 export default router;
