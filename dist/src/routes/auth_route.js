@@ -46,7 +46,7 @@ const auth_controller_1 = __importDefault(require("../controllers/auth_controlle
  *           type: string
  *           description: The user's role
  *       example:
- *         name: 'dan'
+ *         name: 'bob'
  *         email: 'bob@gmail.com'
  *         password: '123456'
  *         role: 'author'
@@ -75,6 +75,27 @@ const auth_controller_1 = __importDefault(require("../controllers/auth_controlle
  *       406:
  *         description: Email already exists
  */
+router.post("/register", auth_controller_1.default.register);
+/**
+* @swagger
+* components:
+*   schemas:
+*       Tokens:
+*           type: object
+*           required:
+*             - accessToken
+*             - refreshToken
+*           properties:
+*             accessToken:
+*               type: string
+*               description: The JWT access token
+*             refreshToken:
+*               type: string
+*               description: The JWT refresh token
+*           example:
+*             accessToken: '123cd123x1xx1'
+*             refreshToken: '134r2134cr1x3c'
+*/
 /**
  * @swagger
  * /auth/login:
@@ -99,6 +120,7 @@ const auth_controller_1 = __importDefault(require("../controllers/auth_controlle
  *       401:
  *         description: Incorrect email or password
  */
+router.post("/login", auth_controller_1.default.login);
 /**
  * @swagger
  * /auth/logout:
@@ -114,9 +136,10 @@ const auth_controller_1 = __importDefault(require("../controllers/auth_controlle
  *       401:
  *         description: Unauthorized, invalid or missing token
  */
+router.get("/logout", auth_controller_1.default.logout);
 /**
  * @swagger
- * /auth/refreshToken:
+ * /auth/refresh:
  *   get:
  *     summary: get a new access token using the refresh token
  *     tags: [Auth]
@@ -133,9 +156,6 @@ const auth_controller_1 = __importDefault(require("../controllers/auth_controlle
  *       401:
  *         description: Unauthorized, invalid or missing token
  */
-router.post("/register", auth_controller_1.default.register);
-router.post("/login", auth_controller_1.default.login);
-router.get("/logout", auth_controller_1.default.logout);
 router.get("/refresh", auth_controller_1.default.refresh);
 exports.default = router;
 //# sourceMappingURL=auth_route.js.map

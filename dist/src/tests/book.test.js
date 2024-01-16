@@ -120,7 +120,7 @@ describe("Book tests", () => {
     }));
     test("Test Admin Adding Book", () => __awaiter(void 0, void 0, void 0, function* () {
         const response = yield (0, supertest_1.default)(app)
-            .post("/book/admin/")
+            .post("/book/admin")
             .set("Authorization", "JWT " + adminAccessToken)
             .send(book2);
         expect(response.status).toBe(201);
