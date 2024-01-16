@@ -14,32 +14,38 @@ GET http://localhost:6969/book/658c6bbe41cb64ee84d31465
 ###
 
 POST http://localhost:6969/book
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NTk5MWJiZDY5N2NkNWUxNzcwNzViMjEiLCJpYXQiOjE3MDQ1MzY2MzgsImV4cCI6MTcwNDU0MDIzOH0.yj0nf5LD0aN3OXw_M4xlKZGOO7p02WT2Z8dlQ3JcnJk
-Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NWEyNGU5M2UyODlkNTViZWUzZTExMjQiLCJpYXQiOjE3MDUzMTI4NDksImV4cCI6MTcwNTMxNjQ0OX0.JqQE_dt0ZmbjOUrBR3l_7Sb7sauHCAHiWVUFc3TV7zI
+Content-Type: application/json 
+
 {
-   " name": "book1",
+    "name": "try add book rest",
     "year": 2020,
     "image": "image1",
     "pages": 100,
     "price": 100,
     "rating": 5,
-    "author": "author1",
+    "author": "65a24e93e289d55bee3e1124",
     "category": "category1",
     "summary": "summary1",
-    "reviews": null,
 }
 
 ###
 
-POST http://localhost:6969/review
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NTk5MWJiZDY5N2NkNWUxNzcwNzViMjEiLCJpYXQiOjE3MDQ1MzY2ODgsImV4cCI6MTcwNDU0MDI4OH0.0g8-mg_6NV9Tx9EqjYI01h80WVsbU5U84UKlUhznYZc
-Content-Type: application/json 
+PUT http://localhost:6969/book/updateOwnBook/65a582820b50e365c925d0db
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NWE1ODI4MjBiNTBlMzY1YzkyNWQwY2YiLCJpYXQiOjE3MDUzOTIyMDIsImV4cCI6MTcwNTM5NTgwMn0.eb9NB1xuLe0RM-ndQkVfWm2mWsupav5M3-TsDIedcUk
+Content-Type: application/json
 
 {
-    "BookName": "Book1",
-    "text": "Good book",
-    "owner": "659545451de24fb89dabdb55",
-    "bookId": "65946f74874feabd96c7c7bd"
+  "name": "adminUpdateSwagger",
+  "year": 2020,
+  "image": "image1",
+  "pages": 100,
+  "price": 100,
+  "rating": 5,
+  "author": "65a582820b50e365c925d0cf",
+  "category": "category1",
+  "summary": "summary1",
+  "reviews": []
 }
 
 # ###
@@ -68,8 +74,8 @@ POST http://localhost:6969/auth/login
 Content-Type: application/json
 
 {
-  "email": "author2@test.com",
-  "password": "authorpass"
+    "email": "author@test.com",
+    "password": "authorpass"
 }
 
 

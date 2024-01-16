@@ -139,7 +139,7 @@ describe("Book tests", () => {
   });
   test("Test Admin Adding Book", async () => {
      const response = await request(app)
-      .post("/book/admin/")
+      .post("/book/admin")
       .set("Authorization", "JWT " + adminAccessToken)
       .send(book2);
     expect(response.status).toBe(201);

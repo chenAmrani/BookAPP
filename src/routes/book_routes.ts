@@ -17,11 +17,14 @@ import verifyBookOwner from "../common/verifyBookOwner";
  * @swagger
  * components:
  *   securitySchemes:
- *       bearerAuth:
- *           type: http
- *           scheme: bearer
- *           bearerFormat: JWT
- */
+ *     bearerAuth:
+ *       type: http
+ *       scheme: bearer
+ *       bearerFormat: JWT
+ *
+ * security:
+ *   - bearerAuth: []
+ *
 
 /**
  * @swagger 
@@ -79,7 +82,7 @@ import verifyBookOwner from "../common/verifyBookOwner";
  *         pages: 100
  *         price: 100
  *         rating: 5
- *         author: '65a3f0b43d405991df89ffad' 
+ *         author: '65a639239dd9ed21c708bbe3' 
  *         category: 'category1'
  *         summary: 'summary1'
  *         reviews: []
@@ -137,14 +140,8 @@ router.get("/:id", bookController.getById.bind(bookController));
  * /book/admin/update/{id}:
  *   put:
  *     summary: Update details of a specific book (Admin)
- *     tags: [Book]
- *     parameters:
- *       - in: path
- *         name: id
- *         schema:
- *           type: string
- *         required: true
- *         description: ID of the book
+ *     tags: 
+ *       - Book
  *     requestBody:
  *       required: false
  *       content:
@@ -152,7 +149,13 @@ router.get("/:id", bookController.getById.bind(bookController));
  *           schema:
  *             $ref: '#/components/schemas/Book'
  *       security:
-*           - bearerAuth: []
+ *         - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         description: ID of the book
+ *         required: true
+ *         type: string 
  *     responses:
  *       200:
  *         description: Updated details of the book
@@ -161,12 +164,13 @@ router.get("/:id", bookController.getById.bind(bookController));
  *             schema:
  *               $ref: '#/components/schemas/Book'
  *       401:
- *         description: Unauthorized, missing or invalid token
+ *         description: Unauthorized, missing, or invalid token
  *       403:
  *         description: Forbidden, user does not have admin privileges
  *       404:
  *         description: Book not found
  */
+
 router.put("/admin/update/:id", authMiddleware,adminMiddleware, bookController.putById.bind(bookController));
 
 /**
@@ -174,16 +178,22 @@ router.put("/admin/update/:id", authMiddleware,adminMiddleware, bookController.p
  * /book/admin/delete/{id}:
  *   delete:
  *     summary: Delete a specific book (Admin)
- *     tags: [Book]
- *     parameters:
- *       - in: path
- *         name: id
- *         schema:
- *           type: string
- *         required: true
- *         description: ID of the book
+ *     tags:
+ *       - Book
+ *     requestBody:
+ *       required: false
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Book'
  *     security:
  *       - bearerAuth: []
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         description: The ID of the book to be deleted.
+ *         required: true
+ *         type: string
  *     responses:
  *       200:
  *         description: Book deleted successfully
@@ -194,6 +204,7 @@ router.put("/admin/update/:id", authMiddleware,adminMiddleware, bookController.p
  *       404:
  *         description: Book not found
  */
+
 router.delete("/admin/delete/:id", authMiddleware, adminMiddleware, bookController.deleteById.bind(bookController));
 
 
@@ -202,16 +213,22 @@ router.delete("/admin/delete/:id", authMiddleware, adminMiddleware, bookControll
  * /book/updateOwnBook/{id}:
  *   put:
  *     summary: Update details of a specific book (Author)
- *     tags: [Book]
+  *     tags: 
+ *       - Book
+ *     requestBody:
+ *       required: false
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Book'
+ *       security:
+ *         - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
- *         schema:
- *           type: string
- *         required: true
  *         description: ID of the book
- *     security:
- *       - bearerAuth: []
+ *         required: true
+ *         type: string 
  *     responses:
  *       200:
  *         description: Updated details of the book
@@ -220,9 +237,9 @@ router.delete("/admin/delete/:id", authMiddleware, adminMiddleware, bookControll
  *             schema:
  *               $ref: '#/components/schemas/Book'
  *       401:
- *         description: Unauthorized, missing or invalid token
+ *         description: Unauthorized, missing, or invalid token
  *       403:
- *         description: Forbidden, user does not own the book
+ *         description: Forbidden, user does not have admin privileges
  *       404:
  *         description: Book not found
  */
@@ -282,7 +299,9 @@ router.put("/updateOwnBook/:id", authMiddleware, verifyBookOwner, bookController
  *       406:
  *         description: Book already exists
  */
-router.post("/", authMiddleware, authorMiddleware, bookController.post.bind(bookController));
+router.post("/",authMiddleware,authorMiddleware, bookController.post.bind(bookController));
+
+router.post("/admin",authMiddleware,adminMiddleware, bookController.post.bind(bookController));
 
 
 

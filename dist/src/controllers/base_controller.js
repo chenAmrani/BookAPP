@@ -43,8 +43,8 @@ class BaseController {
     getById(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const student = yield this.model.findById(req.params.id);
-                res.send(student);
+                const book = yield this.model.findById(req.params.id);
+                res.send(book);
             }
             catch (err) {
                 res.status(500).json({ message: err.message });
@@ -53,7 +53,6 @@ class BaseController {
     }
     post(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            // console.log("post book: " + req.body);
             try {
                 const existingBook = yield this.model.findOne({
                     name: req.body.name,
@@ -80,10 +79,6 @@ class BaseController {
                 console.log("The obj is: " + obj);
                 const updatedBook = yield this.model.findByIdAndUpdate(id, obj, { new: true });
                 console.log("The updatedBook is: " + updatedBook);
-                // await this.model.findByIdAndUpdate(req.params.id, req.body, { new: true });
-                // await this.model.findByIdAndUpdate(req.params.id, req.body);
-                // const obj = await this.model.findById(req.body._id);
-                // console.log("The objjjj is: " + obj);
                 console.log("The updatedBook is: " + updatedBook);
                 res.status(200).send(updatedBook);
             }

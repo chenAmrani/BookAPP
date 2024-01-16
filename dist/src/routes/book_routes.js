@@ -13,9 +13,24 @@ const verifyBookOwner_1 = __importDefault(require("../common/verifyBookOwner"));
 /**
  * @swagger
  * tags:
- *   name: Books
+ *   name: Book
  *   description: API for managing books.
+ */
+/**
+ * @swagger
+ * components:
+ *   securitySchemes:
+ *     bearerAuth:
+ *       type: http
+ *       scheme: bearer
+ *       bearerFormat: JWT
  *
+ * security:
+ *   - bearerAuth: []
+ *
+
+/**
+ * @swagger
  * components:
  *   schemas:
  *     Book:
@@ -27,10 +42,9 @@ const verifyBookOwner_1 = __importDefault(require("../common/verifyBookOwner"));
  *         - pages
  *         - price
  *         - rating
- *         - owner
+ *         - author
  *         - category
  *         - summary
- *         - reviews
  *       properties:
  *         name:
  *           type: string
@@ -50,9 +64,9 @@ const verifyBookOwner_1 = __importDefault(require("../common/verifyBookOwner"));
  *         rating:
  *           type: number
  *           description: The rating of the book
- *         owner:
+ *         author:
  *           type: string
- *           description: ID of the book's owner (User)
+ *           description: ID of the book's author (User)
  *         category:
  *           type: string
  *           description: The category of the book
@@ -65,23 +79,23 @@ const verifyBookOwner_1 = __importDefault(require("../common/verifyBookOwner"));
  *             type: string
  *           description: IDs of reviews related to the book
  *       example:
- *         name: 'The Great Gatsby'
- *         year: 1925
- *         image: 'https://example.com/gatsby.jpg'
- *         pages: 180
- *         price: 10.99
- *         rating: 4.5
- *         owner: '65a2592c4adf3035466a0a2f'  # Replace with actual owner ID
- *         category: 'Classic'
- *         summary: 'A novel by F. Scott Fitzgerald.'
- *         reviews: ['65a2592da3e5af450752b518']  # Replace with actual review IDs
+ *         name: 'updateBookName'
+ *         year: 2020
+ *         image: 'image1'
+ *         pages: 100
+ *         price: 100
+ *         rating: 5
+ *         author: '65a582820b50e365c925d0cf'
+ *         category: 'category1'
+ *         summary: 'summary1'
+ *         reviews: []
  */
 /**
  * @swagger
- * /books:
+ * /book/:
  *   get:
  *     summary: Get a list of all books
- *     tags: [Books]
+ *     tags: [Book]
  *     responses:
  *       200:
  *         description: A list of books
@@ -93,11 +107,14 @@ const verifyBookOwner_1 = __importDefault(require("../common/verifyBookOwner"));
  *                 $ref: '#/components/schemas/Book'
  *       401:
  *         description: Unauthorized, missing or invalid token
- *
- * /books/{id}:
+ */
+router.get("/", book_controller_1.default.get.bind(book_controller_1.default));
+/**
+ * @swagger
+ * /book/{id}:
  *   get:
  *     summary: Get details of a specific book
- *     tags: [Books]
+ *     tags: [Book]
  *     parameters:
  *       - in: path
  *         name: id
@@ -117,25 +134,28 @@ const verifyBookOwner_1 = __importDefault(require("../common/verifyBookOwner"));
  *       404:
  *         description: Book not found
  */
+router.get("/:id", book_controller_1.default.getById.bind(book_controller_1.default));
 /**
  * @swagger
- * /books/admin/update/{id}:
+ * /book/admin/update/{id}:
  *   put:
  *     summary: Update details of a specific book (Admin)
- *     tags: [Books]
- *     parameters:
- *       - in: path
- *         name: id
- *         schema:
- *           type: string
- *         required: true
- *         description: ID of the book
+ *     tags:
+ *       - Book
  *     requestBody:
- *       required: true
+ *       required: false
  *       content:
  *         application/json:
  *           schema:
  *             $ref: '#/components/schemas/Book'
+ *       security:
+ *         - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         description: ID of the book
+ *         required: true
+ *         type: string
  *     responses:
  *       200:
  *         description: Updated details of the book
@@ -144,23 +164,34 @@ const verifyBookOwner_1 = __importDefault(require("../common/verifyBookOwner"));
  *             schema:
  *               $ref: '#/components/schemas/Book'
  *       401:
- *         description: Unauthorized, missing or invalid token
+ *         description: Unauthorized, missing, or invalid token
  *       403:
  *         description: Forbidden, user does not have admin privileges
  *       404:
  *         description: Book not found
- *
- * /books/admin/delete/{id}:
+ */
+router.put("/admin/update/:id", auth_middleware_1.default, admin_middleware_1.default, book_controller_1.default.putById.bind(book_controller_1.default));
+/**
+ * @swagger
+ * /book/admin/delete/{id}:
  *   delete:
  *     summary: Delete a specific book (Admin)
- *     tags: [Books]
+ *     tags:
+ *       - Book
+ *     requestBody:
+ *       required: false
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Book'
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
- *       - in: path
- *         name: id
- *         schema:
- *           type: string
+ *       - name: id
+ *         in: path
+ *         description: The ID of the book to be deleted.
  *         required: true
- *         description: ID of the book
+ *         type: string
  *     responses:
  *       200:
  *         description: Book deleted successfully
@@ -170,48 +201,29 @@ const verifyBookOwner_1 = __importDefault(require("../common/verifyBookOwner"));
  *         description: Forbidden, user does not have admin privileges
  *       404:
  *         description: Book not found
- *
- * /books/admin:
- *   post:
- *     summary: Create a new book (Admin)
- *     tags: [Books]
+ */
+router.delete("/admin/delete/:id", auth_middleware_1.default, admin_middleware_1.default, book_controller_1.default.deleteById.bind(book_controller_1.default));
+/**
+ * @swagger
+ * /book/updateOwnBook/{id}:
+ *   put:
+ *     summary: Update details of a specific book (Author)
+  *     tags:
+ *       - Book
  *     requestBody:
- *       required: true
+ *       required: false
  *       content:
  *         application/json:
  *           schema:
  *             $ref: '#/components/schemas/Book'
- *     responses:
- *       201:
- *         description: New book created
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Book'
- *       401:
- *         description: Unauthorized, missing or invalid token
- *       403:
- *         description: Forbidden, user does not have admin privileges
- *       406:
- *         description: Book already exists
- *
- * /books/updateOwnBook/{id}:
- *   put:
- *     summary: Update details of a specific book (Author)
- *     tags: [Books]
+ *       security:
+ *         - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
- *         schema:
- *           type: string
- *         required: true
  *         description: ID of the book
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             $ref: '#/components/schemas/Book'
+ *         required: true
+ *         type: string
  *     responses:
  *       200:
  *         description: Updated details of the book
@@ -220,23 +232,27 @@ const verifyBookOwner_1 = __importDefault(require("../common/verifyBookOwner"));
  *             schema:
  *               $ref: '#/components/schemas/Book'
  *       401:
- *         description: Unauthorized, missing or invalid token
+ *         description: Unauthorized, missing, or invalid token
  *       403:
- *         description: Forbidden, user does not own the book
+ *         description: Forbidden, user does not have admin privileges
  *       404:
  *         description: Book not found
- *
- * /books/{id}:
+ */
+router.put("/updateOwnBook/:id", auth_middleware_1.default, verifyBookOwner_1.default, book_controller_1.default.putById.bind(book_controller_1.default));
+/**
+ * @swagger
+ * /book/{id}:
  *   delete:
  *     summary: Delete a specific book (Author)
- *     tags: [Books]
- *     parameters:
- *       - in: path
- *         name: id
- *         schema:
- *           type: string
- *         required: true
- *         description: ID of the book
+ *     tags: [Book]
+ *       requestBody:
+ *           required: false
+ *           content:
+ *               application/json:
+ *                   schema:
+ *                       $ref: '#/components/schemas/Book'
+ *       security:
+ *           - bearerAuth: []
  *     responses:
  *       200:
  *         description: Book deleted successfully
@@ -246,11 +262,14 @@ const verifyBookOwner_1 = __importDefault(require("../common/verifyBookOwner"));
  *         description: Forbidden, user does not own the book
  *       404:
  *         description: Book not found
- *
- * /books:
+ */
+router.delete("/:id", auth_middleware_1.default, verifyBookOwner_1.default, book_controller_1.default.deleteById.bind(book_controller_1.default));
+/**
+ * @swagger
+ * /book/:
  *   post:
  *     summary: Create a new book (Author)
- *     tags: [Books]
+ *     tags: [Book]
  *     requestBody:
  *       required: true
  *       content:
@@ -271,15 +290,7 @@ const verifyBookOwner_1 = __importDefault(require("../common/verifyBookOwner"));
  *       406:
  *         description: Book already exists
  */
-router.get("/", auth_middleware_1.default, book_controller_1.default.get.bind(book_controller_1.default));
-router.get("/:id", auth_middleware_1.default, book_controller_1.default.getById.bind(book_controller_1.default));
-// Allow admin to edit and delete any book
-router.put("/admin/update/:id", auth_middleware_1.default, admin_middleware_1.default, book_controller_1.default.putById.bind(book_controller_1.default));
-router.delete("/admin/delete/:id", auth_middleware_1.default, admin_middleware_1.default, book_controller_1.default.deleteById.bind(book_controller_1.default));
-router.post("/admin", auth_middleware_1.default, admin_middleware_1.default, book_controller_1.default.post.bind(book_controller_1.default));
-//Allow auther to add,delete and edit his book
-router.put("/updateOwnBook/:id", auth_middleware_1.default, verifyBookOwner_1.default, book_controller_1.default.putById.bind(book_controller_1.default));
-router.delete("/:id", auth_middleware_1.default, verifyBookOwner_1.default, book_controller_1.default.deleteById.bind(book_controller_1.default));
 router.post("/", auth_middleware_1.default, author_middleware_1.default, book_controller_1.default.post.bind(book_controller_1.default));
+router.post("/admin", auth_middleware_1.default, admin_middleware_1.default, book_controller_1.default.post.bind(book_controller_1.default));
 exports.default = router;
 //# sourceMappingURL=book_routes.js.map

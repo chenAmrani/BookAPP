@@ -48,7 +48,6 @@ export class BaseController<ModelType>{
 
     
     async post(req: Request, res: Response) {
-        // console.log("post book: " + req.body);
         try {
             const existingBook = await this.model.findOne({
                 name: req.body.name,
@@ -77,10 +76,6 @@ export class BaseController<ModelType>{
             console.log("The obj is: " + obj);
             const updatedBook = await this.model.findByIdAndUpdate(id, obj, { new: true });
             console.log("The updatedBook is: " + updatedBook);
-            // await this.model.findByIdAndUpdate(req.params.id, req.body, { new: true });
-            // await this.model.findByIdAndUpdate(req.params.id, req.body);
-            // const obj = await this.model.findById(req.body._id);
-            // console.log("The objjjj is: " + obj);
             console.log("The updatedBook is: " + updatedBook);
             res.status(200).send(updatedBook);
 

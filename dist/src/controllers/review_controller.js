@@ -24,7 +24,6 @@ class ReviewController extends base_controller_1.BaseController {
         return __awaiter(this, void 0, void 0, function* () {
             const _id = req.user._id;
             req.body.owner = _id;
-            console.log("hiiiiiiiiiiiiiiii");
             console.log("req.body: ", req.body);
             const createReview = yield review_model_1.default.create(req.body);
             const bookId = createReview.bookId;

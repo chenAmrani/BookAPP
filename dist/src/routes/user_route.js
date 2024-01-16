@@ -14,7 +14,16 @@ const router = express_1.default.Router();
  * tags:
  *   name: Users
  *   description: API for managing users.
- *
+
+
+
+ * components:
+ *   securitySchemes:
+ *       bearerAuth:
+ *           type: http
+ *           scheme: bearer
+ *           bearerFormat: JWT
+
  * components:
  *   schemas:
  *     User:
@@ -50,28 +59,39 @@ const router = express_1.default.Router();
  *         email: 'john@example.com'
  *         password: 'password123'
  *         image: 'https://example.com/john.jpg'
- *         role: 'reader'
- *         books: ['60f2c5d97329573b6cfe0e76']  # Replace with actual book IDs
- */
-/**
- * @swagger
- * /users:
- *   get:
- *     summary: Get a list of all users (Admin)
- *     tags: [Users]
- *     responses:
- *       200:
- *         description: A list of users
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 $ref: '#/components/schemas/User'
- *       401:
- *         description: Unauthorized, missing or invalid token
- *
- * /users/id:
+ *         role: 'author'
+ *         books: ['65a24e94e289d55bee3e1130']
+
+* /user/:
+*   get:
+*       summary: get all users registered to the site (admin only)
+*       tags: [User]
+*       requestBody:
+*           required: true
+*           content:
+*               application/json:
+*                   schema:
+*                       $ref: '#/components/schemas/User'
+*       security:
+*           - bearerAuth: []
+*       responses:
+*           200:
+*               description: Get all users registered to the site
+*               content:
+*                   application/json:
+*                       schema:
+*                           $ref: '#/components/schemas/User'
+*           401:
+*               description: Unauthorized
+*               content:
+*                   application/json:
+*                       schema:
+*                           $ref: '#/components/schemas/User'
+*
+
+
+
+ * /user/:id:
  *   get:
  *     summary: Get details of a specific user (Admin)
  *     tags: [Users]
@@ -96,7 +116,7 @@ const router = express_1.default.Router();
  */
 /**
  * @swagger
- * /users/update:
+ * /user/update:
  *   put:
  *     summary: Update details of a specific user (Admin)
  *     tags: [Users]
@@ -117,8 +137,10 @@ const router = express_1.default.Router();
  *         description: Unauthorized, missing or invalid token
  *       404:
  *         description: User not found
- *
- * /users/delete/{id}:
+ * */
+/**
+ * @swagger
+ * /user/delete/{id}:
  *   delete:
  *     summary: Delete a specific user (Admin)
  *     tags: [Users]
@@ -136,8 +158,10 @@ const router = express_1.default.Router();
  *         description: Unauthorized, missing or invalid token
  *       404:
  *         description: User not found
- *
- * /users/books:
+  */
+/**
+ * @swagger
+ * /user/books:
  *   get:
  *     summary: Get a list of books related to the user (Author)
  *     tags: [Users]
@@ -154,84 +178,85 @@ const router = express_1.default.Router();
  *         description: Unauthorized, missing or invalid token
  *       404:
  *         description: User not found
- *
- * /users/deleteByAuthor/{id}:
- *   delete:
- *     summary: Delete a specific user (Author)
- *     tags: [Users]
- *     parameters:
- *       - in: path
- *         name: id
- *         schema:
- *           type: string
- *         required: true
- *         description: ID of the user
- *     responses:
- *       200:
- *         description: User deleted successfully
- *       401:
- *         description: Unauthorized, missing or invalid token
- *       403:
- *         description: Forbidden, user does not have permission
- *       404:
- *         description: User not found
- *
- * /users/updateOwnProfile:
- *   put:
- *     summary: Update details of the logged-in user's profile
- *     tags: [Users]
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             $ref: '#/components/schemas/User'
- *     responses:
- *       200:
- *         description: Updated details of the user's profile
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/User'
- *       401:
- *         description: Unauthorized, missing or invalid token
- *       404:
- *         description: User not found
- *
- * /users/{email}:
- *   get:
- *     summary: Get details of a specific user by email
- *     tags: [Users]
- *     parameters:
- *       - in: path
- *         name: email
- *         schema:
- *           type: string
- *         required: true
- *         description: Email of the user
- *     responses:
- *       200:
- *         description: Details of the user
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/User'
- *       401:
- *         description: Unauthorized, missing or invalid token
- *       404:
- *         description: User not found
- */
-//Admin
+ * */
+/**
+* /users/deleteByAuthor/{id}:
+*   delete:
+*     summary: Delete a specific user (Author)
+*     tags: [Users]
+*     parameters:
+*       - in: path
+*         name: id
+*         schema:
+*           type: string
+*         required: true
+*         description: ID of the user
+*     responses:
+*       200:
+*         description: User deleted successfully
+*       401:
+*         description: Unauthorized, missing or invalid token
+*       403:
+*         description: Forbidden, user does not have permission
+*       404:
+*         description: User not found
+* */
+/**
+* @swagger
+* /user/updateOwnProfile:
+*   put:
+*     summary: Update details of the logged-in user's profile
+*     tags: [Users]
+*     requestBody:
+*       required: true
+*       content:
+*         application/json:
+*           schema:
+*             $ref: '#/components/schemas/User'
+*     responses:
+*       200:
+*         description: Updated details of the user's profile
+*         content:
+*           application/json:
+*             schema:
+*               $ref: '#/components/schemas/User'
+*       401:
+*         description: Unauthorized, missing or invalid token
+*       404:
+*         description: User not found
+* */
+/**
+* @swagger
+* /user/{email}:
+*   get:
+*     summary: Get details of a specific user by email
+*     tags: [Users]
+*     parameters:
+*       - in: path
+*         name: email
+*         schema:
+*           type: string
+*         required: true
+*         description: Email of the user
+*     responses:
+*       200:
+*         description: Details of the user
+*         content:
+*           application/json:
+*             schema:
+*               $ref: '#/components/schemas/User'
+*       401:
+*         description: Unauthorized, missing or invalid token
+*       404:
+*         description: User not found
+*/
+exports.default = router;
 router.get("/", auth_middleware_1.default, admin_middleware_1.default, user_controller_1.default.getAllUsers);
+router.get('/:email', auth_middleware_1.default, user_controller_1.default.getUserByEmail);
+router.put("/updateOwnProfile", auth_middleware_1.default, veifyUserOwenr_midleeware_1.default, user_controller_1.default.updateOwnProfile);
+router.delete("/deleteByAuthor/:id", auth_middleware_1.default, veifyUserOwenr_midleeware_1.default, user_controller_1.default.deleteUser);
+router.get("/books", auth_middleware_1.default, user_controller_1.default.getMyBooks);
+router.delete("/delete/:id", auth_middleware_1.default, admin_middleware_1.default, user_controller_1.default.deleteUser);
 router.get("/id:", auth_middleware_1.default, admin_middleware_1.default, user_controller_1.default.getUserById);
 router.put("/update", auth_middleware_1.default, admin_middleware_1.default, user_controller_1.default.updateUser);
-router.delete("/delete/:id", auth_middleware_1.default, admin_middleware_1.default, user_controller_1.default.deleteUser);
-//author
-router.get("/books", auth_middleware_1.default, user_controller_1.default.getMyBooks);
-router.delete("/deleteByAuthor/:id", auth_middleware_1.default, veifyUserOwenr_midleeware_1.default, user_controller_1.default.deleteUser);
-//updating the user profile by himself.
-router.put("/updateOwnProfile", auth_middleware_1.default, veifyUserOwenr_midleeware_1.default, user_controller_1.default.updateOwnProfile);
-//get user by email
-router.get('/:email', auth_middleware_1.default, user_controller_1.default.getUserByEmail);
-exports.default = router;
 //# sourceMappingURL=user_route.js.map
