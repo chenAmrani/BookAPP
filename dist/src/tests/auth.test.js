@@ -16,6 +16,7 @@ const supertest_1 = __importDefault(require("supertest"));
 const app_1 = __importDefault(require("../app"));
 const mongoose_1 = __importDefault(require("mongoose"));
 const user_model_1 = __importDefault(require("../models/user_model"));
+const path_1 = __importDefault(require("path"));
 let app;
 const user = {
     name: "name1",
@@ -38,7 +39,11 @@ describe("Auth tests", () => {
     test("Test Register", () => __awaiter(void 0, void 0, void 0, function* () {
         const response = yield (0, supertest_1.default)(app)
             .post("/auth/register")
-            .send(user);
+            .field("name", user.name)
+            .field("email", user.email)
+            .field("password", user.password)
+            .field("role", user.role)
+            .attach("avatar", path_1.default.join(__dirname, "../../static/uploads/avatar.jpg"));
         expect(response.statusCode).toBe(201);
     }));
     test("Test Register exist email", () => __awaiter(void 0, void 0, void 0, function* () {
