@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const router = express_1.default.Router();
 const auth_controller_1 = __importDefault(require("../controllers/auth_controller"));
+const multer_1 = require("../common/multer");
 /**
  * @swagger
  * tags:
@@ -75,27 +76,27 @@ const auth_controller_1 = __importDefault(require("../controllers/auth_controlle
  *       406:
  *         description: Email already exists
  */
-router.post("/register", auth_controller_1.default.register);
+router.post("/register", multer_1.upload.single("avatar"), auth_controller_1.default.register);
 /**
-* @swagger
-* components:
-*   schemas:
-*       Tokens:
-*           type: object
-*           required:
-*             - accessToken
-*             - refreshToken
-*           properties:
-*             accessToken:
-*               type: string
-*               description: The JWT access token
-*             refreshToken:
-*               type: string
-*               description: The JWT refresh token
-*           example:
-*             accessToken: '123cd123x1xx1'
-*             refreshToken: '134r2134cr1x3c'
-*/
+ * @swagger
+ * components:
+ *   schemas:
+ *       Tokens:
+ *           type: object
+ *           required:
+ *             - accessToken
+ *             - refreshToken
+ *           properties:
+ *             accessToken:
+ *               type: string
+ *               description: The JWT access token
+ *             refreshToken:
+ *               type: string
+ *               description: The JWT refresh token
+ *           example:
+ *             accessToken: '123cd123x1xx1'
+ *             refreshToken: '134r2134cr1x3c'
+ */
 /**
  * @swagger
  * /auth/login:

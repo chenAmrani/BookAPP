@@ -65,7 +65,9 @@ class bookController extends base_controller_1.BaseController {
                 console.log("The id is: " + id);
                 const obj = req.body;
                 console.log("The obj is: " + obj);
-                const updatedBook = yield this.model.findByIdAndUpdate(id, obj, { new: true });
+                const updatedBook = yield this.model.findByIdAndUpdate(id, obj, {
+                    new: true,
+                });
                 console.log("The updatedBook is: " + updatedBook);
                 // await this.model.findByIdAndUpdate(req.params.id, req.body, { new: true });
                 // await this.model.findByIdAndUpdate(req.params.id, req.body);

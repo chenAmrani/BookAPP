@@ -1,6 +1,7 @@
 import express from "express";
 const router = express.Router();
 import authController from "../controllers/auth_controller";
+import { upload } from "../common/multer";
 
 /**
  * @swagger
@@ -74,28 +75,27 @@ import authController from "../controllers/auth_controller";
  *       406:
  *         description: Email already exists
  */
-router.post("/register", authController.register);
+router.post("/register", upload.single("avatar"), authController.register);
 /**
-* @swagger
-* components:
-*   schemas:
-*       Tokens:
-*           type: object
-*           required:
-*             - accessToken
-*             - refreshToken
-*           properties:
-*             accessToken:
-*               type: string
-*               description: The JWT access token
-*             refreshToken:
-*               type: string
-*               description: The JWT refresh token
-*           example:
-*             accessToken: '123cd123x1xx1'
-*             refreshToken: '134r2134cr1x3c'
-*/
-
+ * @swagger
+ * components:
+ *   schemas:
+ *       Tokens:
+ *           type: object
+ *           required:
+ *             - accessToken
+ *             - refreshToken
+ *           properties:
+ *             accessToken:
+ *               type: string
+ *               description: The JWT access token
+ *             refreshToken:
+ *               type: string
+ *               description: The JWT refresh token
+ *           example:
+ *             accessToken: '123cd123x1xx1'
+ *             refreshToken: '134r2134cr1x3c'
+ */
 
 /**
  * @swagger
@@ -158,9 +158,5 @@ router.get("/logout", authController.logout);
  *         description: Unauthorized, invalid or missing token
  */
 router.get("/refresh", authController.refresh);
-
-
-
-
 
 export default router;

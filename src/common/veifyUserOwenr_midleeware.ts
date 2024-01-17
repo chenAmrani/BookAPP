@@ -22,7 +22,6 @@ const verifyUserOwner = async (req: CustomRequest, res: Response, next: NextFunc
         console.log("this is the user: " + user);
 
         if (!user || user._id.toString() !== currentUserId) {
-            console.log("im hereeeeeeeeeeee1");
             return res.status(403).send('You do not have permission to modify this user');
         }
 
