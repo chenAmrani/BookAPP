@@ -208,7 +208,7 @@ router.delete("/admin/delete/:id", auth_middleware_1.default, admin_middleware_1
  * /book/updateOwnBook/{id}:
  *   put:
  *     summary: Update details of a specific book (Author)
-  *     tags:
+ *     tags:
  *       - Book
  *     requestBody:
  *       required: false
@@ -270,6 +270,8 @@ router.delete("/:id", auth_middleware_1.default, verifyBookOwner_1.default, book
  *   post:
  *     summary: Create a new book (Author)
  *     tags: [Book]
+ *     security:
+ *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:

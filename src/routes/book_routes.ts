@@ -297,6 +297,8 @@ router.delete(
  *   post:
  *     summary: Create a new book (Author)
  *     tags: [Book]
+ *     security:
+ *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:

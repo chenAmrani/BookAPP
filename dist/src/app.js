@@ -7,11 +7,11 @@ const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
 const express_1 = __importDefault(require("express"));
 const mongoose_1 = __importDefault(require("mongoose"));
-const body_parser_1 = __importDefault(require("body-parser"));
 const book_routes_1 = __importDefault(require("./routes/book_routes"));
 const review_routes_1 = __importDefault(require("./routes/review_routes"));
 const auth_route_1 = __importDefault(require("./routes/auth_route"));
 const user_route_1 = __importDefault(require("./routes/user_route"));
+const cors_1 = __importDefault(require("cors"));
 const initApp = () => {
     const promise = new Promise((resolve) => {
         const db = mongoose_1.default.connection;
@@ -20,8 +20,9 @@ const initApp = () => {
         const url = process.env.DB_URL;
         mongoose_1.default.connect(url).then(() => {
             const app = (0, express_1.default)();
-            app.use(body_parser_1.default.json());
-            app.use(body_parser_1.default.urlencoded({ extended: true }));
+            app.use((0, cors_1.default)());
+            app.use(express_1.default.json());
+            app.use(express_1.default.urlencoded({ extended: true }));
             app.use("/book", book_routes_1.default);
             app.use("/review", review_routes_1.default);
             app.use("/auth", auth_route_1.default);

@@ -73,9 +73,10 @@ export default BookModel;
 //   rating: 5,
 //   category: "category1",
 //   summary: "summary1",
-//   reviews: null,
+//   reviews: ["65a7e29e8d1b65e500e14636"] as unknown as typeof mongoose.Schema.Types.ObjectId[],
 //   author:
 //     "65a6b6822338056d8466021e" as unknown as mongoose.Schema.Types.ObjectId,
+
 // };
 // const book2: IBook = {
 //   name: "book2",
@@ -87,7 +88,7 @@ export default BookModel;
 //   rating: 5,
 //   category: "category1",
 //   summary: "summary1",
-//   reviews: null,
+//   reviews: ["65a7e29e8d1b65e500e14637"] as unknown as typeof mongoose.Schema.Types.ObjectId[],
 //   author:
 //     "65a6b6822338056d8466021e" as unknown as mongoose.Schema.Types.ObjectId,
 // };
@@ -102,9 +103,9 @@ export default BookModel;
 //   rating: 5,
 //   category: "category1",
 //   summary: "summary1",
+//   reviews: ["65a7e29e8d1b65e500e14638"] as unknown as typeof mongoose.Schema.Types.ObjectId[],
 //   author:
 //     "65a6b6822338056d8466021e" as unknown as mongoose.Schema.Types.ObjectId,
-//   reviews: null,
 // };
 
 // const books = [book1, book2, book3];

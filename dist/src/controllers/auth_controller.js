@@ -20,31 +20,42 @@ const register = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const password = req.body.password;
     const role = req.body.role;
     const name = req.body.name;
+    console.log(req.file);
     if (!email || !password || !role || !name) {
         return res.status(400).send("missing email or password or role or name");
     }
     try {
-        const rs = yield user_model_1.default.findOne({ 'email': email });
-        if (rs != null) {
+        const doesUserExists = yield user_model_1.default.findOne({ email: email });
+        if (doesUserExists != null) {
             return res.status(406).send("email already exists");
         }
         const salt = yield bcrypt_1.default.genSalt(10);
         const encryptedPassword = yield bcrypt_1.default.hash(password, salt);
-        const rs2 = yield user_model_1.default.create({ 'email': email, 'password': encryptedPassword, 'role': role, 'name': name });
-        return res.status(201).send(rs2);
+        const newUser = yield user_model_1.default.create({
+            email: email,
+            password: encryptedPassword,
+            role: role,
+            name: name,
+            avatar: req.file.filename,
+        });
+        const userData = prepareUser(newUser);
+        return res.status(201).send(userData);
     }
     catch (err) {
-        return res.status(400).send("error missing email or password or role");
+        console.log("err", err);
+        return res.status(400).send("Error: " + err.message);
     }
 });
 const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const email = req.body.email;
+    console.log("email", email);
     const password = req.body.password;
+    console.log("password", password);
     if (!email || !password) {
         return res.status(400).send("missing email or password");
     }
     try {
-        const user = yield user_model_1.default.findOne({ 'email': email });
+        const user = yield user_model_1.default.findOne({ email: email });
         if (user == null) {
             return res.status(401).send("email or password incorrect");
         }
@@ -52,8 +63,10 @@ const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         if (!match) {
             return res.status(401).send("email or password incorrect");
         }
-        const accessToken = jsonwebtoken_1.default.sign({ '_id': user._id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRATION });
-        const refreshToken = jsonwebtoken_1.default.sign({ '_id': user._id }, process.env.JWT_REFRESH_SECRET);
+        const accessToken = jsonwebtoken_1.default.sign({ _id: user._id }, process.env.JWT_SECRET, {
+            expiresIn: process.env.JWT_EXPIRATION,
+        });
+        const refreshToken = jsonwebtoken_1.default.sign({ _id: user._id }, process.env.JWT_REFRESH_SECRET);
         if (user.refreshTokens == null) {
             user.refreshTokens = [refreshToken];
         }
@@ -61,9 +74,11 @@ const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             user.refreshTokens.push(refreshToken);
         }
         yield user.save();
+        const userData = prepareUser(user);
         return res.status(200).send({
-            'accessToken': accessToken,
-            'refreshToken': refreshToken
+            accessToken,
+            refreshToken,
+            userData,
         });
     }
     catch (err) {
@@ -71,8 +86,8 @@ const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     }
 });
 const logout = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const authHeader = req.headers['authorization'];
-    const refreshToken = authHeader && authHeader.split(' ')[1]; // Bearer <token>
+    const authHeader = req.headers["authorization"];
+    const refreshToken = authHeader && authHeader.split(" ")[1]; // Bearer <token>
     if (refreshToken == null)
         return res.sendStatus(401);
     jsonwebtoken_1.default.verify(refreshToken, process.env.JWT_REFRESH_SECRET, (err, user) => __awaiter(void 0, void 0, void 0, function* () {
@@ -80,14 +95,15 @@ const logout = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         if (err)
             return res.sendStatus(401);
         try {
-            const userDb = yield user_model_1.default.findOne({ '_id': user._id });
-            if (!userDb.refreshTokens || !userDb.refreshTokens.includes(refreshToken)) {
+            const userDb = yield user_model_1.default.findOne({ _id: user._id });
+            if (!userDb.refreshTokens ||
+                !userDb.refreshTokens.includes(refreshToken)) {
                 userDb.refreshTokens = [];
                 yield userDb.save();
                 return res.sendStatus(401);
             }
             else {
-                userDb.refreshTokens = userDb.refreshTokens.filter(t => t !== refreshToken);
+                userDb.refreshTokens = userDb.refreshTokens.filter((t) => t !== refreshToken);
                 yield userDb.save();
                 return res.sendStatus(200);
             }
@@ -98,8 +114,8 @@ const logout = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     }));
 });
 const refresh = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const authHeader = req.headers['authorization'];
-    const refreshToken = (yield authHeader) && authHeader.split(' ')[1]; // Bearer <token>
+    const authHeader = req.headers["authorization"];
+    const refreshToken = (yield authHeader) && authHeader.split(" ")[1]; // Bearer <token>
     if (refreshToken == null)
         return res.sendStatus(401);
     jsonwebtoken_1.default.verify(refreshToken, process.env.JWT_REFRESH_SECRET, (err, user) => __awaiter(void 0, void 0, void 0, function* () {
@@ -108,20 +124,21 @@ const refresh = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             return res.sendStatus(401);
         }
         try {
-            const userDb = yield user_model_1.default.findOne({ '_id': user._id });
-            if (!userDb.refreshTokens || !userDb.refreshTokens.includes(refreshToken)) {
+            const userDb = yield user_model_1.default.findOne({ _id: user._id });
+            if (!userDb.refreshTokens ||
+                !userDb.refreshTokens.includes(refreshToken)) {
                 userDb.refreshTokens = [];
                 yield userDb.save();
                 return res.sendStatus(401);
             }
-            const accessToken = yield jsonwebtoken_1.default.sign({ '_id': user._id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRATION });
-            const newRefreshToken = yield jsonwebtoken_1.default.sign({ '_id': user._id }, process.env.JWT_REFRESH_SECRET);
-            userDb.refreshTokens = userDb.refreshTokens.filter(t => t !== refreshToken);
+            const accessToken = yield jsonwebtoken_1.default.sign({ _id: user._id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRATION });
+            const newRefreshToken = yield jsonwebtoken_1.default.sign({ _id: user._id }, process.env.JWT_REFRESH_SECRET);
+            userDb.refreshTokens = userDb.refreshTokens.filter((t) => t !== refreshToken);
             userDb.refreshTokens.push(newRefreshToken);
             yield userDb.save();
             return res.status(200).send({
-                'accessToken': accessToken,
-                'refreshToken': refreshToken
+                accessToken: accessToken,
+                refreshToken: refreshToken,
             });
         }
         catch (err) {
@@ -133,6 +150,11 @@ exports.default = {
     register,
     login,
     logout,
-    refresh
+    refresh,
 };
+function prepareUser(newUser) {
+    const userData = newUser.toObject();
+    delete userData.password;
+    return userData;
+}
 //# sourceMappingURL=auth_controller.js.map

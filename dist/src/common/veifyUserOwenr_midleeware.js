@@ -27,7 +27,6 @@ const verifyUserOwner = (req, res, next) => __awaiter(void 0, void 0, void 0, fu
         const user = yield user_model_1.default.findById(id);
         console.log("this is the user: " + user);
         if (!user || user._id.toString() !== currentUserId) {
-            console.log("im hereeeeeeeeeeee1");
             return res.status(403).send('You do not have permission to modify this user');
         }
         next();

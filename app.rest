@@ -31,8 +31,8 @@ Content-Type: application/json
 
 ###
 
-PUT http://localhost:6969/book/updateOwnBook/65a582820b50e365c925d0db
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NWE1ODI4MjBiNTBlMzY1YzkyNWQwY2YiLCJpYXQiOjE3MDUzOTIyMDIsImV4cCI6MTcwNTM5NTgwMn0.eb9NB1xuLe0RM-ndQkVfWm2mWsupav5M3-TsDIedcUk
+POST http://localhost:6969/book/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NWE2ZWQyN2E4NWU5YjRmZDRkYTVhOGQiLCJpYXQiOjE3MDU1MDc1NzUsImV4cCI6MTcwNTUxMTE3NX0.QH1Eq9XRi6QZMr90HJACziF0g_aLjYBClZMIYJmAvkE
 Content-Type: application/json
 
 {
