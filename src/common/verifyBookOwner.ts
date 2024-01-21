@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import User from '../models/user_model';
 import jwt from 'jsonwebtoken';
-//check
+
 interface CustomRequest extends Request {
     user?: { _id: string;};
   }

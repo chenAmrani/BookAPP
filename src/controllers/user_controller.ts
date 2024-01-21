@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import User from '../models/user_model';
 import bcrypt from 'bcrypt';
-//check
+
 
 interface CustomRequest  extends Request {
     locals: {

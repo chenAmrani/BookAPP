@@ -3,7 +3,7 @@ import User, { IUser } from "../models/user_model";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { Document } from "mongoose";
-//check
+
 const register = async (req: Request, res: Response) => {
   const email = req.body.email;
   const password = req.body.password;
