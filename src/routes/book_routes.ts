@@ -1,4 +1,3 @@
-//check
 import express from "express";
 const router = express.Router();
 import bookController from "../controllers/book_controller";

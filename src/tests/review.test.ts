@@ -1,4 +1,3 @@
-//check
 import { Express } from "express";
 import request from "supertest";
 import initApp from "../app";

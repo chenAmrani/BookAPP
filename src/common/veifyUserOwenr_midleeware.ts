@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import User from '../models/user_model';
-//check
+
 interface CustomRequest extends Request {
     locals: {
       currentUserId?: string;

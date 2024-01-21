@@ -4,7 +4,7 @@ import {Response } from "express";
 import { AuthRequest } from "../common/auth_middleware";
 import book_model from "../models/book_model";
 //import book_model from "../models/book_model";
-//check
+
 class ReviewController extends BaseController<IReview> {
     constructor() {
         super(Review);
