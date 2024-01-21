@@ -1,6 +1,6 @@
 import path from "path";
 import multer from "multer";
-
+//check
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, path.join(process.cwd(), "static", "uploads"));
