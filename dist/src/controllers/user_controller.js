@@ -135,6 +135,6 @@ exports.default = {
     updateUser,
     deleteUser,
     updateOwnProfile,
-    getMyBooks,
+    getMyBooks
 };
 //# sourceMappingURL=user_controller.js.map
