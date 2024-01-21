@@ -23,18 +23,21 @@ let readerAccessToken;
 let adminAccessToken;
 const adminUser = {
     name: "name1",
+    image: "image1",
     email: "admin@test.com",
     password: "adminpass",
     role: "admin"
 };
 const authorUser = {
     name: "name1",
+    image: "image1",
     email: "author@test.com",
     password: "authorpass",
     role: "author"
 };
 const readerUser = {
     name: "name1",
+    image: "image1",
     email: "reader@test.com",
     password: "readerpass",
     role: "reader"

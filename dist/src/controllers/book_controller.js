@@ -69,11 +69,6 @@ class bookController extends base_controller_1.BaseController {
                     new: true,
                 });
                 console.log("The updatedBook is: " + updatedBook);
-                // await this.model.findByIdAndUpdate(req.params.id, req.body, { new: true });
-                // await this.model.findByIdAndUpdate(req.params.id, req.body);
-                // const obj = await this.model.findById(req.body._id);
-                // console.log("The objjjj is: " + obj);
-                console.log("The updatedBook is: " + updatedBook);
                 res.status(200).send(updatedBook);
             }
             catch (err) {

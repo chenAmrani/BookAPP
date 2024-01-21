@@ -34,9 +34,9 @@ const register = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const newUser = yield user_model_1.default.create({
             email: email,
             password: encryptedPassword,
+            image: req.file ? req.file.filename : undefined,
             role: role,
             name: name,
-            avatar: req.file.filename,
         });
         const userData = prepareUser(newUser);
         return res.status(201).send(userData);
@@ -64,7 +64,7 @@ const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             return res.status(401).send("email or password incorrect");
         }
         const accessToken = jsonwebtoken_1.default.sign({ _id: user._id }, process.env.JWT_SECRET, {
-            expiresIn: process.env.JWT_EXPIRATION,
+            expiresIn: process.env.JWT_EXPIRATION || "1h",
         });
         const refreshToken = jsonwebtoken_1.default.sign({ _id: user._id }, process.env.JWT_REFRESH_SECRET);
         if (user.refreshTokens == null) {
@@ -155,6 +155,7 @@ exports.default = {
 function prepareUser(newUser) {
     const userData = newUser.toObject();
     delete userData.password;
+    delete userData.refreshTokens; //לבדוק האם למחוק את זה
     return userData;
 }
 //# sourceMappingURL=auth_controller.js.map

@@ -171,12 +171,7 @@ router.get("/:id", bookController.getById.bind(bookController));
  *         description: Book not found
  */
 
-router.put(
-  "/admin/update/:id",
-  authMiddleware,
-  adminMiddleware,
-  bookController.putById.bind(bookController)
-);
+router.put("/admin/update/:id",authMiddleware,adminMiddleware,bookController.putById.bind(bookController));
 
 /**
  * @swagger
@@ -210,12 +205,7 @@ router.put(
  *         description: Book not found
  */
 
-router.delete(
-  "/admin/delete/:id",
-  authMiddleware,
-  adminMiddleware,
-  bookController.deleteById.bind(bookController)
-);
+router.delete("/admin/delete/:id",authMiddleware,adminMiddleware,bookController.deleteById.bind(bookController));
 
 /**
  * @swagger
@@ -252,12 +242,7 @@ router.delete(
  *       404:
  *         description: Book not found
  */
-router.put(
-  "/updateOwnBook/:id",
-  authMiddleware,
-  verifyBookOwner,
-  bookController.putById.bind(bookController)
-);
+router.put("/updateOwnBook/:id",authMiddleware,verifyBookOwner,bookController.putById.bind(bookController));
 
 /**
  * @swagger
@@ -284,12 +269,7 @@ router.put(
  *         description: Book not found
  */
 
-router.delete(
-  "/:id",
-  authMiddleware,
-  verifyBookOwner,
-  bookController.deleteById.bind(bookController)
-);
+router.delete("/:id",authMiddleware,verifyBookOwner,bookController.deleteById.bind(bookController));
 
 /**
  * @swagger
@@ -319,18 +299,8 @@ router.delete(
  *       406:
  *         description: Book already exists
  */
-router.post(
-  "/",
-  authMiddleware,
-  authorMiddleware,
-  bookController.post.bind(bookController)
-);
+router.post("/",authMiddleware,authorMiddleware,bookController.post.bind(bookController));
 
-router.post(
-  "/admin",
-  authMiddleware,
-  adminMiddleware,
-  bookController.post.bind(bookController)
-);
+router.post("/admin",authMiddleware,adminMiddleware,bookController.post.bind(bookController));
 
 export default router;

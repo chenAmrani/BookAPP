@@ -26,9 +26,9 @@ const register = async (req: Request, res: Response) => {
     const newUser = await User.create({
       email: email,
       password: encryptedPassword,
+      image: req.file ? req.file.filename : undefined,
       role: role,
       name: name,
-      avatar: req.file.filename,
     });
 
     const userData = prepareUser(newUser);
@@ -61,7 +61,7 @@ const login = async (req: Request, res: Response) => {
     }
 
     const accessToken = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, {
-      expiresIn: process.env.JWT_EXPIRATION,
+      expiresIn: process.env.JWT_EXPIRATION || "1h",
     });
     const refreshToken = jwt.sign(
       { _id: user._id },
@@ -180,5 +180,6 @@ function prepareUser(
   const userData = newUser.toObject();
 
   delete userData.password;
+  delete userData.refreshTokens; //לבדוק האם למחוק את זה
   return userData;
 }
