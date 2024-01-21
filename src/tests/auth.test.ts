@@ -11,6 +11,7 @@ const user = {
   email: "Admin@test.com",
   password: "123456789",
   role: "admin",
+  image: "image1",
 }
 beforeAll(async () => {
   app = await initApp();

@@ -6,7 +6,7 @@ export interface IUser {
   email: string;
   password: string;
   _id?: string;
-  image?: string;
+  image: string;
   refreshTokens?: string[];
   role: string;
   books?: typeof mongoose.Schema.Types.ObjectId[];

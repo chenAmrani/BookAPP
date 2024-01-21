@@ -10,6 +10,7 @@ let createdReview1: string;
 
 const user: IUser = {
   name:"Moshe Amrani",
+  image: "image1",
   email: "testReview@test.com",
   password: "1234567890",
   role: "reader",

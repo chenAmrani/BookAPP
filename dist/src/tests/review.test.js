@@ -21,6 +21,7 @@ let app;
 let createdReview1;
 const user = {
     name: "Moshe Amrani",
+    image: "image1",
     email: "testReview@test.com",
     password: "1234567890",
     role: "reader",
