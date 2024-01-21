@@ -22,6 +22,7 @@ const user = {
     email: "Admin@test.com",
     password: "123456789",
     role: "admin",
+    image: "image1",
 };
 beforeAll(() => __awaiter(void 0, void 0, void 0, function* () {
     app = yield (0, app_1.default)();

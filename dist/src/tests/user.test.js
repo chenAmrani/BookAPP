@@ -27,19 +27,22 @@ const adminUser = {
     name: "admin1",
     email: "admin@test.com",
     password: "adminpass",
-    role: "admin"
+    role: "admin",
+    Image: "image1"
 };
 const authorUser = {
     name: "author1",
     email: "author@test.com",
     password: "authorpass",
-    role: "author"
+    role: "author",
+    Image: "image1"
 };
 const readerUser = {
     name: "reader1",
     email: "reader@test.com",
     password: "readerpass",
-    role: "reader"
+    role: "reader",
+    Image: "image1"
 };
 beforeAll(() => __awaiter(void 0, void 0, void 0, function* () {
     app = yield (0, app_1.default)();
