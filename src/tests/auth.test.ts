@@ -3,6 +3,7 @@ import initApp from "../app";
 import mongoose from "mongoose";
 import { Express } from "express";
 import User from "../models/user_model";
+import path from 'path';
 
 let app: Express;
 const user = {
@@ -26,13 +27,20 @@ let accessToken: string;
 let refreshToken: string;
 let newRefreshToken: string
 
+
 describe("Auth tests", () => {
   test("Test Register", async () => {
     const response = await request(app)
       .post("/auth/register")
-      .send(user);
+      .field("name", user.name)
+      .field("email", user.email)
+      .field("password", user.password)
+      .field("role", user.role)
+      .attach("avatar",path.join(__dirname, "../../static/uploads/avatar.jpg"));
+  
     expect(response.statusCode).toBe(201);
   });
+  
 
   test("Test Register exist email", async () => {
     const response = await request(app)
