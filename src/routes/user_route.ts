@@ -11,9 +11,11 @@ const router = express.Router();
  * tags:
  *   name: Users
  *   description: API for managing users.
+ */
 
 
-
+/**
+ * @swagger
  * components:
  *   securitySchemes:
  *       bearerAuth:
@@ -21,6 +23,8 @@ const router = express.Router();
  *           scheme: bearer
  *           bearerFormat: JWT
 
+/**
+ * @swagger
  * components:
  *   schemas:
  *     User:
@@ -30,7 +34,7 @@ const router = express.Router();
  *         - email
  *         - password
  *         - role
- *       properties:
+ *     properties:
  *         name:
  *           type: string
  *           description: The name of the user
@@ -51,43 +55,47 @@ const router = express.Router();
  *           items:
  *             type: string
  *           description: IDs of books related to the user
- *       example:
+ *     example:
  *         name: 'John Doe'
  *         email: 'john@example.com'
  *         password: 'password123'
  *         image: 'https://example.com/john.jpg'
  *         role: 'author'
- *         books: ['65a24e94e289d55bee3e1130']  
+ *         books: ['65a24e94e289d55bee3e1130']
+ */  
 
-* /user/:
-*   get:
-*       summary: get all users registered to the site (admin only)
-*       tags: [User]
-*       requestBody:
-*           required: true
-*           content:
-*               application/json:
-*                   schema:
-*                       $ref: '#/components/schemas/User'
-*       security:
-*           - bearerAuth: []
-*       responses:
-*           200:
-*               description: Get all users registered to the site
-*               content:
-*                   application/json:
-*                       schema:
-*                           $ref: '#/components/schemas/User'
-*           401:
-*               description: Unauthorized
-*               content:
-*                   application/json:
-*                       schema:
-*                           $ref: '#/components/schemas/User'
-*
+/** 
+ * @swagger
+ * /user/:
+ *   get:
+ *    summary: get all users registered to the site (admin only)
+ *    tags: [Users]
+ *    requestBody:
+ *      required: true
+ *      content:
+ *        application/json:
+ *          schema:
+ *            $ref: '#/components/schemas/User'
+ *    security:
+ *      - bearerAuth: []
+ *    responses:
+ *      200:
+ *        description: Get all users registered to the site
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: '#/components/schemas/User'
+ *      401:
+ *        description: Unauthorized
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: '#/components/schemas/User'
+ *
+ */
 
-
-
+/** 
+ * @swagger
  * /user/:id:
  *   get:
  *     summary: Get details of a specific user (Admin)
@@ -99,6 +107,8 @@ const router = express.Router();
  *           type: string
  *         required: true
  *         description: ID of the user
+ *     security:
+ *      - bearerAuth: []
  *     responses:
  *       200:
  *         description: Details of the user
@@ -111,6 +121,7 @@ const router = express.Router();
  *       404:
  *         description: User not found
  */
+
 /**
  * @swagger
  * /user/update:
@@ -123,6 +134,8 @@ const router = express.Router();
  *         application/json:
  *           schema:
  *             $ref: '#/components/schemas/User'
+ *     security:
+ *      - bearerAuth: []
  *     responses:
  *       200:
  *         description: Updated details of the user
@@ -134,7 +147,8 @@ const router = express.Router();
  *         description: Unauthorized, missing or invalid token
  *       404:
  *         description: User not found
- * */
+ * 
+ */
 
 /**  
  * @swagger
@@ -149,6 +163,8 @@ const router = express.Router();
  *           type: string
  *         required: true
  *         description: ID of the user
+ *     security:
+ *      - bearerAuth: []
  *     responses:
  *       200:
  *         description: User deleted successfully
@@ -156,7 +172,7 @@ const router = express.Router();
  *         description: Unauthorized, missing or invalid token
  *       404:
  *         description: User not found
-  */
+ */
 
 
 /**
@@ -165,6 +181,8 @@ const router = express.Router();
  *   get:
  *     summary: Get a list of books related to the user (Author)
  *     tags: [Users]
+ *     security:
+ *      - bearerAuth: []
  *     responses:
  *       200:
  *         description: A list of book IDs related to the user
@@ -178,10 +196,11 @@ const router = express.Router();
  *         description: Unauthorized, missing or invalid token
  *       404:
  *         description: User not found
- * */
+ */
  
- /**
- * /users/deleteByAuthor/{id}:
+/**
+ * @swagger
+ * /users/deleteMyOwnUser/{id}:
  *   delete:
  *     summary: Delete a specific user (Author)
  *     tags: [Users]
@@ -192,6 +211,8 @@ const router = express.Router();
  *           type: string
  *         required: true
  *         description: ID of the user
+ *     security:
+ *      - bearerAuth: []
  *     responses:
  *       200:
  *         description: User deleted successfully
@@ -201,7 +222,7 @@ const router = express.Router();
  *         description: Forbidden, user does not have permission
  *       404:
  *         description: User not found
- * */
+ */
 
  /** 
  * @swagger
@@ -215,6 +236,8 @@ const router = express.Router();
  *         application/json:
  *           schema:
  *             $ref: '#/components/schemas/User'
+ *     security:
+ *      - bearerAuth: []
  *     responses:
  *       200:
  *         description: Updated details of the user's profile
@@ -226,7 +249,8 @@ const router = express.Router();
  *         description: Unauthorized, missing or invalid token
  *       404:
  *         description: User not found
- * */
+ * 
+ */
 
 
  /**
@@ -274,7 +298,7 @@ export default router;
 router.get("/",authMiddleware,adminMiddleware,UserController.getAllUsers);
 router.get('/:email',authMiddleware,UserController.getUserByEmail);
 router.put("/updateOwnProfile", authMiddleware,verifyUserOwenerMiddleware,UserController.updateOwnProfile);
-router.delete("/deleteByAuthor/:id",authMiddleware,verifyUserOwenerMiddleware,UserController.deleteUser);
+router.delete("/deleteMyOwnUser/:id",authMiddleware,verifyUserOwenerMiddleware,UserController.deleteUser);
 router.get("/books",authMiddleware,UserController.getMyBooks);
 router.delete("/delete/:id",authMiddleware,adminMiddleware,UserController.deleteUser);
 router.get("/id:",authMiddleware,adminMiddleware,UserController.getUserById);
