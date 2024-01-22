@@ -203,5 +203,5 @@ router.post("/",authMiddleware, reviewController.post.bind(reviewController));
 router.put("/:id",authMiddleware, reviewController.putById.bind(reviewController));
 
 router.delete("/:id",authMiddleware, reviewController.deleteById.bind(reviewController));
-
+ //need to add delete for admin
 export default router;

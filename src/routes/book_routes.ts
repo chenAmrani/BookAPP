@@ -92,7 +92,7 @@ import verifyBookOwner from "../common/verifyBookOwner";
  * @swagger
  * /book/:
  *   get:
- *     summary: Get a list of all books
+ *     summary: Get a list of all the books
  *     tags: [Book]
  *     responses:
  *       200:
@@ -250,12 +250,12 @@ router.put("/updateOwnBook/:id",authMiddleware,verifyBookOwner,bookController.pu
  *   delete:
  *     summary: Delete a specific book (Author)
  *     tags: [Book]
- *       requestBody:
- *           required: false
- *           content:
- *               application/json:
- *                   schema:
- *                       $ref: '#/components/schemas/Book'
+ *     requestBody:
+ *       required: false
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Book'
  *     security:
  *       - bearerAuth: []
  *     responses:
@@ -301,6 +301,7 @@ router.delete("/:id",authMiddleware,verifyBookOwner,bookController.deleteById.bi
  */
 router.post("/",authMiddleware,authorMiddleware,bookController.post.bind(bookController));
 
+//need to add swagger
 router.post("/admin",authMiddleware,adminMiddleware,bookController.post.bind(bookController));
 
 export default router;
