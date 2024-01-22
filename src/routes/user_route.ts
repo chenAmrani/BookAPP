@@ -97,7 +97,7 @@ const router = express.Router();
 
 /** 
  * @swagger
- * /user/:id:
+ * /user/{id}:
  *   get:
  *     summary: Get details of a specific user (Admin)
  *     tags: [Users]
@@ -203,7 +203,7 @@ const router = express.Router();
  * @swagger
  * /users/deleteMyOwnUser/{id}:
  *   delete:
- *     summary: Delete a specific user (Author)
+ *     summary: Delete a specific user 
  *     tags: [Users]
  *     parameters:
  *       - in: path
