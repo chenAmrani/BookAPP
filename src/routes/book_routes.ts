@@ -250,12 +250,12 @@ router.put("/updateOwnBook/:id",authMiddleware,verifyBookOwner,bookController.pu
  *   delete:
  *     summary: Delete a specific book (Author)
  *     tags: [Book]
- *       requestBody:
- *           required: false
- *           content:
- *               application/json:
- *                   schema:
- *                       $ref: '#/components/schemas/Book'
+ *     requestBody:
+ *       required: false
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Book'
  *     security:
  *       - bearerAuth: []
  *     responses:

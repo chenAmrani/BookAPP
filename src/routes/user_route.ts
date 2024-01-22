@@ -22,6 +22,7 @@ const router = express.Router();
  *           type: http
  *           scheme: bearer
  *           bearerFormat: JWT
+ */
 
 /**
  * @swagger
@@ -224,7 +225,7 @@ const router = express.Router();
  *         description: User not found
  */
 
- /** 
+/** 
  * @swagger
  * /user/updateOwnProfile:
  *   put:
@@ -253,7 +254,7 @@ const router = express.Router();
  */
 
 
- /**
+/**
  * @swagger
  * /user/{email}:
  *   get:
