@@ -74,7 +74,10 @@ import authMiddleware from "../common/auth_middleware";
  *                 $ref: '#/components/schemas/Review'
  *       401:
  *         description: Unauthorized, missing or invalid token
- * 
+ */
+/**
+ * @swagger
+ * /post:
  *   post:
  *     summary: Create a new review
  *     tags: [Reviews]
@@ -127,7 +130,11 @@ import authMiddleware from "../common/auth_middleware";
  *         description: Unauthorized, missing or invalid token
  *       404:
  *         description: Review not found
- * 
+ */
+
+/**
+ * @swagger
+ * /put/{id}: 
  *   put:
  *     summary: Update details of a specific review
  *     tags: [Reviews]
@@ -159,7 +166,10 @@ import authMiddleware from "../common/auth_middleware";
  *         description: Unauthorized, missing or invalid token
  *       404:
  *         description: Review not found
- * 
+ */
+/**
+ * @swagger
+ * /delete/{id}:  
  *   delete:
  *     summary: Delete a specific review
  *     tags: [Reviews]

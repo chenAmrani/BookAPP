@@ -24,7 +24,7 @@ import verifyBookOwner from "../common/verifyBookOwner";
  *
  * security:
  *   - bearerAuth: []
- *
+ */
 
 /**
  * @swagger 
@@ -148,8 +148,8 @@ router.get("/:id", bookController.getById.bind(bookController));
  *         application/json:
  *           schema:
  *             $ref: '#/components/schemas/Book'
- *       security:
- *         - bearerAuth: []
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -220,8 +220,8 @@ router.delete("/admin/delete/:id",authMiddleware,adminMiddleware,bookController.
  *         application/json:
  *           schema:
  *             $ref: '#/components/schemas/Book'
- *       security:
- *         - bearerAuth: []
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -256,8 +256,8 @@ router.put("/updateOwnBook/:id",authMiddleware,verifyBookOwner,bookController.pu
  *               application/json:
  *                   schema:
  *                       $ref: '#/components/schemas/Book'
- *       security:
- *           - bearerAuth: []
+ *     security:
+ *       - bearerAuth: []
  *     responses:
  *       200:
  *         description: Book deleted successfully

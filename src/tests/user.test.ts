@@ -205,7 +205,7 @@ const adminUser = {
             //tests that check that return us error.
           //   test("Test Delete user by Id - not Admin,and not on the same user ", async () => {
           //     const response = await request(app)
-          //     .delete(`/user/deleteByAuthor${readerUserId}`)
+          //     .delete(`/user/deleteMyOwnUser${readerUserId}`)
           //     .set("Authorization", "JWT " + accessTokenUser2);
       
           //     expect(response.statusCode).toBe(403);
