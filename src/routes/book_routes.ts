@@ -249,7 +249,8 @@ router.put("/updateOwnBook/:id",authMiddleware,verifyBookOwner,bookController.pu
  * /book/{id}:
  *   delete:
  *     summary: Delete a specific book (Author)
- *     tags: [Book]
+ *     tags:
+ *       - Book
  *     requestBody:
  *       required: false
  *       content:
@@ -258,6 +259,12 @@ router.put("/updateOwnBook/:id",authMiddleware,verifyBookOwner,bookController.pu
  *             $ref: '#/components/schemas/Book'
  *     security:
  *       - bearerAuth: []
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         description: The ID of the book to be deleted.
+ *         required: true
+ *         type: string
  *     responses:
  *       200:
  *         description: Book deleted successfully
@@ -301,7 +308,7 @@ router.delete("/:id",authMiddleware,verifyBookOwner,bookController.deleteById.bi
  */
 router.post("/",authMiddleware,authorMiddleware,bookController.post.bind(bookController));
 
-//need to add swagger
+//need to add swager
 router.post("/admin",authMiddleware,adminMiddleware,bookController.post.bind(bookController));
 
 export default router;
