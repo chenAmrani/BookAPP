@@ -15,10 +15,13 @@ import authMiddleware from "../common/auth_middleware";
  * @swagger
  * components:
  *   securitySchemes:
- *       bearerAuth:
- *           type: http
- *           scheme: bearer
- *           bearerFormat: JWT
+ *      bearerAuth:
+ *          type: http
+ *          scheme: bearer
+ *          bearerFormat: JWT
+ * 
+ * security:
+ *   - bearerAuth: []
  */
 
 /**
@@ -32,6 +35,7 @@ import authMiddleware from "../common/auth_middleware";
  *         - text
  *         - owner
  *         - bookId
+ *         - Date
  *       properties:
  *         BookName:
  *           type: string
@@ -50,11 +54,15 @@ import authMiddleware from "../common/auth_middleware";
  *           type: string
  *           format: uuid
  *           description: The ID of the book being reviewed
+ *         Date:
+ *           type: Date,
+ *           description: The date of the posted review   
  *       example:
  *         BookName: 'Example Book'
  *         text: 'This is a great book!'
  *         owner: '60f2c5d97329573b6cfe0e76'  # Replace with actual user ID
  *         bookId: '60f2c5d97329573b6cfe0e77'  # Replace with actual book ID
+ *         Date: 'null'
  */
 
 /**
@@ -75,6 +83,7 @@ import authMiddleware from "../common/auth_middleware";
  *       401:
  *         description: Unauthorized, missing or invalid token
  */
+
 /**
  * @swagger
  * /post:
@@ -82,7 +91,7 @@ import authMiddleware from "../common/auth_middleware";
  *     summary: Create a new review
  *     tags: [Reviews]
  *     security:
- *       - BearerAuth: []
+ *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -139,7 +148,7 @@ import authMiddleware from "../common/auth_middleware";
  *     summary: Update details of a specific review
  *     tags: [Reviews]
  *     security:
- *       - BearerAuth: []
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -174,7 +183,7 @@ import authMiddleware from "../common/auth_middleware";
  *     summary: Delete a specific review
  *     tags: [Reviews]
  *     security:
- *       - BearerAuth: []
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id

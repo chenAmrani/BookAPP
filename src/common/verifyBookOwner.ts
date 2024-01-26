@@ -28,7 +28,7 @@ const verifyBookOwner = async (req: CustomRequest, res: Response, next: NextFunc
 
         
         if (!user || user._id.toString() !== authorId) {
-            return res.status(403).send('You do not have permission to modify this user');
+            return res.status(403).send('You do not have permission to modify this book');
         }
 
         next();
