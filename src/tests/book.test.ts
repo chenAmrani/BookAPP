@@ -124,7 +124,7 @@ describe("Book tests", () => {
 
   test("Test Get All Books - empty response", async () => {
     const response = await request(app)
-      .get("/book")
+      .get("/book") //get(/book?name=book1)
       .set("Authorization", "JWT " + authorAccessToken);
     expect(response.statusCode).toBe(200);
     expect(response.body).toStrictEqual([]);

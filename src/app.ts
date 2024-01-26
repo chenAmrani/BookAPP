@@ -7,7 +7,7 @@ import reviewRoute from "./routes/review_routes";
 import authRoute from "./routes/auth_route";
 import userRoute from "./routes/user_route";
 import cors from "cors";
-import path from "path";
+
 
 const initApp = (): Promise<Express> => {
   const promise = new Promise<Express>((resolve) => {
@@ -25,7 +25,7 @@ const initApp = (): Promise<Express> => {
       app.use("/review", reviewRoute);
       app.use("/auth", authRoute);
       app.use("/user", userRoute);
-      app.use('/static', express.static(path.join(__dirname, 'static')));
+      app.use('/static', express.static( 'static'));
       resolve(app);
     });
   });
