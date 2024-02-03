@@ -2,7 +2,7 @@ import express from "express";
 const router = express.Router();
 import reviewController from "../controllers/review_controller";
 import authMiddleware from "../common/auth_middleware";
-
+import adminMiddleware from "../common/admin_middleware";
 
 /**
  * @swagger
@@ -207,5 +207,7 @@ router.put("/:id",authMiddleware, reviewController.putById.bind(reviewController
 
 
 router.delete("/:id",authMiddleware, reviewController.deleteById.bind(reviewController));
- //need to add delete for admin
+
+//need to add swagger documentation for admin routes
+ router.delete("/admin/delete/:id",authMiddleware, adminMiddleware ,reviewController.deleteById.bind(reviewController));
 export default router;
