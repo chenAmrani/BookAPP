@@ -94,6 +94,7 @@ const router = express.Router();
  *              $ref: '#/components/schemas/User'
  *
  */
+router.get("/",authMiddleware,adminMiddleware,UserController.getAllUsers);
 
 /** 
  * @swagger
@@ -122,6 +123,7 @@ const router = express.Router();
  *       404:
  *         description: User not found
  */
+router.get("/id:",authMiddleware,adminMiddleware,UserController.getUserById);
 
 /**
  * @swagger
@@ -150,6 +152,7 @@ const router = express.Router();
  *         description: User not found
  * 
  */
+router.put("/update",authMiddleware,adminMiddleware,UserController.updateUser);
 
 /**  
  * @swagger
@@ -174,7 +177,7 @@ const router = express.Router();
  *       404:
  *         description: User not found
  */
-
+router.delete("/delete/:id",authMiddleware,adminMiddleware,UserController.deleteUser);
 
 /**
  * @swagger
@@ -198,7 +201,8 @@ const router = express.Router();
  *       404:
  *         description: User not found
  */
- 
+router.get("/books",authMiddleware,UserController.getMyBooks);
+
 /**
  * @swagger
  * /users/deleteMyOwnUser/{id}:
@@ -224,7 +228,7 @@ const router = express.Router();
  *       404:
  *         description: User not found
  */
-
+router.delete("/deleteMyOwnUser/:id",authMiddleware,verifyUserOwenerMiddleware,UserController.deleteUser);
 /** 
  * @swagger
  * /user/updateOwnProfile:
@@ -252,7 +256,7 @@ const router = express.Router();
  *         description: User not found
  * 
  */
-
+router.put("/updateOwnProfile", authMiddleware,verifyUserOwenerMiddleware,UserController.updateOwnProfile);
 
 /**
  * @swagger
@@ -279,28 +283,8 @@ const router = express.Router();
  *       404:
  *         description: User not found
  */
-
-
-
-
-
-
-
-
-
-
-
+router.get('/:email',authMiddleware,UserController.getUserByEmail);
 
 
 
 export default router;
-
-
-router.get("/",authMiddleware,adminMiddleware,UserController.getAllUsers);
-router.get('/:email',authMiddleware,UserController.getUserByEmail);
-router.put("/updateOwnProfile", authMiddleware,verifyUserOwenerMiddleware,UserController.updateOwnProfile);
-router.delete("/deleteMyOwnUser/:id",authMiddleware,verifyUserOwenerMiddleware,UserController.deleteUser);
-router.get("/books",authMiddleware,UserController.getMyBooks);
-router.delete("/delete/:id",authMiddleware,adminMiddleware,UserController.deleteUser);
-router.get("/id:",authMiddleware,adminMiddleware,UserController.getUserById);
-router.put("/update",authMiddleware,adminMiddleware,UserController.updateUser);

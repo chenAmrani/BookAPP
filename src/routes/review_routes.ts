@@ -83,6 +83,7 @@ import authMiddleware from "../common/auth_middleware";
  *       401:
  *         description: Unauthorized, missing or invalid token
  */
+router.get("/", reviewController.get.bind(reviewController));
 
 /**
  * @swagger
@@ -114,7 +115,7 @@ import authMiddleware from "../common/auth_middleware";
  *       500:
  *         description: Internal Server Error
  */
-
+router.post("/",authMiddleware, reviewController.post.bind(reviewController));
 /**
  * @swagger
  * /review/{id}:
@@ -140,6 +141,7 @@ import authMiddleware from "../common/auth_middleware";
  *       404:
  *         description: Review not found
  */
+router.get("/:id", reviewController.getById.bind(reviewController));
 
 /**
  * @swagger
@@ -176,6 +178,7 @@ import authMiddleware from "../common/auth_middleware";
  *       404:
  *         description: Review not found
  */
+router.put("/:id",authMiddleware, reviewController.putById.bind(reviewController));
 /**
  * @swagger
  * /delete/{id}:  
@@ -202,14 +205,6 @@ import authMiddleware from "../common/auth_middleware";
  *         description: Fail, error message
  */
 
-
-router.get("/", reviewController.get.bind(reviewController));
-
-router.get("/:id", reviewController.getById.bind(reviewController));
-
-router.post("/",authMiddleware, reviewController.post.bind(reviewController));
-
-router.put("/:id",authMiddleware, reviewController.putById.bind(reviewController));
 
 router.delete("/:id",authMiddleware, reviewController.deleteById.bind(reviewController));
  //need to add delete for admin
