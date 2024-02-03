@@ -2,7 +2,6 @@ import express from "express";
 const router = express.Router();
 import reviewController from "../controllers/review_controller";
 import authMiddleware from "../common/auth_middleware";
-import adminMiddleware from "../common/admin_middleware";
 
 /**
  * @swagger
@@ -11,7 +10,7 @@ import adminMiddleware from "../common/admin_middleware";
  *   description: API for managing book reviews.
  */
 
-/** 
+/**
  * @swagger
  * components:
  *   securitySchemes:
@@ -19,7 +18,7 @@ import adminMiddleware from "../common/admin_middleware";
  *          type: http
  *          scheme: bearer
  *          bearerFormat: JWT
- * 
+ *
  * security:
  *   - bearerAuth: []
  */
@@ -56,7 +55,7 @@ import adminMiddleware from "../common/admin_middleware";
  *           description: The ID of the book being reviewed
  *         Date:
  *           type: Date,
- *           description: The date of the posted review   
+ *           description: The date of the posted review
  *       example:
  *         BookName: 'Example Book'
  *         text: 'This is a great book!'
@@ -83,7 +82,6 @@ import adminMiddleware from "../common/admin_middleware";
  *       401:
  *         description: Unauthorized, missing or invalid token
  */
-router.get("/", reviewController.get.bind(reviewController));
 
 /**
  * @swagger
@@ -115,7 +113,7 @@ router.get("/", reviewController.get.bind(reviewController));
  *       500:
  *         description: Internal Server Error
  */
-router.post("/",authMiddleware, reviewController.post.bind(reviewController));
+
 /**
  * @swagger
  * /review/{id}:
@@ -141,11 +139,10 @@ router.post("/",authMiddleware, reviewController.post.bind(reviewController));
  *       404:
  *         description: Review not found
  */
-router.get("/:id", reviewController.getById.bind(reviewController));
 
 /**
  * @swagger
- * /put/{id}: 
+ * /put/{id}:
  *   put:
  *     summary: Update details of a specific review
  *     tags: [Reviews]
@@ -178,11 +175,9 @@ router.get("/:id", reviewController.getById.bind(reviewController));
  *       404:
  *         description: Review not found
  */
-router.put("/:id",authMiddleware, reviewController.putById.bind(reviewController));
-
 /**
  * @swagger
- * /delete/{id}:  
+ * /delete/{id}:
  *   delete:
  *     summary: Delete a specific review
  *     tags: [Reviews]
@@ -206,35 +201,20 @@ router.put("/:id",authMiddleware, reviewController.putById.bind(reviewController
  *         description: Fail, error message
  */
 
+router.get("/", reviewController.get.bind(reviewController));
 
-router.delete("/:id",authMiddleware, reviewController.deleteById.bind(reviewController));
+router.get("/:id", reviewController.getById.bind(reviewController));
 
+router.get("/book/:bookId", reviewController.getReviewsByBookId);
 
-/**
- * @swagger
- * /admin/delete/{id}:  
- *   delete:
- *     summary: Delete a specific review
- *     tags: [Reviews]
- *     security:
- *       - bearerAuth: []
- *     parameters:
- *       - in: path
- *         name: id
- *         schema:
- *           type: string
- *         required: true
- *         description: ID of the review
- *     responses:
- *       200:
- *         description: OK
- *       401:
- *         description: Unauthorized, missing or invalid token
- *       404:
- *         description: Review not found
- *       406:
- *         description: Fail, error message
- */
+router.post("/", authMiddleware, reviewController.addNewReview);
 
- router.delete("/admin/delete/:id",authMiddleware, adminMiddleware ,reviewController.deleteById.bind(reviewController));
+router.put("/", authMiddleware, reviewController.updateById);
+
+router.delete(
+  "/:id",
+  authMiddleware,
+  reviewController.deleteById.bind(reviewController)
+);
+//need to add delete for admin
 export default router;
