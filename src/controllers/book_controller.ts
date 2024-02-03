@@ -49,7 +49,7 @@ class bookController extends BaseController<IBook> {
     }
   }
 
-  async putById(req: AuthRequest, res: Response) {
+  putById = async (req: AuthRequest, res: Response) => {
     try {
       const id = req.params.id;
       console.log("The id is: " + id);
@@ -64,7 +64,7 @@ class bookController extends BaseController<IBook> {
       console.log(err);
       res.status(406).send("fail: " + err.message);
     }
-  }
+  };
 }
 
 export default new bookController();
