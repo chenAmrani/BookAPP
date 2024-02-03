@@ -179,6 +179,7 @@ router.get("/:id", reviewController.getById.bind(reviewController));
  *         description: Review not found
  */
 router.put("/:id",authMiddleware, reviewController.putById.bind(reviewController));
+
 /**
  * @swagger
  * /delete/{id}:  
@@ -208,6 +209,32 @@ router.put("/:id",authMiddleware, reviewController.putById.bind(reviewController
 
 router.delete("/:id",authMiddleware, reviewController.deleteById.bind(reviewController));
 
-//need to add swagger documentation for admin routes
+
+/**
+ * @swagger
+ * /admin/delete/{id}:  
+ *   delete:
+ *     summary: Delete a specific review
+ *     tags: [Reviews]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: ID of the review
+ *     responses:
+ *       200:
+ *         description: OK
+ *       401:
+ *         description: Unauthorized, missing or invalid token
+ *       404:
+ *         description: Review not found
+ *       406:
+ *         description: Fail, error message
+ */
+
  router.delete("/admin/delete/:id",authMiddleware, adminMiddleware ,reviewController.deleteById.bind(reviewController));
 export default router;
