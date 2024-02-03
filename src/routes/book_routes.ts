@@ -27,7 +27,7 @@ import verifyBookOwner from "../common/verifyBookOwner";
  */
 
 /**
- * @swagger 
+ * @swagger
  * components:
  *   schemas:
  *     Book:
@@ -82,7 +82,7 @@ import verifyBookOwner from "../common/verifyBookOwner";
  *         pages: 100
  *         price: 100
  *         rating: 5
- *         author: '65a639239dd9ed21c708bbe3' 
+ *         author: '65a639239dd9ed21c708bbe3'
  *         category: 'category1'
  *         summary: 'summary1'
  *         reviews: []
@@ -171,7 +171,12 @@ router.get("/:id", bookController.getById.bind(bookController));
  *         description: Book not found
  */
 
-router.put("/admin/update/:id",authMiddleware,adminMiddleware,bookController.putById.bind(bookController));
+router.put(
+  "/admin/update/:id",
+  authMiddleware,
+  adminMiddleware,
+  bookController.putById.bind(bookController)
+);
 
 /**
  * @swagger
@@ -205,7 +210,12 @@ router.put("/admin/update/:id",authMiddleware,adminMiddleware,bookController.put
  *         description: Book not found
  */
 
-router.delete("/admin/delete/:id",authMiddleware,adminMiddleware,bookController.deleteById.bind(bookController));
+router.delete(
+  "/admin/delete/:id",
+  authMiddleware,
+  adminMiddleware,
+  bookController.deleteById.bind(bookController)
+);
 
 /**
  * @swagger
@@ -242,7 +252,12 @@ router.delete("/admin/delete/:id",authMiddleware,adminMiddleware,bookController.
  *       404:
  *         description: Book not found
  */
-router.put("/updateOwnBook/:id",authMiddleware,verifyBookOwner,bookController.putById.bind(bookController));
+router.put(
+  "/updateOwnBook/:id",
+  authMiddleware,
+  verifyBookOwner,
+  bookController.putById.bind(bookController)
+);
 
 /**
  * @swagger
@@ -276,7 +291,12 @@ router.put("/updateOwnBook/:id",authMiddleware,verifyBookOwner,bookController.pu
  *         description: Book not found
  */
 
-router.delete("/:id",authMiddleware,verifyBookOwner,bookController.deleteById.bind(bookController));
+router.delete(
+  "/:id",
+  authMiddleware,
+  verifyBookOwner,
+  bookController.deleteById.bind(bookController)
+);
 
 /**
  * @swagger
@@ -306,9 +326,9 @@ router.delete("/:id",authMiddleware,verifyBookOwner,bookController.deleteById.bi
  *       406:
  *         description: Book already exists
  */
-router.post("/",authMiddleware,authorMiddleware,bookController.post.bind(bookController));
+router.post("/", authMiddleware, authorMiddleware, bookController.post);
 
-//need to add swager
-router.post("/admin",authMiddleware,adminMiddleware,bookController.post.bind(bookController));
+//need to add swagger
+router.post("/admin", authMiddleware, adminMiddleware, bookController.post);
 
 export default router;

@@ -1,35 +1,31 @@
 import mongoose from "mongoose";
 
 export interface IReview {
-  BookName: string;
-  date: Date;
   text: string;
-  owner:string;
+  reviewerId: typeof mongoose.Schema.Types.ObjectId;
   bookId: typeof mongoose.Schema.Types.ObjectId;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
-const reviewSchema = new mongoose.Schema<IReview>({
-  BookName: {
-    type: String,
-    required: true,
+const reviewSchema = new mongoose.Schema<IReview>(
+  {
+    text: {
+      type: String,
+      required: true,
+    },
+    reviewerId: {
+      type: mongoose.Schema.Types.ObjectId,
+      required: true,
+      ref: "User",
+    },
+    bookId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Book",
+    },
   },
-  date: {
-    type: Date,
-    default: () => new Date(),
-  },
-  text: {
-    type: String,
-    required: true,
-  },
-  owner: {
-    type: String,
-    required: true,
-  },
-  bookId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Book",
-  },
-});
+  { timestamps: true }
+);
 
 export const ReviewModel = mongoose.model<IReview>("Review", reviewSchema);
 export default ReviewModel;

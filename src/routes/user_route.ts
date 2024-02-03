@@ -1,8 +1,9 @@
 import express from "express";
-import UserController from '../controllers/user_controller';
-import authMiddleware from '../common/auth_middleware';
-import verifyUserOwenerMiddleware from '../common/veifyUserOwenr_midleeware';
-import adminMiddleware from '../common/admin_middleware';
+import UserController from "../controllers/user_controller";
+import authMiddleware from "../common/auth_middleware";
+import verifyUserOwenerMiddleware from "../common/veifyUserOwenr_midleeware";
+import adminMiddleware from "../common/admin_middleware";
+import { upload } from "../common/multer";
 
 const router = express.Router();
 
@@ -12,7 +13,6 @@ const router = express.Router();
  *   name: Users
  *   description: API for managing users.
  */
-
 
 /**
  * @swagger
@@ -63,9 +63,9 @@ const router = express.Router();
  *         image: 'https://example.com/john.jpg'
  *         role: 'author'
  *         books: ['65a24e94e289d55bee3e1130']
- */  
+ */
 
-/** 
+/**
  * @swagger
  * /user/:
  *   get:
@@ -94,9 +94,8 @@ const router = express.Router();
  *              $ref: '#/components/schemas/User'
  *
  */
-router.get("/",authMiddleware,adminMiddleware,UserController.getAllUsers);
 
-/** 
+/**
  * @swagger
  * /user/{id}:
  *   get:
@@ -123,7 +122,6 @@ router.get("/",authMiddleware,adminMiddleware,UserController.getAllUsers);
  *       404:
  *         description: User not found
  */
-router.get("/id:",authMiddleware,adminMiddleware,UserController.getUserById);
 
 /**
  * @swagger
@@ -150,11 +148,10 @@ router.get("/id:",authMiddleware,adminMiddleware,UserController.getUserById);
  *         description: Unauthorized, missing or invalid token
  *       404:
  *         description: User not found
- * 
+ *
  */
-router.put("/update",authMiddleware,adminMiddleware,UserController.updateUser);
 
-/**  
+/**
  * @swagger
  * /user/delete/{id}:
  *   delete:
@@ -177,7 +174,6 @@ router.put("/update",authMiddleware,adminMiddleware,UserController.updateUser);
  *       404:
  *         description: User not found
  */
-router.delete("/delete/:id",authMiddleware,adminMiddleware,UserController.deleteUser);
 
 /**
  * @swagger
@@ -201,13 +197,12 @@ router.delete("/delete/:id",authMiddleware,adminMiddleware,UserController.delete
  *       404:
  *         description: User not found
  */
-router.get("/books",authMiddleware,UserController.getMyBooks);
 
 /**
  * @swagger
  * /users/deleteMyOwnUser/{id}:
  *   delete:
- *     summary: Delete a specific user 
+ *     summary: Delete a specific user
  *     tags: [Users]
  *     parameters:
  *       - in: path
@@ -228,8 +223,8 @@ router.get("/books",authMiddleware,UserController.getMyBooks);
  *       404:
  *         description: User not found
  */
-router.delete("/deleteMyOwnUser/:id",authMiddleware,verifyUserOwenerMiddleware,UserController.deleteUser);
-/** 
+
+/**
  * @swagger
  * /user/updateOwnProfile:
  *   put:
@@ -254,9 +249,8 @@ router.delete("/deleteMyOwnUser/:id",authMiddleware,verifyUserOwenerMiddleware,U
  *         description: Unauthorized, missing or invalid token
  *       404:
  *         description: User not found
- * 
+ *
  */
-router.put("/updateOwnProfile", authMiddleware,verifyUserOwenerMiddleware,UserController.updateOwnProfile);
 
 /**
  * @swagger
@@ -283,8 +277,35 @@ router.put("/updateOwnProfile", authMiddleware,verifyUserOwenerMiddleware,UserCo
  *       404:
  *         description: User not found
  */
-router.get('/:email',authMiddleware,UserController.getUserByEmail);
-
-
 
 export default router;
+
+router.get("/", authMiddleware, adminMiddleware, UserController.getAllUsers);
+router.get("/:email", authMiddleware, UserController.getUserByEmail);
+router.put(
+  "/updateOwnProfile",
+  upload.single("image"),
+  authMiddleware,
+  verifyUserOwenerMiddleware,
+  UserController.updateOwnProfile
+);
+router.delete(
+  "/deleteMyOwnUser/:id",
+  authMiddleware,
+  verifyUserOwenerMiddleware,
+  UserController.deleteUser
+);
+router.get("/books", authMiddleware, UserController.getMyBooks);
+router.delete(
+  "/delete/:id",
+  authMiddleware,
+  adminMiddleware,
+  UserController.deleteUser
+);
+router.get("/id:", authMiddleware, adminMiddleware, UserController.getUserById);
+router.put(
+  "/update",
+  authMiddleware,
+  adminMiddleware,
+  UserController.updateUser
+);
