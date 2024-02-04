@@ -6,27 +6,20 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.ReviewModel = void 0;
 const mongoose_1 = __importDefault(require("mongoose"));
 const reviewSchema = new mongoose_1.default.Schema({
-    BookName: {
-        type: String,
-        required: true,
-    },
-    date: {
-        type: Date,
-        default: () => new Date(),
-    },
     text: {
         type: String,
         required: true,
     },
-    owner: {
-        type: String,
+    reviewerId: {
+        type: mongoose_1.default.Schema.Types.ObjectId,
         required: true,
+        ref: "User",
     },
     bookId: {
         type: mongoose_1.default.Schema.Types.ObjectId,
         ref: "Book",
     },
-});
+}, { timestamps: true });
 exports.ReviewModel = mongoose_1.default.model("Review", reviewSchema);
 exports.default = exports.ReviewModel;
 // const review1: IReview = {

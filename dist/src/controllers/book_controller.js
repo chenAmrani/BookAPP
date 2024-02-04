@@ -19,6 +19,23 @@ const user_model_1 = __importDefault(require("../models/user_model"));
 class bookController extends base_controller_1.BaseController {
     constructor() {
         super(book_model_1.default);
+        this.putById = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            try {
+                const id = req.params.id;
+                console.log("The id is: " + id);
+                const obj = req.body;
+                console.log("The obj is: " + obj);
+                const updatedBook = yield this.model.findByIdAndUpdate(id, obj, {
+                    new: true,
+                });
+                console.log("The updatedBook is: " + updatedBook);
+                res.status(200).send(updatedBook);
+            }
+            catch (err) {
+                console.log(err);
+                res.status(406).send("fail: " + err.message);
+            }
+        });
     }
     post(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -55,25 +72,6 @@ class bookController extends base_controller_1.BaseController {
             catch (error) {
                 console.log(error);
                 res.status(500).json({ message: error.message });
-            }
-        });
-    }
-    putById(req, res) {
-        return __awaiter(this, void 0, void 0, function* () {
-            try {
-                const id = req.params.id;
-                console.log("The id is: " + id);
-                const obj = req.body;
-                console.log("The obj is: " + obj);
-                const updatedBook = yield this.model.findByIdAndUpdate(id, obj, {
-                    new: true,
-                });
-                console.log("The updatedBook is: " + updatedBook);
-                res.status(200).send(updatedBook);
-            }
-            catch (err) {
-                console.log(err);
-                res.status(406).send("fail: " + err.message);
             }
         });
     }

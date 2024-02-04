@@ -27,8 +27,7 @@ const verifyBookOwner_1 = __importDefault(require("../common/verifyBookOwner"));
  *
  * security:
  *   - bearerAuth: []
- *
-
+ */
 /**
  * @swagger
  * components:
@@ -94,7 +93,7 @@ const verifyBookOwner_1 = __importDefault(require("../common/verifyBookOwner"));
  * @swagger
  * /book/:
  *   get:
- *     summary: Get a list of all books
+ *     summary: Get a list of all the books
  *     tags: [Book]
  *     responses:
  *       200:
@@ -148,8 +147,8 @@ router.get("/:id", book_controller_1.default.getById.bind(book_controller_1.defa
  *         application/json:
  *           schema:
  *             $ref: '#/components/schemas/Book'
- *       security:
- *         - bearerAuth: []
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -216,8 +215,8 @@ router.delete("/admin/delete/:id", auth_middleware_1.default, admin_middleware_1
  *         application/json:
  *           schema:
  *             $ref: '#/components/schemas/Book'
- *       security:
- *         - bearerAuth: []
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -244,15 +243,22 @@ router.put("/updateOwnBook/:id", auth_middleware_1.default, verifyBookOwner_1.de
  * /book/{id}:
  *   delete:
  *     summary: Delete a specific book (Author)
- *     tags: [Book]
- *       requestBody:
- *           required: false
- *           content:
- *               application/json:
- *                   schema:
- *                       $ref: '#/components/schemas/Book'
- *       security:
- *           - bearerAuth: []
+ *     tags:
+ *       - Book
+ *     requestBody:
+ *       required: false
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Book'
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         description: The ID of the book to be deleted.
+ *         required: true
+ *         type: string
  *     responses:
  *       200:
  *         description: Book deleted successfully
@@ -292,7 +298,8 @@ router.delete("/:id", auth_middleware_1.default, verifyBookOwner_1.default, book
  *       406:
  *         description: Book already exists
  */
-router.post("/", auth_middleware_1.default, author_middleware_1.default, book_controller_1.default.post.bind(book_controller_1.default));
-router.post("/admin", auth_middleware_1.default, admin_middleware_1.default, book_controller_1.default.post.bind(book_controller_1.default));
+router.post("/", auth_middleware_1.default, author_middleware_1.default, book_controller_1.default.post);
+//need to add swagger
+router.post("/admin", auth_middleware_1.default, admin_middleware_1.default, book_controller_1.default.post);
 exports.default = router;
 //# sourceMappingURL=book_routes.js.map
