@@ -22,18 +22,22 @@ const verifyUserOwner = (req, res, next) => __awaiter(void 0, void 0, void 0, fu
         console.log("this is the currentUserId test 2: " + currentUserId);
         if (!id || !currentUserId) {
             console.log("you have a problem here");
-            return res.status(400).send('User ID and current user ID are required for verification');
+            return res
+                .status(400)
+                .send("User ID and current user ID are required for verification");
         }
         const user = yield user_model_1.default.findById(id);
-        console.log("this is the user: " + user);
+        // console.log("this is the user: " + user);
         if (!user || user._id.toString() !== currentUserId) {
-            return res.status(403).send('You do not have permission to modify this user');
+            return res
+                .status(403)
+                .send("You do not have permission to modify this user");
         }
         next();
     }
     catch (err) {
-        console.error('Error in verifyUserOwnership:', err);
-        res.status(500).send('Internal Server Error -> verifyUserOwnership');
+        console.error("Error in verifyUserOwnership:", err);
+        res.status(500).send("Internal Server Error -> verifyUserOwnership");
     }
 });
 exports.default = verifyUserOwner;

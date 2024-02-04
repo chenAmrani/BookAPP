@@ -14,15 +14,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const authMiddleware = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    const authHeader = req.headers['authorization'];
-    const token = authHeader && authHeader.split(' ')[1]; // Bearer <token>
+    const authHeader = req.headers["authorization"];
+    const token = authHeader && authHeader.split(" ")[1]; // Bearer <token>
     if (!token)
         return res.sendStatus(401);
     try {
         jsonwebtoken_1.default.verify(token, process.env.JWT_SECRET, (err, user) => {
             if (err) {
                 //console.error('Token Verification Error:', err);
-                return res.status(401).json({ error: 'Token is not valid' });
+                return res.status(401).json({ error: "Token is not valid" });
             }
             req.user = user;
             req.locals = req.locals || {};
@@ -31,8 +31,8 @@ const authMiddleware = (req, res, next) => __awaiter(void 0, void 0, void 0, fun
         });
     }
     catch (err) {
-        console.error('Unexpected Error:', err);
-        res.status(500).send('Internal Server Error');
+        console.error("Unexpected Error:", err);
+        res.status(500).send("Internal Server Error");
     }
 });
 exports.default = authMiddleware;

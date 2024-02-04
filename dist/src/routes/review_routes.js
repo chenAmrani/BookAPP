@@ -17,10 +17,13 @@ const auth_middleware_1 = __importDefault(require("../common/auth_middleware"));
  * @swagger
  * components:
  *   securitySchemes:
- *       bearerAuth:
- *           type: http
- *           scheme: bearer
- *           bearerFormat: JWT
+ *      bearerAuth:
+ *          type: http
+ *          scheme: bearer
+ *          bearerFormat: JWT
+ *
+ * security:
+ *   - bearerAuth: []
  */
 /**
  * @swagger
@@ -33,6 +36,7 @@ const auth_middleware_1 = __importDefault(require("../common/auth_middleware"));
  *         - text
  *         - owner
  *         - bookId
+ *         - Date
  *       properties:
  *         BookName:
  *           type: string
@@ -51,11 +55,15 @@ const auth_middleware_1 = __importDefault(require("../common/auth_middleware"));
  *           type: string
  *           format: uuid
  *           description: The ID of the book being reviewed
+ *         Date:
+ *           type: Date,
+ *           description: The date of the posted review
  *       example:
  *         BookName: 'Example Book'
  *         text: 'This is a great book!'
  *         owner: '60f2c5d97329573b6cfe0e76'  # Replace with actual user ID
  *         bookId: '60f2c5d97329573b6cfe0e77'  # Replace with actual book ID
+ *         Date: 'null'
  */
 /**
  * @swagger
@@ -74,12 +82,15 @@ const auth_middleware_1 = __importDefault(require("../common/auth_middleware"));
  *                 $ref: '#/components/schemas/Review'
  *       401:
  *         description: Unauthorized, missing or invalid token
- *
+ */
+/**
+ * @swagger
+ * /post:
  *   post:
  *     summary: Create a new review
  *     tags: [Reviews]
  *     security:
- *       - BearerAuth: []
+ *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -126,12 +137,15 @@ const auth_middleware_1 = __importDefault(require("../common/auth_middleware"));
  *         description: Unauthorized, missing or invalid token
  *       404:
  *         description: Review not found
- *
+ */
+/**
+ * @swagger
+ * /put/{id}:
  *   put:
  *     summary: Update details of a specific review
  *     tags: [Reviews]
  *     security:
- *       - BearerAuth: []
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -158,12 +172,15 @@ const auth_middleware_1 = __importDefault(require("../common/auth_middleware"));
  *         description: Unauthorized, missing or invalid token
  *       404:
  *         description: Review not found
- *
+ */
+/**
+ * @swagger
+ * /delete/{id}:
  *   delete:
  *     summary: Delete a specific review
  *     tags: [Reviews]
  *     security:
- *       - BearerAuth: []
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -183,8 +200,10 @@ const auth_middleware_1 = __importDefault(require("../common/auth_middleware"));
  */
 router.get("/", review_controller_1.default.get.bind(review_controller_1.default));
 router.get("/:id", review_controller_1.default.getById.bind(review_controller_1.default));
-router.post("/", auth_middleware_1.default, review_controller_1.default.post.bind(review_controller_1.default));
-router.put("/:id", auth_middleware_1.default, review_controller_1.default.putById.bind(review_controller_1.default));
+router.get("/book/:bookId", review_controller_1.default.getReviewsByBookId);
+router.post("/", auth_middleware_1.default, review_controller_1.default.addNewReview);
+router.put("/", auth_middleware_1.default, review_controller_1.default.updateById);
 router.delete("/:id", auth_middleware_1.default, review_controller_1.default.deleteById.bind(review_controller_1.default));
+//need to add delete for admin
 exports.default = router;
 //# sourceMappingURL=review_routes.js.map

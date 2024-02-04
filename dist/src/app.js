@@ -12,7 +12,6 @@ const review_routes_1 = __importDefault(require("./routes/review_routes"));
 const auth_route_1 = __importDefault(require("./routes/auth_route"));
 const user_route_1 = __importDefault(require("./routes/user_route"));
 const cors_1 = __importDefault(require("cors"));
-const path_1 = __importDefault(require("path"));
 const initApp = () => {
     const promise = new Promise((resolve) => {
         const db = mongoose_1.default.connection;
@@ -28,7 +27,7 @@ const initApp = () => {
             app.use("/review", review_routes_1.default);
             app.use("/auth", auth_route_1.default);
             app.use("/user", user_route_1.default);
-            app.use('/static', express_1.default.static(path_1.default.join(__dirname, 'static')));
+            app.use('/static', express_1.default.static('static'));
             resolve(app);
         });
     });

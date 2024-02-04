@@ -12,25 +12,44 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.BaseController = void 0;
 class BaseController {
     constructor(model) {
+        this.putById = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            try {
+                const { id, obj } = req.body;
+                console.log("The id is: " + id);
+                console.log("The obj is: " + obj);
+                const updatedBook = yield this.model.findByIdAndUpdate(id, obj, {
+                    new: true,
+                });
+                console.log("The updatedBook is: " + updatedBook);
+                console.log("The updatedBook is: " + updatedBook);
+                res.status(200).send(updatedBook);
+            }
+            catch (err) {
+                console.log(err);
+                res.status(406).send("fail: " + err.message);
+            }
+        });
         this.model = model;
     }
     get(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            console.log('getAll');
+            console.log("getAll");
             try {
                 if (req.query.name) {
                     const obj = yield this.model.find({ name: req.query.name });
                     res.send(obj);
                 }
                 else {
-                    if (req.user && req.user.role === 'admin') {
+                    if (req.user && req.user.role === "admin") {
                         // Access to all books for admin
                         const allObjects = yield this.model.find();
                         res.send(allObjects);
                     }
                     else {
                         // Access to books based on user or default behavior
-                        const obj = yield this.model.find({ /* Your condition here */});
+                        const obj = yield this.model.find({
+                        /* Your condition here */
+                        });
                         res.send(obj);
                     }
                 }
@@ -64,23 +83,6 @@ class BaseController {
                 }
                 const obj = yield this.model.create(req.body);
                 res.status(201).send(obj);
-            }
-            catch (err) {
-                console.log(err);
-                res.status(406).send("fail: " + err.message);
-            }
-        });
-    }
-    putById(req, res) {
-        return __awaiter(this, void 0, void 0, function* () {
-            try {
-                const { id, obj } = req.body;
-                console.log("The id is: " + id);
-                console.log("The obj is: " + obj);
-                const updatedBook = yield this.model.findByIdAndUpdate(id, obj, { new: true });
-                console.log("The updatedBook is: " + updatedBook);
-                console.log("The updatedBook is: " + updatedBook);
-                res.status(200).send(updatedBook);
             }
             catch (err) {
                 console.log(err);

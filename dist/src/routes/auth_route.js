@@ -33,6 +33,7 @@ const multer_1 = require("../common/multer");
  *         - email
  *         - password
  *         - role
+ *         - image
  *       properties:
  *         name:
  *           type: string
@@ -46,11 +47,15 @@ const multer_1 = require("../common/multer");
  *         role:
  *           type: string
  *           description: The user's role
+ *         image:
+ *           type: string
+ *           description: The user's picture
  *       example:
  *         name: 'bob'
  *         email: 'bob@gmail.com'
  *         password: '123456'
  *         role: 'author'
+ *         image: 'beautifullImage'
  */
 /**
  * @swagger

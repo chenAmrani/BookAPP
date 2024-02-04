@@ -30,7 +30,7 @@ const verifyBookOwner = (req, res, next) => __awaiter(void 0, void 0, void 0, fu
         const userId = decoded._id; //the id of the user that is logged in
         const user = yield user_model_1.default.findOne({ _id: userId }); //checl if this exist user.
         if (!user || user._id.toString() !== authorId) {
-            return res.status(403).send('You do not have permission to modify this user');
+            return res.status(403).send('You do not have permission to modify this book');
         }
         next();
     }
