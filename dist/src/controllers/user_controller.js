@@ -20,7 +20,7 @@ const getAllUsers = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
         res.status(200).send(users);
     }
     catch (error) {
-        res.status(500).send({ message: 'Error fetching users' });
+        res.status(500).send({ message: "Error fetching users" });
     }
 });
 const getUserById = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -28,14 +28,14 @@ const getUserById = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
         const { id } = req.params;
         const user = yield user_model_1.default.findById(id);
         if (!user) {
-            res.status(404).send('User not found');
+            res.status(404).send("User not found");
             return;
         }
         res.status(200).json(user);
     }
     catch (err) {
-        console.error('Error in getUserById:', err);
-        res.status(500).send('Internal Server Error -> getUserById');
+        console.error("Error in getUserById:", err);
+        res.status(500).send("Internal Server Error -> getUserById");
     }
 });
 const getUserByEmail = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -45,7 +45,7 @@ const getUserByEmail = (req, res) => __awaiter(void 0, void 0, void 0, function*
         res.status(200).json(user);
     }
     catch (err) {
-        res.status(400).send('worng to get: getUserByEmail');
+        res.status(400).send("worng to get: getUserByEmail");
     }
 });
 const updateUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -53,35 +53,37 @@ const updateUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         const { id } = req.body;
         const { name, email, password } = req.body.user;
         if (!name && !email && !password) {
-            res.status(400).send('At least one field (name, email, or password) is required for update');
+            res
+                .status(400)
+                .send("At least one field (name, email, or password) is required for update");
             return;
         }
         const salt = yield bcrypt_1.default.genSalt(10);
         const encryptedPassword = yield bcrypt_1.default.hash(password, salt);
         const updatedUser = yield user_model_1.default.findByIdAndUpdate(id, { name, email, encryptedPassword }, { new: true });
         if (!updatedUser) {
-            res.status(404).send('User not found');
+            res.status(404).send("User not found");
             return;
         }
         res.status(200).json(updatedUser);
     }
     catch (err) {
-        console.error('Error in updateUser:', err);
-        res.status(500).send('Internal Server Error -> updateUser');
+        console.error("Error in updateUser:", err);
+        res.status(500).send("Internal Server Error -> updateUser");
     }
 });
 const deleteUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const deletedUser = yield user_model_1.default.findByIdAndDelete(req.params.id);
         if (!deletedUser) {
-            res.status(404).send('User not found');
+            res.status(404).send("User not found");
             return;
         }
-        res.status(200).json({ message: 'User deleted successfully' });
+        res.status(200).json({ message: "User deleted successfully" });
     }
     catch (err) {
-        console.error('Error in deleteUser:', err);
-        res.status(500).send('Internal Server Error -> deleteUser');
+        console.error("Error in deleteUser:", err);
+        res.status(500).send("Internal Server Error -> deleteUser");
     }
 });
 const updateOwnProfile = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -89,27 +91,32 @@ const updateOwnProfile = (req, res) => __awaiter(void 0, void 0, void 0, functio
     const { currentUserId } = req.locals;
     if (!currentUserId) {
         console.log("this is here");
-        res.status(400).send('User ID is required for updating the profile');
+        res.status(400).send("User ID is required for updating the profile");
         return;
     }
-    const { name, email, password } = req.body.user;
+    const { name, email, password } = req.body;
     if (!name && !email && !password) {
-        res.status(400).send('At least one field (name, email, or password) is required for update');
+        res
+            .status(400)
+            .send("At least one field (name, email, or password) is required for update");
         return;
     }
     try {
-        const salt = yield bcrypt_1.default.genSalt(10);
-        const encryptedPassword = yield bcrypt_1.default.hash(password, salt);
-        const updatedUser = yield user_model_1.default.findByIdAndUpdate(currentUserId, { name, email, encryptedPassword }, { new: true });
+        const updatedUserData = { name, email };
+        if (password) {
+            const salt = yield bcrypt_1.default.genSalt(10);
+            updatedUserData.password = yield bcrypt_1.default.hash(password, salt);
+        }
+        const updatedUser = yield user_model_1.default.findByIdAndUpdate(currentUserId, updatedUserData, { new: true }).select("-password");
         if (!updatedUser) {
-            res.status(404).send('User not found');
+            res.status(404).send("User not found");
             return;
         }
         res.status(200).json(updatedUser);
     }
     catch (err) {
-        console.error('Error in updateOwnProfile:', err);
-        res.status(500).send('Internal Server Error -> updateOwnProfile');
+        console.error("Error in updateOwnProfile:", err);
+        res.status(500).send("Internal Server Error -> updateOwnProfile");
     }
 });
 //get my books
@@ -118,14 +125,14 @@ const getMyBooks = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         const { currentUserId } = req.locals;
         const user = yield user_model_1.default.findById(currentUserId);
         if (!user) {
-            res.status(404).send('User not found');
+            res.status(404).send("User not found");
             return;
         }
         res.status(200).json(user.books);
     }
     catch (err) {
-        console.error('Error in getMyBooks:', err);
-        res.status(500).send('Internal Server Error -> getMyBooks');
+        console.error("Error in getMyBooks:", err);
+        res.status(500).send("Internal Server Error -> getMyBooks");
     }
 });
 exports.default = {
@@ -135,6 +142,6 @@ exports.default = {
     updateUser,
     deleteUser,
     updateOwnProfile,
-    getMyBooks
+    getMyBooks,
 };
 //# sourceMappingURL=user_controller.js.map

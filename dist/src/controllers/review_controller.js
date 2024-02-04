@@ -20,13 +20,30 @@ class ReviewController extends base_controller_1.BaseController {
     constructor() {
         super(review_model_1.default);
     }
-    post(req, res) {
+    getReviewsByBookId(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const _id = req.user._id;
-            req.body.owner = _id;
-            console.log("req.body: ", req.body);
-            const createReview = yield review_model_1.default.create(req.body);
-            const bookId = createReview.bookId;
+            try {
+                const { bookId } = req.params;
+                const reviews = yield review_model_1.default.find({ bookId }).populate({
+                    path: "reviewerId",
+                    select: "name image",
+                });
+                res.send(reviews);
+            }
+            catch (err) {
+                res.status(500).json({ message: err.message });
+            }
+        });
+    }
+    addNewReview(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { bookId, text } = req.body;
+            if (!bookId || !text) {
+                res.status(406).send("Book id or comment is missing");
+                return;
+            }
+            const review = { bookId, text, reviewerId: req.user._id };
+            const createReview = yield review_model_1.default.create(review);
             console.log("createReview: ", createReview);
             console.log("the book id is: ", bookId.toString());
             if (createReview) {
@@ -52,10 +69,6 @@ class ReviewController extends base_controller_1.BaseController {
             }
         });
     }
-    catch(error) {
-        console.log(error);
-        //res.status(500).json({ message: error.message });
-    }
     deleteById(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
@@ -77,6 +90,13 @@ class ReviewController extends base_controller_1.BaseController {
             catch (err) {
                 res.status(406).send("Fail: " + err.message);
             }
+        });
+    }
+    updateById(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { id, text } = req.body;
+            const updatedReview = yield review_model_1.default.findByIdAndUpdate(id, { text }, { new: true });
+            res.json(updatedReview);
         });
     }
 }
