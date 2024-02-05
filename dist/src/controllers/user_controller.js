@@ -122,13 +122,16 @@ const updateOwnProfile = (req, res) => __awaiter(void 0, void 0, void 0, functio
 //get my books
 const getMyBooks = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { currentUserId } = req.locals;
-        const user = yield user_model_1.default.findById(currentUserId);
+        const currentUserId = req.locals.currentUserId;
+        console.log("currentUserId: ", currentUserId);
+        const user = yield user_model_1.default.findById(currentUserId).populate('books');
         if (!user) {
             res.status(404).send("User not found");
             return;
         }
-        res.status(200).json(user.books);
+        const myBooks = user.books || [];
+        console.log("user.books: ", user.books);
+        res.status(200).json({ myBooks });
     }
     catch (err) {
         console.error("Error in getMyBooks:", err);

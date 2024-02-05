@@ -82,7 +82,7 @@ const multer_1 = require("../common/multer");
  *         description: Email already exists
  */
 router.post("/register", multer_1.upload.single("avatar"), auth_controller_1.default.register);
-router.post("/google", auth_controller_1.default.googleSignIn);
+// router.post("/google", authController.googleSignIn);
 /**
  * @swagger
  * components:

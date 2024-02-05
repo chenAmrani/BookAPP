@@ -15,35 +15,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const user_model_1 = __importDefault(require("../models/user_model"));
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
-const google_auth_library_1 = require("google-auth-library");
-const client = new google_auth_library_1.OAuth2Client();
-const googleSignIn = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    console.log(req.body);
-    try {
-        const ticket = yield client.verifyIdToken({
-            idToken: req.body.credential,
-            audience: process.env.GOOGLE_CLIENT_ID,
-        });
-        const payload = ticket.getPayload();
-        const email = payload === null || payload === void 0 ? void 0 : payload.email;
-        if (email != null) {
-            let user = yield user_model_1.default.findOne({ 'email': email });
-            if (user == null) {
-                user = yield user_model_1.default.create({
-                    'name': payload === null || payload === void 0 ? void 0 : payload.name,
-                    'email': email,
-                    'password': '',
-                    'image': payload === null || payload === void 0 ? void 0 : payload.picture
-                });
-            }
-            const tokens = yield generateTokens(user);
-            res.status(200).send(Object.assign({ email: user.email, _id: user._id, image: user.image }, tokens));
-        }
-    }
-    catch (err) {
-        return res.status(400).send(err.message);
-    }
-});
 const register = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const email = req.body.email;
     const password = req.body.password;
@@ -75,21 +46,6 @@ const register = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         return res.status(400).send("Error: " + err.message);
     }
 });
-const generateTokens = (user) => __awaiter(void 0, void 0, void 0, function* () {
-    const accessToken = jsonwebtoken_1.default.sign({ _id: user._id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRATION || "1h", });
-    const refreshToken = jsonwebtoken_1.default.sign({ _id: user._id }, process.env.JWT_REFRESH_SECRET);
-    if (user.refreshTokens == null) {
-        user.refreshTokens = [refreshToken];
-    }
-    else {
-        user.refreshTokens.push(refreshToken);
-    }
-    yield user.save();
-    return {
-        'accessToken': accessToken,
-        'refreshToken': refreshToken,
-    };
-});
 const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const email = req.body.email;
     console.log("email", email);
@@ -107,10 +63,21 @@ const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         if (!match) {
             return res.status(401).send("email or password incorrect");
         }
-        const tokens = yield generateTokens(user);
+        const accessToken = jsonwebtoken_1.default.sign({ _id: user._id }, process.env.JWT_SECRET, {
+            expiresIn: process.env.JWT_EXPIRATION || "1h",
+        });
+        const refreshToken = jsonwebtoken_1.default.sign({ _id: user._id }, process.env.JWT_REFRESH_SECRET);
+        if (user.refreshTokens == null) {
+            user.refreshTokens = [refreshToken];
+        }
+        else {
+            user.refreshTokens.push(refreshToken);
+        }
+        yield user.save();
         const userData = prepareUser(user);
         return res.status(200).send({
-            tokens,
+            accessToken,
+            refreshToken,
             userData,
         });
     }
@@ -180,7 +147,6 @@ const refresh = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     }));
 });
 exports.default = {
-    googleSignIn,
     register,
     login,
     logout,

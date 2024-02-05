@@ -27,6 +27,7 @@ const authMiddleware = (req, res, next) => __awaiter(void 0, void 0, void 0, fun
             req.user = user;
             req.locals = req.locals || {};
             req.locals.currentUserId = user._id;
+            console.log("User", user);
             next();
         });
     }

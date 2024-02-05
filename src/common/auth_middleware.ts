@@ -5,6 +5,7 @@ import { IUser } from "../models/user_model";
 export interface AuthRequest extends Request {
   user?: {
     _id: string;
+    
   };
   locals?: {
     currentUserId?: string;
@@ -26,10 +27,10 @@ const authMiddleware = async (
         //console.error('Token Verification Error:', err);
         return res.status(401).json({ error: "Token is not valid" });
       }
-
       req.user = user as { _id: string };
       req.locals = req.locals || {};
       req.locals.currentUserId = user._id;
+      console.log("User", user);
       next();
     });
   } catch (err) {

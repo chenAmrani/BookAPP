@@ -1,15 +1,15 @@
 ###
 
 GET http://localhost:6969/book
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NWEyZDdlMDBkMTM3YWQ5OTZmYzRiNGIiLCJpYXQiOjE3MDUxNzA5MjAsImV4cCI6MTcwNTE3NDUyMH0.RKN3IxRtsWq8uBhxcWXy5_Lg-B8q4QZoYcgUWQwUo8M
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NWJlNjBlZjJkNDY0MGZiZGZjZTY5NjUiLCJpYXQiOjE3MDcxMzA2OTIsImV4cCI6MTcwNzEzNDI5Mn0.AUOvc9ju8Q7gOKPEj_Vu8I9XyM6_A3UMbhxfKA_TlRk
 ###
 GET http://localhost:6969/book?name=book1
 
 
 ###
 
-GET http://localhost:6969/book/658c6bbe41cb64ee84d31465
-
+GET http://localhost:6969/user/ownBooks/65be60ef2d4640fbdfce6965
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NWJlNjBlZjJkNDY0MGZiZGZjZTY5NjUiLCJpYXQiOjE3MDcxMzQxODIsImV4cCI6MTcwNzEzNzc4Mn0.vehRAWNCrXagcPfUxtyuDhFmSVGk6kJuKHVgjNuWPQU
 
 ###
 
@@ -74,8 +74,8 @@ POST http://localhost:6969/auth/login
 Content-Type: application/json
 
 {
-    "email": "author@test.com",
-    "password": "authorpass"
+    "email": "ori@gmail.com",
+    "password": "1234"
 }
 
 
@@ -84,10 +84,11 @@ POST http://localhost:6969/auth/register
 Content-Type: application/json
 
 {
-    "name": "reader1",
-    "email": "author2@test.com",
-    "password": "authorpass",
-    "role": "author"
+    "name": "chen",
+    "email": "chen@gmail.com",
+    "password": "1234",
+    "role": "author",
+    "books": ["65be6059f98ce2d590f646c0" , "65be6059f98ce2d590f646c1" ,"65be6059f98ce2d590f646c2" ]
 }
 
 
