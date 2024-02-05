@@ -8,7 +8,7 @@ interface CustomRequest extends Request {
   };
 }
 
-const getAllUsers = async (req: Request, res: Response): Promise<void> => {
+const getAllUsers = async (req: Request, res: Response): Promise<void> =>{
   try {
     const users = await User.find();
     res.status(200).send(users);
@@ -17,7 +17,7 @@ const getAllUsers = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
-const getUserById = async (req: Request, res: Response): Promise<void> => {
+const getUserById = async (req: Request, res: Response) : Promise<void> => {
   try {
     const { id } = req.params;
     const user = await User.findById(id);
@@ -77,7 +77,7 @@ const updateUser = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
-const deleteUser = async (req: Request, res: Response): Promise<void> => {
+const deleteUser = async (req: Request, res: Response) : Promise<void> => {
   try {
     const deletedUser = await User.findByIdAndDelete(req.params.id);
 
@@ -93,10 +93,7 @@ const deleteUser = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
-const updateOwnProfile = async (
-  req: CustomRequest,
-  res: Response
-): Promise<void> => {
+const updateOwnProfile = async (req: CustomRequest,res: Response): Promise<void> => {
   console.log("req.locals`:", req.locals);
   const { currentUserId } = req.locals;
 
@@ -148,15 +145,18 @@ const updateOwnProfile = async (
 };
 
 //get my books
-const getMyBooks = async (req: CustomRequest, res: Response): Promise<void> => {
+const getMyBooks = async (req: Request, res: Response) : Promise<void> => {
   try {
-    const { currentUserId } = req.locals;
-    const user = await User.findById(currentUserId);
+    const user = await User.findById(req.params.id);
+    console.log("the userr: ", user);  
+  
     if (!user) {
       res.status(404).send("User not found");
       return;
     }
-    res.status(200).json(user.books);
+    const myBooks = user.books || [];
+    console.log("user.books: ", user.books);
+    res.status(200).json({myBooks});
   } catch (err) {
     console.error("Error in getMyBooks:", err);
     res.status(500).send("Internal Server Error -> getMyBooks");
