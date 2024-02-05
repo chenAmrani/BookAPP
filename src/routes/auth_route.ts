@@ -81,7 +81,7 @@ import { upload } from "../common/multer";
  *         description: Email already exists
  */
 router.post("/register", upload.single("avatar"), authController.register);
-// router.post("/google", authController.googleSignIn);
+router.post("/google", authController.googleSignin);
 /**
  * @swagger
  * components:
