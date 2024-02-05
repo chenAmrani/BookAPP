@@ -2,6 +2,7 @@ import express from "express";
 const router = express.Router();
 import reviewController from "../controllers/review_controller";
 import authMiddleware from "../common/auth_middleware";
+import  adminMiddleware  from "../common/admin_middleware";
 
 /**
  * @swagger
@@ -82,7 +83,7 @@ import authMiddleware from "../common/auth_middleware";
  *       401:
  *         description: Unauthorized, missing or invalid token
  */
-
+router.get("/", reviewController.get.bind(reviewController));
 /**
  * @swagger
  * /post:
@@ -113,7 +114,7 @@ import authMiddleware from "../common/auth_middleware";
  *       500:
  *         description: Internal Server Error
  */
-
+router.post("/", authMiddleware, reviewController.addNewReview);
 /**
  * @swagger
  * /review/{id}:
@@ -139,7 +140,7 @@ import authMiddleware from "../common/auth_middleware";
  *       404:
  *         description: Review not found
  */
-
+router.get("/:id", reviewController.getById.bind(reviewController));
 /**
  * @swagger
  * /put/{id}:
@@ -175,6 +176,8 @@ import authMiddleware from "../common/auth_middleware";
  *       404:
  *         description: Review not found
  */
+router.put("/", authMiddleware, reviewController.updateById);
+
 /**
  * @swagger
  * /delete/{id}:
@@ -200,16 +203,19 @@ import authMiddleware from "../common/auth_middleware";
  *       406:
  *         description: Fail, error message
  */
+router.delete(
+  "/:id",
+  authMiddleware,
+  reviewController.deleteById.bind(reviewController)
+);
 
-router.get("/", reviewController.get.bind(reviewController));
 
-router.get("/:id", reviewController.getById.bind(reviewController));
+
 
 router.get("/book/:bookId", reviewController.getReviewsByBookId);
 
-router.post("/", authMiddleware, reviewController.addNewReview);
 
-router.put("/", authMiddleware, reviewController.updateById);
+
 
 router.delete(
   "/:id",
@@ -217,4 +223,10 @@ router.delete(
   reviewController.deleteById.bind(reviewController)
 );
 //need to add delete for admin
+router.delete(
+  "/admin/:id",
+  authMiddleware,
+  adminMiddleware,
+  reviewController.deleteById.bind(reviewController)
+);
 export default router;
