@@ -105,15 +105,6 @@ const register = async (req: Request, res: Response) => {
       role: role,
       name: name,
     });
-    //לשאול לגבי הצורת שליחה הזו
-    // const tokens = await generateTokens(rs2)
-    // res.status(201).send(
-    //   {
-    //       email: rs2.email,
-    //       _id: rs2._id,
-    //       imgUrl: rs2.imgUrl,
-    //       ...tokens
-    //   })
     const userData = prepareUser(newUser);
 
     return res.status(201).send(userData);
