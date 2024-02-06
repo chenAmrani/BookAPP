@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import User from '../models/user_model';
 import jwt from 'jsonwebtoken';
+import Book from '../models/book_model';
 
 interface CustomRequest extends Request {
     user?: { _id: string;};
@@ -14,7 +15,9 @@ const verifyBookOwner = async (req: CustomRequest, res: Response, next: NextFunc
         return res.sendStatus(401).send("missing authorization header");
         }
       //author id
-        const authorId = req.body.author;
+        const bookId = req.params.id;
+        const book = await Book.findOne({_id: bookId});
+        const authorId = book?.author;
 
         
         if (!authorId) {
@@ -27,7 +30,7 @@ const verifyBookOwner = async (req: CustomRequest, res: Response, next: NextFunc
         const user = await User.findOne({_id : userId}) //checl if this exist user.
 
         
-        if (!user || user._id.toString() !== authorId) {
+        if (!user || user._id.toString() !== authorId.toString()) {
             return res.status(403).send('You do not have permission to modify this book');
         }
 
