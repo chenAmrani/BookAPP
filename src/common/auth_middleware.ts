@@ -5,7 +5,7 @@ import { IUser } from "../models/user_model";
 export interface AuthRequest extends Request {
   user?: {
     _id: string;
-    
+    role: string;
   };
   locals?: {
     currentUserId?: string;
@@ -24,10 +24,14 @@ const authMiddleware = async (
   try {
     jwt.verify(token, process.env.JWT_SECRET, (err, user: IUser) => {
       if (err) {
+        console.log("err", err);
+        if (err.message === "jwt expired") {
+          return res.status(401).json({ error: "Token is expired" });
+        }
         //console.error('Token Verification Error:', err);
         return res.status(401).json({ error: "Token is not valid" });
       }
-      req.user = user as { _id: string };
+      req.user = user;
       req.locals = req.locals || {};
       req.locals.currentUserId = user._id;
       console.log("User", user);
