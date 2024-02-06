@@ -196,6 +196,13 @@ router.delete(
  *   get:
  *     summary: Get a list of books related to the user (Author)
  *     tags: [Users]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: ID of the user (Author)
  *     security:
  *      - bearerAuth: []
  *     responses:
@@ -220,7 +227,7 @@ router.get(
 
 /**
  * @swagger
- * /users/deleteMyOwnUser/{id}:
+ * /user/deleteMyOwnUser/{id}:
  *   delete:
  *     summary: Delete a specific user
  *     tags: [Users]
@@ -244,7 +251,7 @@ router.get(
  *         description: User not found
  */
 router.delete(
-  "/deleteMyOwnUser/:id",
+  "/deleteMyOwnUser/:id", 
   authMiddleware,
   verifyUserOwenerMiddleware,
   UserController.deleteUser
@@ -261,7 +268,21 @@ router.delete(
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/User'
+ *             type: object
+ *             properties:
+ *               id:
+ *                 type: string
+ *               name:
+ *                 type: string
+ *               email:
+ *                 type: string
+ *               password:
+ *                 type: string
+ *             required:
+ *               - id
+ *               - name
+ *               - email
+ *               - password
  *     security:
  *      - bearerAuth: []
  *     responses:
@@ -275,7 +296,6 @@ router.delete(
  *         description: Unauthorized, missing or invalid token
  *       404:
  *         description: User not found
- *
  */
 router.put(
   "/updateOwnProfile",
@@ -297,6 +317,8 @@ router.put(
  *           type: string
  *         required: true
  *         description: Email of the user
+ *     security:
+ *      - bearerAuth: []
  *     responses:
  *       200:
  *         description: Details of the user

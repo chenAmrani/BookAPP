@@ -84,6 +84,7 @@ import  adminMiddleware  from "../common/admin_middleware";
  *         description: Unauthorized, missing or invalid token
  */
 router.get("/", reviewController.get.bind(reviewController));
+
 /**
  * @swagger
  * /post:
@@ -97,7 +98,27 @@ router.get("/", reviewController.get.bind(reviewController));
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/Review'
+ *             type: object
+ *             required:
+ *               - bookId
+ *               - text
+ *               - reviewerId
+ *             properties:
+ *               bookId:
+ *                 type: string
+ *                 format: uuid
+ *                 description: The ID of the book being reviewed
+ *               text:
+ *                 type: string
+ *                 description: The text content of the review
+ *               reviewerId:
+ *                 type: string
+ *                 format: uuid
+ *                 description: The ID of the reviewer
+ *             example:
+ *               bookId: '60f2c5d97329573b6cfe0e77'  # Replace with actual book ID
+ *               text: 'This is a great book!'
+ *               reviewerId: '65bf721966d70f77cac83273'  # Replace with actual reviewer ID
  *     responses:
  *       201:
  *         description: The created review
