@@ -1,7 +1,6 @@
 import BookModel, { IBook } from "../models/book_model";
-// import createController from "./base_controller";
 import { BaseController } from "./base_controller";
-import { Response } from "express";
+import { Request, Response } from "express";
 import { AuthRequest } from "../common/auth_middleware";
 import User from "../models/user_model";
 
@@ -10,7 +9,27 @@ class bookController extends BaseController<IBook> {
     super(BookModel);
   }
 
-  async post(req: AuthRequest, res: Response) {
+  getBooks = async (req: Request, res: Response) => {
+    try {
+      if (req.query.name) {
+        const obj = await this.model.find({ name: req.query.name });
+        res.send(obj);
+      } else {
+        const allObjects = await this.model.find().populate({
+          path: "reviews",
+
+          populate: [
+            { path: "reviewerId", select: "name image isGoogleSsoUser" },
+          ],
+        });
+        res.send(allObjects);
+      }
+    } catch (err) {
+      res.status(500).json({ message: err.message });
+    }
+  };
+
+  post = async (req: AuthRequest, res: Response) => {
     try {
       const _id = req.user._id;
       req.body.author = _id;
@@ -25,7 +44,9 @@ class bookController extends BaseController<IBook> {
         return;
       }
 
-      const createdBook = await this.model.create(req.body);
+      const book = { ...req.body, image: req.file.filename };
+
+      const createdBook = await this.model.create(book);
       // console.log("this is the real deal: ", createdBook.id)
       if (createdBook) {
         const user = await User.findById(_id);
@@ -47,7 +68,7 @@ class bookController extends BaseController<IBook> {
       console.log(error);
       res.status(500).json({ message: error.message });
     }
-  }
+  };
 
   putById = async (req: AuthRequest, res: Response) => {
     try {

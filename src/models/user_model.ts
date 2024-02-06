@@ -1,15 +1,14 @@
-
 import mongoose from "mongoose";
 
 export interface IUser {
+  _id: string;
   name: string;
   email: string;
   password: string;
-  _id?: string;
   image: string;
-  refreshTokens?: string[];
   role: string;
   books?: string[];
+  isGoogleSsoUser: boolean;
 }
 
 const userSchema = new mongoose.Schema<IUser>({
@@ -24,27 +23,28 @@ const userSchema = new mongoose.Schema<IUser>({
   password: {
     type: String,
     required: true,
-  }, 
+  },
   image: {
     type: String,
     required: false,
   },
-  refreshTokens: {
-    type: [String],
-    required: false,
-  },
+
   role: {
     type: String,
     required: true,
-    enum: ['admin', 'author', 'reader'], // Enumerate the roles
-    default: 'reader', // Default role for new users
+    enum: ["admin", "author", "reader"], // Enumerate the roles
+    default: "reader", // Default role for new users
   },
-  books:[
+  books: [
     {
       type: mongoose.Schema.Types.Mixed,
       default: [],
     },
-],
+  ],
+  isGoogleSsoUser: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 export const UserModel = mongoose.model<IUser>("User", userSchema);

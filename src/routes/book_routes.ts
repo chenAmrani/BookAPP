@@ -5,6 +5,7 @@ import authMiddleware from "../common/auth_middleware";
 import authorMiddleware from "../common/author_middleware";
 import adminMiddleware from "../common/admin_middleware";
 import verifyBookOwner from "../common/verifyBookOwner";
+import { upload } from "../common/multer";
 
 /**
  * @swagger
@@ -106,7 +107,7 @@ import verifyBookOwner from "../common/verifyBookOwner";
  *       401:
  *         description: Unauthorized, missing or invalid token
  */
-router.get("/", bookController.get.bind(bookController));
+router.get("/", bookController.getBooks);
 
 /**
  * @swagger
@@ -326,7 +327,13 @@ router.delete(
  *       406:
  *         description: Book already exists
  */
-router.post("/", authMiddleware, authorMiddleware, bookController.post);
+router.post(
+  "/",
+  authMiddleware,
+  authorMiddleware,
+  upload.single("image"),
+  bookController.post
+);
 
 //need to add swagger
 router.post("/admin", authMiddleware, adminMiddleware, bookController.post);

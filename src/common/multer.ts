@@ -3,11 +3,12 @@ import multer from "multer";
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, path.join(process.cwd(), "static", "uploads"));
+    const isBook = req.baseUrl.includes("/book");
+    console.log("req", req);
+    cb(null, path.join(process.cwd(), "static", isBook ? "books" : "uploads"));
   },
   filename: function (req, file, cb) {
-    const extension = file.originalname.split(".").pop();
-    cb(null, file.fieldname + "." + extension);
+    cb(null, file.originalname);
   },
 });
 
