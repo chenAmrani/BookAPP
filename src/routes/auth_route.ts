@@ -114,7 +114,20 @@ router.post("/google", authController.googleSignin);
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/User'
+ *             type: object
+ *             required:
+ *               - email
+ *               - password
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 description: The user email
+ *               password:
+ *                 type: string
+ *                 description: The user password
+ *             example:
+ *               email: 'ori@gmail.com'
+ *               password: '1234'
  *     responses:
  *       200:
  *         description: The access & refresh tokens
