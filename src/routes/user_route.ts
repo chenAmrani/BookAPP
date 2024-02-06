@@ -125,7 +125,7 @@ router.get("/", authMiddleware, adminMiddleware, UserController.getAllUsers);
  *       404:
  *         description: User not found
  */
-router.get("/id:", authMiddleware, adminMiddleware, UserController.getUserById);
+router.get("/id:", authMiddleware, UserController.getUserById);
 
 /**
  * @swagger

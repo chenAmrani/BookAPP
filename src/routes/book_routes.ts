@@ -310,9 +310,39 @@ router.delete(
  *     requestBody:
  *       required: true
  *       content:
- *         application/json:
+ *         multipart/form-data:
  *           schema:
- *             $ref: '#/components/schemas/Book'
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *               year:
+ *                 type: number
+ *               image:
+ *                 type: string
+ *                 format: binary
+ *               pages:
+ *                 type: number
+ *               price:
+ *                 type: number
+ *               rating:
+ *                 type: number
+ *               author:
+ *                 type: string
+ *               category:
+ *                 type: string
+ *               summary:
+ *                 type: string
+ *             required:
+ *               - name
+ *               - year
+ *               - image
+ *               - pages
+ *               - price
+ *               - rating
+ *               - author
+ *               - category
+ *               - summary
  *     responses:
  *       201:
  *         description: New book created
@@ -336,6 +366,6 @@ router.post(
 );
 
 //need to add swagger
-router.post("/admin", authMiddleware, adminMiddleware, bookController.post);
+router.post("/admin", authMiddleware, adminMiddleware, upload.single("image"), bookController.post);
 
 export default router;

@@ -69,7 +69,23 @@ class bookController extends BaseController<IBook> {
       res.status(500).json({ message: error.message });
     }
   };
+  
+  async deleteById(req: Request, res: Response) {
+    try {
+      const book = await this.model.findById(req.params.id);
+      const authorId = book?.author;
+      const user = await User.findById(authorId);
 
+      user.books = user.books.filter((bookId) => bookId !== req.params.id);
+      await user.save();
+      await this.model.findByIdAndDelete(req.params.id);
+      
+      res.status(200).send("OK");
+    } catch (err) {
+      res.status(406).send("fail: " + err.message);
+    }
+  }
+  
   putById = async (req: AuthRequest, res: Response) => {
     try {
       const id = req.params.id;
