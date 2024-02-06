@@ -73,13 +73,10 @@ class bookController extends BaseController<IBook> {
   putById = async (req: AuthRequest, res: Response) => {
     try {
       const id = req.params.id;
-      console.log("The id is: " + id);
       const obj = req.body;
-      console.log("The obj is: " + obj);
       const updatedBook = await this.model.findByIdAndUpdate(id, obj, {
         new: true,
       });
-      console.log("The updatedBook is: " + updatedBook);
       res.status(200).send(updatedBook);
     } catch (err) {
       console.log(err);
