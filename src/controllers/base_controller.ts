@@ -1,11 +1,9 @@
 import { Request, Response } from "express";
 import { Model } from "mongoose";
+import { AuthRequest } from "../common/auth_middleware";
 //import book_model from "../models/book_model";
 
 // Extend Request interface to include user property
-interface AuthRequest extends Request {
-  user?: { _id: string; role: string }; // Define the user object properties here
-}
 
 export class BaseController<ModelType> {
   model: Model<ModelType>;
@@ -20,17 +18,8 @@ export class BaseController<ModelType> {
         const obj = await this.model.find({ name: req.query.name });
         res.send(obj);
       } else {
-        if (req.user && req.user.role === "admin") {
-          // Access to all books for admin
-          const allObjects = await this.model.find();
-          res.send(allObjects);
-        } else {
-          // Access to books based on user or default behavior
-          const obj = await this.model.find({
-            /* Your condition here */
-          });
-          res.send(obj);
-        }
+        const allObjects = await this.model.find();
+        res.send(allObjects);
       }
     } catch (err) {
       res.status(500).json({ message: err.message });
