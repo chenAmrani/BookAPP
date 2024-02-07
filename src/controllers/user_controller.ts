@@ -36,11 +36,17 @@ const getUserByEmail = async (req: Request, res: Response): Promise<void> => {
   try {
     const { email } = req.params;
     const user = await User.findOne({ email });
+    if (!user) {
+      res.status(404).send("User not found");
+      return;
+    }
     res.status(200).json(user);
   } catch (err) {
-    res.status(400).send("worng to get: getUserByEmail");
+    console.error("Error in getUserByEmail:", err);
+    res.status(500).send("Internal Server Error");
   }
 };
+
 
 const updateUser = async (req: Request, res: Response): Promise<void> => {
   try {

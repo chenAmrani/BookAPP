@@ -121,39 +121,6 @@ router.get("/:id", authMiddleware, UserController.getUserById);
 
 /**
  * @swagger
- * /user/update:
- *   put:
- *     summary: Update details of a specific user (Admin)
- *     tags: [Users]
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             $ref: '#/components/schemas/User'
- *     security:
- *      - bearerAuth: []
- *     responses:
- *       200:
- *         description: Updated details of the user
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/User'
- *       401:
- *         description: Unauthorized, missing or invalid token
- *       404:
- *         description: User not found
- *
- */
-router.put(
-  "/update",
-  authMiddleware,
-  adminMiddleware,
-  UserController.updateUser
-);
-/**
- * @swagger
  * /user/delete/{id}:
  *   delete:
  *     summary: Delete a specific user (Admin)
@@ -296,34 +263,8 @@ router.put(
   verifyUserOwenerMiddleware,
   UserController.updateOwnProfile
 );
-/**
- * @swagger
- * /user/{email}:
- *   get:
- *     summary: Get details of a specific user by email
- *     tags: [Users]
- *     parameters:
- *       - in: path
- *         name: email
- *         schema:
- *           type: string
- *         required: true
- *         description: Email of the user
- *     security:
- *      - bearerAuth: []
- *     responses:
- *       200:
- *         description: Details of the user
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/User'
- *       401:
- *         description: Unauthorized, missing or invalid token
- *       404:
- *         description: User not found
- */
-router.get("/:email", authMiddleware, UserController.getUserByEmail);
+
+
 
 
 
