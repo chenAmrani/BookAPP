@@ -39,12 +39,6 @@ const googleSignin = async (req: Request, res: Response) => {
       await user.save();
 
       const userData = prepareUser(user);
-      // console.log("the user data is", userData);
-      // return res.status(200).send({
-      //   accessToken,
-      //   refreshToken,
-      //   userData,
-      // });
       res.status(201).send({ accessToken, refreshToken, userData });
     }
   } catch (err) {

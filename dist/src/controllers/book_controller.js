@@ -13,32 +13,32 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const book_model_1 = __importDefault(require("../models/book_model"));
-// import createController from "./base_controller";
 const base_controller_1 = require("./base_controller");
 const user_model_1 = __importDefault(require("../models/user_model"));
 class bookController extends base_controller_1.BaseController {
     constructor() {
         super(book_model_1.default);
-        this.putById = (req, res) => __awaiter(this, void 0, void 0, function* () {
+        this.getBooks = (req, res) => __awaiter(this, void 0, void 0, function* () {
             try {
-                const id = req.params.id;
-                console.log("The id is: " + id);
-                const obj = req.body;
-                console.log("The obj is: " + obj);
-                const updatedBook = yield this.model.findByIdAndUpdate(id, obj, {
-                    new: true,
-                });
-                console.log("The updatedBook is: " + updatedBook);
-                res.status(200).send(updatedBook);
+                if (req.query.name) {
+                    const obj = yield this.model.find({ name: req.query.name });
+                    res.send(obj);
+                }
+                else {
+                    const allObjects = yield this.model.find().populate({
+                        path: "reviews",
+                        populate: [
+                            { path: "reviewerId", select: "name image isGoogleSsoUser" },
+                        ],
+                    });
+                    res.send(allObjects);
+                }
             }
             catch (err) {
-                console.log(err);
-                res.status(406).send("fail: " + err.message);
+                res.status(500).json({ message: err.message });
             }
         });
-    }
-    post(req, res) {
-        return __awaiter(this, void 0, void 0, function* () {
+        this.post = (req, res) => __awaiter(this, void 0, void 0, function* () {
             try {
                 const _id = req.user._id;
                 req.body.author = _id;
@@ -50,8 +50,10 @@ class bookController extends base_controller_1.BaseController {
                     res.status(406).send("Book already exists");
                     return;
                 }
-                const createdBook = yield this.model.create(req.body);
-                // console.log("this is the real deal: ", createdBook.id)
+                const book = Object.assign(Object.assign({}, req.body), { image: req.file.filename });
+                console.log("book!!!!!!!!!!!", book);
+                const createdBook = yield this.model.create(book);
+                console.log("createdBook", createdBook);
                 if (createdBook) {
                     const user = yield user_model_1.default.findById(_id);
                     if (user) {
@@ -72,6 +74,36 @@ class bookController extends base_controller_1.BaseController {
             catch (error) {
                 console.log(error);
                 res.status(500).json({ message: error.message });
+            }
+        });
+        this.putById = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            try {
+                const id = req.params.id;
+                const obj = req.body;
+                const updatedBook = yield this.model.findByIdAndUpdate(id, obj, {
+                    new: true,
+                });
+                res.status(200).send(updatedBook);
+            }
+            catch (err) {
+                console.log(err);
+                res.status(406).send("fail: " + err.message);
+            }
+        });
+    }
+    deleteById(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const book = yield this.model.findById(req.params.id);
+                const authorId = book === null || book === void 0 ? void 0 : book.author;
+                const user = yield user_model_1.default.findById(authorId);
+                user.books = user.books.filter((bookId) => bookId !== req.params.id);
+                yield user.save();
+                yield this.model.findByIdAndDelete(req.params.id);
+                res.status(200).send("OK");
+            }
+            catch (err) {
+                res.status(406).send("fail: " + err.message);
             }
         });
     }

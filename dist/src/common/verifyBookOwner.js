@@ -14,6 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const user_model_1 = __importDefault(require("../models/user_model"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+const book_model_1 = __importDefault(require("../models/book_model"));
 const verifyBookOwner = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const authHeader = req.headers['authorization'];
@@ -22,14 +23,16 @@ const verifyBookOwner = (req, res, next) => __awaiter(void 0, void 0, void 0, fu
             return res.sendStatus(401).send("missing authorization header");
         }
         //author id
-        const authorId = req.body.author;
+        const bookId = req.params.id;
+        const book = yield book_model_1.default.findOne({ _id: bookId });
+        const authorId = book === null || book === void 0 ? void 0 : book.author;
         if (!authorId) {
             return res.status(400).send('author id required for verification');
         }
         const decoded = jsonwebtoken_1.default.decode(token);
         const userId = decoded._id; //the id of the user that is logged in
         const user = yield user_model_1.default.findOne({ _id: userId }); //checl if this exist user.
-        if (!user || user._id.toString() !== authorId) {
+        if (!user || user._id.toString() !== authorId.toString()) {
             return res.status(403).send('You do not have permission to modify this book');
         }
         next();

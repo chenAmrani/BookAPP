@@ -25,7 +25,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>3/3</span>
+                <span class='fraction'>4/4</span>
             </div>
         
             
@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>3/3</span>
+                <span class='fraction'>4/4</span>
             </div>
         
             
@@ -110,8 +110,23 @@
 <a name='L45'></a><a href='#L45'>45</a>
 <a name='L46'></a><a href='#L46'>46</a>
 <a name='L47'></a><a href='#L47'>47</a>
-<a name='L48'></a><a href='#L48'>48</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L48'></a><a href='#L48'>48</a>
+<a name='L49'></a><a href='#L49'>49</a>
+<a name='L50'></a><a href='#L50'>50</a>
+<a name='L51'></a><a href='#L51'>51</a>
+<a name='L52'></a><a href='#L52'>52</a>
+<a name='L53'></a><a href='#L53'>53</a>
+<a name='L54'></a><a href='#L54'>54</a>
+<a name='L55'></a><a href='#L55'>55</a>
+<a name='L56'></a><a href='#L56'>56</a>
+<a name='L57'></a><a href='#L57'>57</a>
+<a name='L58'></a><a href='#L58'>58</a>
+<a name='L59'></a><a href='#L59'>59</a>
+<a name='L60'></a><a href='#L60'>60</a>
+<a name='L61'></a><a href='#L61'>61</a>
+<a name='L62'></a><a href='#L62'>62</a>
+<a name='L63'></a><a href='#L63'>63</a>
+<a name='L64'></a><a href='#L64'>64</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -157,18 +172,34 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">4x</span></td><td class="text"><pre class="prettyprint lang-js">import mongoose from "mongoose";
-&nbsp;
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import mongoose from "mongoose";
 &nbsp;
 export interface IUser {
+  _id: string;
   name: string;
   email: string;
   password: string;
-  _id?: string;
   image: string;
-  refreshTokens?: string[];
   role: string;
-  books?: typeof mongoose.Schema.Types.ObjectId[];
+  books?: string[];
+  isGoogleSsoUser: boolean;
 }
 &nbsp;
 const userSchema = new mongoose.Schema&lt;IUser&gt;({
@@ -183,35 +214,52 @@ const userSchema = new mongoose.Schema&lt;IUser&gt;({
   password: {
     type: String,
     required: true,
-  }, 
+  },
   image: {
     type: String,
     required: false,
   },
-  refreshTokens: {
-    type: [String],
-    required: false,
-  },
+&nbsp;
   role: {
     type: String,
     required: true,
-    enum: ['admin', 'author', 'reader'], // Enumerate the roles
-    default: 'reader', // Default role for new users
+    enum: ["admin", "author", "reader"], // Enumerate the roles
+    default: "reader", // Default role for new users
   },
-  books:[{
-    type: mongoose.Schema.Types.ObjectId,
-    ref:"Book"
-  }]
+  books: [
+    {
+      type: mongoose.Schema.Types.Mixed,
+      default: [],
+    },
+  ],
+  isGoogleSsoUser: {
+    type: Boolean,
+    default: false,
+  },
 });
 &nbsp;
-export default mongoose.model&lt;IUser&gt;("User", userSchema);</pre></td></tr></table></pre>
+export const UserModel = mongoose.model&lt;IUser&gt;("User", userSchema);
+export default UserModel;
+&nbsp;
+// const user1: IUser = {
+//   name: "chen",
+//   email: "chen@gmail.com",
+//   password: "1234",
+//   image: "https://example.com/chen.jpg",
+//   role: "author",
+//   books: [('65be6059f98ce2d590f646c0') as unknown as typeof mongoose.Schema.Types.ObjectId, ('65be6059f98ce2d590f646c1') as unknown as typeof mongoose.Schema.Types.ObjectId,("65be6059f98ce2d590f646c2") as unknown as typeof mongoose.Schema.Types.ObjectId]
+// }
+&nbsp;
+// const user = [user1];
+// UserModel.insertMany(user);
+&nbsp;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
             </div><!-- /wrapper -->
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2024-01-22T08:47:54.701Z
+                at 2024-02-07T15:11:25.013Z
             </div>
         <script src="../../prettify.js"></script>
         <script>
