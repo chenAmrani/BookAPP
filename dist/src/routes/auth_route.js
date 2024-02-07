@@ -82,7 +82,7 @@ const multer_1 = require("../common/multer");
  *         description: Email already exists
  */
 router.post("/register", multer_1.upload.single("avatar"), auth_controller_1.default.register);
-// router.post("/google", authController.googleSignIn);
+router.post("/google", auth_controller_1.default.googleSignin);
 /**
  * @swagger
  * components:
@@ -114,7 +114,20 @@ router.post("/register", multer_1.upload.single("avatar"), auth_controller_1.def
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/User'
+ *             type: object
+ *             required:
+ *               - email
+ *               - password
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 description: The user email
+ *               password:
+ *                 type: string
+ *                 description: The user password
+ *             example:
+ *               email: 'ori@gmail.com'
+ *               password: '1234'
  *     responses:
  *       200:
  *         description: The access & refresh tokens

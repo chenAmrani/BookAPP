@@ -45,9 +45,10 @@ class bookController extends BaseController<IBook> {
       }
 
       const book = { ...req.body, image: req.file.filename };
-
+      console.log("book!!!!!!!!!!!", book);
       const createdBook = await this.model.create(book);
-      // console.log("this is the real deal: ", createdBook.id)
+      console.log("createdBook", createdBook);
+      
       if (createdBook) {
         const user = await User.findById(_id);
 

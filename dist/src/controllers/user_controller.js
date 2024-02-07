@@ -17,7 +17,7 @@ const bcrypt_1 = __importDefault(require("bcrypt"));
 const getAllUsers = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const users = yield user_model_1.default.find();
-        res.status(200).send(users);
+        res.status(200).send({ users });
     }
     catch (error) {
         res.status(500).send({ message: "Error fetching users" });
@@ -42,10 +42,15 @@ const getUserByEmail = (req, res) => __awaiter(void 0, void 0, void 0, function*
     try {
         const { email } = req.params;
         const user = yield user_model_1.default.findOne({ email });
+        if (!user) {
+            res.status(404).send("User not found");
+            return;
+        }
         res.status(200).json(user);
     }
     catch (err) {
-        res.status(400).send("worng to get: getUserByEmail");
+        console.error("Error in getUserByEmail:", err);
+        res.status(500).send("Internal Server Error");
     }
 });
 const updateUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -74,6 +79,7 @@ const updateUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
 });
 const deleteUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
+        console.log("Controller - ID:", req.params.id);
         const deletedUser = yield user_model_1.default.findByIdAndDelete(req.params.id);
         if (!deletedUser) {
             res.status(404).send("User not found");
@@ -90,7 +96,6 @@ const updateOwnProfile = (req, res) => __awaiter(void 0, void 0, void 0, functio
     console.log("req.locals`:", req.locals);
     const { currentUserId } = req.locals;
     if (!currentUserId) {
-        console.log("this is here");
         res.status(400).send("User ID is required for updating the profile");
         return;
     }
@@ -122,9 +127,8 @@ const updateOwnProfile = (req, res) => __awaiter(void 0, void 0, void 0, functio
 //get my books
 const getMyBooks = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const currentUserId = req.locals.currentUserId;
-        console.log("currentUserId: ", currentUserId);
-        const user = yield user_model_1.default.findById(currentUserId).populate('books');
+        const user = yield user_model_1.default.findById(req.params.id);
+        console.log("the userr: ", user);
         if (!user) {
             res.status(404).send("User not found");
             return;
