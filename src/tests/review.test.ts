@@ -9,7 +9,7 @@ import User, {IUser} from "../models/user_model";
 let app: Express;
 let createdReview1Id: string;
 
-const readerUser : IUser = {
+const readerUser :  IUser = {
   _id: "",
   name:"reader2",
   email: "reader2@test.com",
