@@ -87,7 +87,7 @@ router.get("/", reviewController.get.bind(reviewController));
 
 /**
  * @swagger
- * /post:
+ * /review:
  *   post:
  *     summary: Create a new review
  *     tags: [Reviews]
@@ -162,27 +162,34 @@ router.post("/", authMiddleware, reviewController.addNewReview);
  *         description: Review not found
  */
 router.get("/:id", reviewController.getById.bind(reviewController));
+
 /**
  * @swagger
- * /put/{id}:
+ * /review:
  *   put:
  *     summary: Update details of a specific review
  *     tags: [Reviews]
  *     security:
  *       - bearerAuth: []
- *     parameters:
- *       - in: path
- *         name: id
- *         schema:
- *           type: string
- *         required: true
- *         description: ID of the review
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/Review'
+ *             type: object
+ *             required:
+ *               - id
+ *               - text
+ *             properties:
+ *               id:
+ *                 type: string
+ *                 description: ID of the review to be updated
+ *               text:
+ *                 type: string
+ *                 description: New text content for the review
+ *             example:
+ *               id: '60f2c5d97329573b6cfe0e77'  # Replace with actual review ID
+ *               text: 'This is an updated review!'
  *     responses:
  *       200:
  *         description: Updated details of the review
@@ -197,13 +204,14 @@ router.get("/:id", reviewController.getById.bind(reviewController));
  *       404:
  *         description: Review not found
  */
+ 
 router.put("/", authMiddleware, reviewController.updateById);
 
 /**
  * @swagger
- * /delete/{id}:
+ * /review/{id}:
  *   delete:
- *     summary: Delete a specific review
+ *     summary: Delete a specific review by ID
  *     tags: [Reviews]
  *     security:
  *       - bearerAuth: []
@@ -213,7 +221,7 @@ router.put("/", authMiddleware, reviewController.updateById);
  *         schema:
  *           type: string
  *         required: true
- *         description: ID of the review
+ *         description: ID of the review to be deleted
  *     responses:
  *       200:
  *         description: OK
@@ -236,13 +244,6 @@ router.delete(
 router.get("/book/:bookId", reviewController.getReviewsByBookId);
 
 
-
-
-router.delete(
-  "/:id",
-  authMiddleware,
-  reviewController.deleteById.bind(reviewController)
-);
 //need to add delete for admin
 router.delete(
   "/admin/:id",

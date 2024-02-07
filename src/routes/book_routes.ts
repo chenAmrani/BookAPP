@@ -186,12 +186,6 @@ router.put(
  *     summary: Delete a specific book (Admin)
  *     tags:
  *       - Book
- *     requestBody:
- *       required: false
- *       content:
- *         application/json:
- *           schema:
- *             $ref: '#/components/schemas/Book'
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -199,7 +193,8 @@ router.put(
  *         in: path
  *         description: The ID of the book to be deleted.
  *         required: true
- *         type: string
+ *         schema:
+ *           type: string
  *     responses:
  *       200:
  *         description: Book deleted successfully
@@ -267,12 +262,6 @@ router.put(
  *     summary: Delete a specific book (Author)
  *     tags:
  *       - Book
- *     requestBody:
- *       required: false
- *       content:
- *         application/json:
- *           schema:
- *             $ref: '#/components/schemas/Book'
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -280,7 +269,8 @@ router.put(
  *         in: path
  *         description: The ID of the book to be deleted.
  *         required: true
- *         type: string
+ *         schema:
+ *           type: string
  *     responses:
  *       200:
  *         description: Book deleted successfully
