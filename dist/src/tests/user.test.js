@@ -73,6 +73,7 @@ beforeAll(() => __awaiter(void 0, void 0, void 0, function* () {
     console.log("this is readerUserId: ", readerUserId);
     const response3 = yield (0, supertest_1.default)(app).post("/auth/login").send(readerUser);
     accessTokenUser3 = response3.body.accessToken;
+    console.log("this is accessTokenUser3: ", accessTokenUser3);
 }));
 afterAll(() => __awaiter(void 0, void 0, void 0, function* () {
     yield mongoose_1.default.connection.close();
@@ -185,7 +186,7 @@ describe('User Controller Tests', () => {
     test("Test Delete My User By Id - succsess", () => __awaiter(void 0, void 0, void 0, function* () {
         console.log("this is readerUserId: ", readerUserId);
         const response = yield (0, supertest_1.default)(app)
-            .delete(`/user/deleteMyOwnUser${readerUserId}`)
+            .delete(`/user/deleteMyOwnUser/${readerUserId}`)
             .set("Authorization", "JWT " + accessTokenUser3);
         expect(response.statusCode).toBe(200);
     }));
