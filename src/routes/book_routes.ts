@@ -355,7 +355,64 @@ router.post(
   bookController.post
 );
 
-//need to add swagger
+/**
+ * @swagger
+ * /book/admin:
+ *   post:
+ *     summary: Create a new book (Admin)
+ *     tags: [Book]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *               year:
+ *                 type: number
+ *               image:
+ *                 type: string
+ *                 format: binary
+ *               pages:
+ *                 type: number
+ *               price:
+ *                 type: number
+ *               rating:
+ *                 type: number
+ *               author:
+ *                 type: string
+ *               category:
+ *                 type: string
+ *               summary:
+ *                 type: string
+ *             required:
+ *               - name
+ *               - year
+ *               - image
+ *               - pages
+ *               - price
+ *               - rating
+ *               - author
+ *               - category
+ *               - summary
+ *     responses:
+ *       201:
+ *         description: New book created
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Book'
+ *       401:
+ *         description: Unauthorized, missing or invalid token
+ *       403:
+ *         description: Forbidden, user does not have admin privileges
+ *       406:
+ *         description: Book already exists
+ */
 router.post("/admin", authMiddleware, adminMiddleware, upload.single("image"), bookController.post);
 
 export default router;

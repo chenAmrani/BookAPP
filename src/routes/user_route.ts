@@ -71,31 +71,23 @@ import { upload } from "../common/multer";
  * @swagger
  * /user/:
  *   get:
- *    summary: get all users registered to the site (admin only)
- *    tags: [Users]
- *    requestBody:
- *      required: true
- *      content:
- *        application/json:
- *          schema:
- *            $ref: '#/components/schemas/User'
- *    security:
- *      - bearerAuth: []
- *    responses:
- *      200:
- *        description: Get all users registered to the site
- *        content:
- *          application/json:
- *            schema:
- *              $ref: '#/components/schemas/User'
- *      401:
- *        description: Unauthorized
- *        content:
- *          application/json:
- *            schema:
- *              $ref: '#/components/schemas/User'
- *
+ *     summary: Get all users registered on the site (admin only)
+ *     tags: [Users]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: A list of all users
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/User'
+ *       401:
+ *         description: Unauthorized
  */
+
 router.get("/", authMiddleware, adminMiddleware, UserController.getAllUsers);
 
 /**
@@ -127,39 +119,6 @@ router.get("/", authMiddleware, adminMiddleware, UserController.getAllUsers);
  */
 router.get("/:id", authMiddleware, UserController.getUserById);
 
-/**
- * @swagger
- * /user/update:
- *   put:
- *     summary: Update details of a specific user (Admin)
- *     tags: [Users]
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             $ref: '#/components/schemas/User'
- *     security:
- *      - bearerAuth: []
- *     responses:
- *       200:
- *         description: Updated details of the user
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/User'
- *       401:
- *         description: Unauthorized, missing or invalid token
- *       404:
- *         description: User not found
- *
- */
-router.put(
-  "/update",
-  authMiddleware,
-  adminMiddleware,
-  UserController.updateUser
-);
 /**
  * @swagger
  * /user/delete/{id}:
@@ -304,34 +263,8 @@ router.put(
   verifyUserOwenerMiddleware,
   UserController.updateOwnProfile
 );
-/**
- * @swagger
- * /user/{email}:
- *   get:
- *     summary: Get details of a specific user by email
- *     tags: [Users]
- *     parameters:
- *       - in: path
- *         name: email
- *         schema:
- *           type: string
- *         required: true
- *         description: Email of the user
- *     security:
- *      - bearerAuth: []
- *     responses:
- *       200:
- *         description: Details of the user
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/User'
- *       401:
- *         description: Unauthorized, missing or invalid token
- *       404:
- *         description: User not found
- */
-router.get("/:email", authMiddleware, UserController.getUserByEmail);
+
+
 
 
 

@@ -8,7 +8,7 @@ interface CustomRequest extends Request {
   };
 }
 
-const getAllUsers = async (req: CustomRequest, res: Response): Promise<void> =>{
+const getAllUsers = async (req: CustomRequest , res: Response): Promise<void> =>{
   try {
     const users = await User.find();
     res.status(200).send(users);
@@ -17,7 +17,7 @@ const getAllUsers = async (req: CustomRequest, res: Response): Promise<void> =>{
   }
 };
 
-const getUserById = async (req: CustomRequest, res: Response) : Promise<void> => {
+const getUserById = async (req: CustomRequest , res: Response) : Promise<void> => {
   try {
     const { id } = req.params;
     const user = await User.findById(id);
@@ -36,11 +36,17 @@ const getUserByEmail = async (req: Request, res: Response): Promise<void> => {
   try {
     const { email } = req.params;
     const user = await User.findOne({ email });
+    if (!user) {
+      res.status(404).send("User not found");
+      return;
+    }
     res.status(200).json(user);
   } catch (err) {
-    res.status(400).send("worng to get: getUserByEmail");
+    console.error("Error in getUserByEmail:", err);
+    res.status(500).send("Internal Server Error");
   }
 };
+
 
 const updateUser = async (req: Request, res: Response): Promise<void> => {
   try {
