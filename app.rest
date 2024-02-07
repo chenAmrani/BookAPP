@@ -75,9 +75,9 @@ POST http://localhost:6969/auth/register
 Content-Type: application/json
 
 {
-    "name": "chen",
-    "email": "chen@gmail.com",
-    "password": "1234",
+    "name": "ori",
+    "email": "ori@gmail.com",
+    "password": "123",
     "role": "author",
     "books": ["65be6059f98ce2d590f646c0" , "65be6059f98ce2d590f646c1" ,"65be6059f98ce2d590f646c2" ]
 }

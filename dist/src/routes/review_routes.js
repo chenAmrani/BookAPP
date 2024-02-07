@@ -231,6 +231,7 @@ router.put("/", auth_middleware_1.default, review_controller_1.default.updateByI
  */
 router.delete("/:id", auth_middleware_1.default, review_controller_1.default.deleteById.bind(review_controller_1.default));
 router.get("/book/:bookId", review_controller_1.default.getReviewsByBookId);
+//need to add delete for admin
 router.delete("/admin/:id", auth_middleware_1.default, admin_middleware_1.default, review_controller_1.default.deleteById.bind(review_controller_1.default));
 exports.default = router;
 //# sourceMappingURL=review_routes.js.map

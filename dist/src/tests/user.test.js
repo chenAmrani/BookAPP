@@ -161,6 +161,13 @@ describe('User Controller Tests', () => {
             .send(updateData);
         expect(response.statusCode).toBe(403);
     }));
+    test("Test Delete My User By Id - not succsess", () => __awaiter(void 0, void 0, void 0, function* () {
+        console.log("this is readerUserId: ", readerUserId);
+        const response = yield (0, supertest_1.default)(app)
+            .delete(`/user/deleteMyOwnUser/${readerUserId}`)
+            .set("Authorization", "JWT" + accessTokenUser2);
+        expect(response.statusCode).toBe(406);
+    }));
     //delete
     test("Test Delete user by Id - Admin", () => __awaiter(void 0, void 0, void 0, function* () {
         const response = yield (0, supertest_1.default)(app)
@@ -189,6 +196,7 @@ describe('User Controller Tests', () => {
             .delete(`/user/deleteMyOwnUser/${readerUserId}`)
             .set("Authorization", "JWT " + accessTokenUser3);
         expect(response.statusCode).toBe(200);
+        expect(response.body).toBe("OK");
     }));
 });
 //# sourceMappingURL=user.test.js.map
