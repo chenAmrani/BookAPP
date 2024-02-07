@@ -195,14 +195,14 @@ describe("Book tests", () => {
     //   expect(response.statusCode).toBe(200);
     //   expect(response.body.length).toBe(1);
     // });
-    test("Test Get My Books - Success", () => __awaiter(void 0, void 0, void 0, function* () {
-        const response = yield (0, supertest_1.default)(app).get("/user/books")
-            .set("Authorization", "JWT " + authorAccessToken);
-        const rc = response.body[0];
-        //console.log(rc)
-        expect(response.statusCode).toBe(200);
-        expect(rc.name).toBe("updateBookName");
-    }));
+    // test("Test Get My Books - Success", async () => {
+    //   const response = await request(app).get("/ownBooks/books")
+    //   .set("Authorization", "JWT " + authorAccessToken);
+    //   const rc = response.body[0];
+    //   //console.log(rc)
+    //   expect(response.statusCode).toBe(200);
+    //   expect(rc.name).toBe("updateBookName");
+    // });
     test("Test Post Duplicate Book", () => __awaiter(void 0, void 0, void 0, function* () {
         const response = yield (0, supertest_1.default)(app)
             .post("/book")

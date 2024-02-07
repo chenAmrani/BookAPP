@@ -24,25 +24,31 @@ let adminUserId;
 let authorUserId;
 let readerUserId;
 const adminUser = {
-    name: "admin1",
+    _id: "",
+    name: "name1",
     email: "admin@test.com",
     password: "adminpass",
+    image: "image1",
     role: "admin",
-    Image: "image1"
+    isGoogleSsoUser: false
 };
 const authorUser = {
-    name: "author1",
+    _id: "",
+    name: "name1",
     email: "author@test.com",
     password: "authorpass",
+    image: "imageBase64",
     role: "author",
-    Image: "image1"
+    isGoogleSsoUser: false
 };
 const readerUser = {
-    name: "reader1",
+    _id: "",
+    name: "name1",
     email: "reader@test.com",
     password: "readerpass",
+    image: "image1",
     role: "reader",
-    Image: "image1"
+    isGoogleSsoUser: false
 };
 beforeAll(() => __awaiter(void 0, void 0, void 0, function* () {
     app = yield (0, app_1.default)();
@@ -83,111 +89,105 @@ describe('User Controller Tests', () => {
             .set("Authorization", "JWT " + accessTokenUser2);
         expect(response.statusCode).toBe(403);
     }));
-    //every user can get user by email.
-    test("Test Get User by Email", () => __awaiter(void 0, void 0, void 0, function* () {
-        const userEmail = readerUser.email;
-        const response = yield (0, supertest_1.default)(app).get(`/user/${userEmail}`)
+    test("Test Get User by Id - Admin", () => __awaiter(void 0, void 0, void 0, function* () {
+        const response = yield (0, supertest_1.default)(app)
+            .get(`/user/${authorUserId}`)
             .set("Authorization", "JWT " + accessTokenUser1);
         expect(response.statusCode).toBe(200);
-        expect(response.body.name).toBe(readerUser.name);
-        expect(response.body._id).toBe(readerUserId);
+        expect(response.body._id).toBe(authorUserId);
+        expect(response.body.name).toBe(authorUser.name);
+        expect(response.body.email).toBe(authorUser.email);
+    }));
+    test("Test Get User by Id - not Admin", () => __awaiter(void 0, void 0, void 0, function* () {
+        const response = yield (0, supertest_1.default)(app)
+            .get(`/user/${authorUserId}`)
+            .set("Authorization", "JWT " + accessTokenUser2);
+        expect(response.statusCode).toBe(200);
+    }));
+    test("Get My Own Book", () => __awaiter(void 0, void 0, void 0, function* () {
+        const response = yield (0, supertest_1.default)(app)
+            .get(`/user/ownBooks/${authorUserId}`)
+            .set("Authorization", "JWT " + accessTokenUser2);
+        expect(response.statusCode).toBe(200);
     }));
     //update
-    test("Test Update - Admin", () => __awaiter(void 0, void 0, void 0, function* () {
+    test("Test Update - Admin - succsess", () => __awaiter(void 0, void 0, void 0, function* () {
         const updateData = {
             id: adminUserId,
             user: {
-                name: "Chen Amrani",
+                name: "change name admin",
                 email: "author@test.com",
                 password: "authorpass",
             }
         };
         const response = yield (0, supertest_1.default)(app)
-            .put("/user/update")
+            .put("/user/updateOwnProfile")
             .set("Authorization", "JWT " + accessTokenUser1)
-            .send(updateData);
+            .field('id', updateData.id)
+            .field('name', updateData.user.name)
+            .field('email', updateData.user.email)
+            .field('password', updateData.user.password);
         expect(response.statusCode).toBe(200);
     }));
-    test("Test Update - not Admin , and not on the same user", () => __awaiter(void 0, void 0, void 0, function* () {
+    test("Test Update - User - succsess", () => __awaiter(void 0, void 0, void 0, function* () {
         const updateData = {
             id: authorUserId,
             user: {
-                name: "Chen Amrani",
-                email: "updateName@gmail.com",
-                password: "123456789",
+                name: "change name author",
+                email: "author@test.com",
+                password: "authorpass",
             }
         };
         const response = yield (0, supertest_1.default)(app)
-            .put("/user/update")
-            .set("Authorization", "JWT " + accessTokenUser3)
-            .send(updateData);
-        expect(response.statusCode).toBe(403);
+            .put("/user/updateOwnProfile")
+            .set("Authorization", "JWT " + accessTokenUser2)
+            .field('id', updateData.id)
+            .field('name', updateData.user.name)
+            .field('email', updateData.user.email)
+            .field('password', updateData.user.password);
+        expect(response.statusCode).toBe(200);
     }));
-    // test("Test Update user that not exist", async () => {
-    //   const nonExistentUserId = "6592857c6341227f90e3fdd3";
-    //   const updateData = {
-    //     id: nonExistentUserId,
-    //     user: {
-    //       name : "Chen Amrani",
-    //       email: "author@test.com",
-    //       password: "authorpass"
-    //     }
-    //   }
-    //   const response = await request(app)
-    //   .put("/user/update")
-    //   .set("Authorization", "JWT " + accessTokenUser1)
-    //   .send(updateData);
-    //   expect(response.statusCode).toBe(404);
-    // });
-    test("Test Update Own Profile - Success", () => __awaiter(void 0, void 0, void 0, function* () {
+    test("Test Update Profile - Not allowd ", () => __awaiter(void 0, void 0, void 0, function* () {
         const updateData = {
             id: authorUserId,
             user: {
-                name: "updateName",
-                email: "author@test.com",
-                password: "authorpass",
+                name: "TryToUpdateName",
             },
         };
         const response = yield (0, supertest_1.default)(app)
             .put('/user/updateOwnProfile')
-            .set("Authorization", "JWT " + accessTokenUser2)
+            .set("Authorization", "JWT " + accessTokenUser3)
             .send(updateData);
-        expect(response.statusCode).toBe(200);
-        const updatedUserResponse = yield (0, supertest_1.default)(app)
-            .get(`/user/${authorUserId}`)
-            .set("Authorization", "JWT " + accessTokenUser1);
-        expect(updatedUserResponse.status).toBe(200);
+        expect(response.statusCode).toBe(403);
     }));
     //delete
-    // test("Test Delete user by Id - Admin", async () => {
-    //     const response = await request(app)
-    //     .delete(`/user/delete/${readerUserId}`)
-    //     .set("Authorization", "JWT " + accessTokenUser1);
-    //     expect(response.statusCode).toBe(200);
-    // });
-    //tests that check that return us error.
-    //   test("Test Delete user by Id - not Admin,and not on the same user ", async () => {
-    //     const response = await request(app)
-    //     .delete(`/user/deleteMyOwnUser${readerUserId}`)
-    //     .set("Authorization", "JWT " + accessTokenUser2);
-    //     expect(response.statusCode).toBe(403);
-    // });
-    // const getUserResponse = await request(app)
-    // .get(`/user/${authorUserId}`).
-    //  set('Authorization', 'JWT ' + accessTokenUser2);
-    // expect(getUserResponse.status).toBe(200);
+    test("Test Delete user by Id - Admin", () => __awaiter(void 0, void 0, void 0, function* () {
+        const response = yield (0, supertest_1.default)(app)
+            .delete(`/user/delete/${authorUserId}`)
+            .set("Authorization", "JWT " + accessTokenUser1);
+        expect(response.statusCode).toBe(200);
+    }));
+    test("Test Update user that not exist", () => __awaiter(void 0, void 0, void 0, function* () {
+        const updateData = {
+            id: authorUserId,
+            user: {
+                name: "Chen Amrani",
+                email: "author@test.com",
+                password: "authorpass"
+            }
+        };
+        const response = yield (0, supertest_1.default)(app)
+            .put("/user/updateUser")
+            .set("Authorization", "JWT " + accessTokenUser1)
+            .send(updateData);
+        expect(response.statusCode).toBe(404);
+    }));
+    test("Test Delete My User By Id - succsess", () => __awaiter(void 0, void 0, void 0, function* () {
+        console.log("this is readerUserId: ", readerUserId);
+        const response = yield (0, supertest_1.default)(app)
+            .delete(`/user/deleteMyOwnUser${readerUserId}`)
+            .set("Authorization", "JWT " + accessTokenUser3);
+        expect(response.statusCode).toBe(200);
+    }));
 });
-test("Test Update Profile - Not allowd ", () => __awaiter(void 0, void 0, void 0, function* () {
-    const updateData = {
-        id: authorUserId,
-        user: {
-            name: "TryToUpdateName",
-        },
-    };
-    const response = yield (0, supertest_1.default)(app)
-        .put('/user/updateOwnProfile')
-        .set("Authorization", "JWT " + accessTokenUser3)
-        .send(updateData);
-    expect(response.statusCode).toBe(403);
-}));
 //# sourceMappingURL=user.test.js.map

@@ -38,45 +38,6 @@ const getUserById = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
         res.status(500).send("Internal Server Error -> getUserById");
     }
 });
-const getUserByEmail = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const { email } = req.params;
-        const user = yield user_model_1.default.findOne({ email });
-        if (!user) {
-            res.status(404).send("User not found");
-            return;
-        }
-        res.status(200).json(user);
-    }
-    catch (err) {
-        console.error("Error in getUserByEmail:", err);
-        res.status(500).send("Internal Server Error");
-    }
-});
-const updateUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const { id } = req.body;
-        const { name, email, password } = req.body.user;
-        if (!name && !email && !password) {
-            res
-                .status(400)
-                .send("At least one field (name, email, or password) is required for update");
-            return;
-        }
-        const salt = yield bcrypt_1.default.genSalt(10);
-        const encryptedPassword = yield bcrypt_1.default.hash(password, salt);
-        const updatedUser = yield user_model_1.default.findByIdAndUpdate(id, { name, email, encryptedPassword }, { new: true });
-        if (!updatedUser) {
-            res.status(404).send("User not found");
-            return;
-        }
-        res.status(200).json(updatedUser);
-    }
-    catch (err) {
-        console.error("Error in updateUser:", err);
-        res.status(500).send("Internal Server Error -> updateUser");
-    }
-});
 const deleteUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         console.log("Controller - ID:", req.params.id);
@@ -145,8 +106,6 @@ const getMyBooks = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
 exports.default = {
     getAllUsers,
     getUserById,
-    getUserByEmail,
-    updateUser,
     deleteUser,
     updateOwnProfile,
     getMyBooks,
