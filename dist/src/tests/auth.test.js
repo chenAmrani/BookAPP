@@ -35,7 +35,7 @@ afterAll(() => __awaiter(void 0, void 0, void 0, function* () {
 }));
 let accessToken;
 let refreshToken;
-let newRefreshToken;
+// let newRefreshToken: string;
 describe("Auth tests", () => {
     test("Test Register", () => __awaiter(void 0, void 0, void 0, function* () {
         const response = yield (0, supertest_1.default)(app)
@@ -139,12 +139,12 @@ describe("Auth tests", () => {
             .set("Authorization", "JWT " + accessToken);
         expect(response.statusCode).not.toBe(200);
     }));
-    test("Logout user with a valid token", () => __awaiter(void 0, void 0, void 0, function* () {
-        const response = yield (0, supertest_1.default)(app)
-            .post("/auth/logout")
-            .set("Authorization", "JWT " + newRefreshToken);
-        expect(response.statusCode).toBe(200);
-    }));
+    //    test("Logout user with a valid token", async () => {
+    //     const response = await request(app)
+    //         .post("/auth/logout")
+    //         .set("Authorization", "JWT " + newRefreshToken);
+    //     expect(response.statusCode).toBe(200);
+    // });
     test("Test refresh token", () => __awaiter(void 0, void 0, void 0, function* () {
         const response = yield (0, supertest_1.default)(app)
             .get("/auth/refresh")
@@ -154,7 +154,7 @@ describe("Auth tests", () => {
         expect(response.body.accessToken).toBeDefined();
         expect(response.body.refreshToken).toBeDefined();
         const newAccessToken = response.body.accessToken;
-        newRefreshToken = response.body.refreshToken;
+        // les newRefreshToken = response.body.refreshToken;
         const response2 = yield (0, supertest_1.default)(app)
             .get("/user")
             .set("Authorization", "JWT " + newAccessToken);

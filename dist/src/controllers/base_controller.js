@@ -22,8 +22,6 @@ class BaseController {
                 const updatedBook = yield this.model.findByIdAndUpdate(id, obj, {
                     new: true,
                 });
-                console.log("The updatedBook is: " + updatedBook);
-                console.log("The updatedBook is: " + updatedBook);
                 res.status(200).send(updatedBook);
             }
             catch (err) {

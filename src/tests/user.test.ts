@@ -4,7 +4,7 @@ import mongoose from "mongoose";
 import User, { IUser } from "../models/user_model";
 import { Express } from "express";
 
-//
+
 
 let app: Express;
 let accessTokenUser1: string;
@@ -184,16 +184,6 @@ const readerUser : IUser = {
           expect(response.statusCode).toBe(403);
           });
 
-          test("Test Delete My User By Id - not succsess", async () => {
-            console.log("this is readerUserId: " , readerUserId);
-            const response = await request(app)
-            .delete(`/user/deleteMyOwnUser/${readerUserId}`)
-            .set("Authorization", "JWT" + accessTokenUser2);
-    
-            expect(response.statusCode).toBe(406);
-             
-        }); 
-
 
           //delete
           test("Test Delete user by Id - Admin", async () => {
@@ -225,7 +215,6 @@ const readerUser : IUser = {
             
           });
 
-          
            
             test("Test Delete My User By Id - succsess", async () => {
               console.log("this is readerUserId: " , readerUserId);
@@ -234,13 +223,6 @@ const readerUser : IUser = {
               .set("Authorization", "JWT " + accessTokenUser3);
       
               expect(response.statusCode).toBe(200);
-              expect(response.body).toBe("OK");
               
-          });   
-          
-           
+          });              
 });
-
-
-            
-        

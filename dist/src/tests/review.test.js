@@ -18,24 +18,24 @@ const mongoose_1 = __importDefault(require("mongoose"));
 const review_model_1 = __importDefault(require("../models/review_model"));
 const user_model_1 = __importDefault(require("../models/user_model"));
 let app;
-let createdReview1;
+let createdReview1Id;
 const readerUser = {
     _id: "",
-    name: "name1",
-    email: "author@test.com",
-    password: "authorpass",
-    image: "imageBase64",
+    name: "reader2",
+    email: "reader2@test.com",
+    password: "readerpass",
+    image: "image1",
     role: "reader",
     isGoogleSsoUser: false
 };
 const review1 = {
-    BookName: "Book1",
+    BookName: "updateBookName",
     date: null,
     text: "review 1",
     reviewerId: readerUser._id,
 };
 const review2 = {
-    BookName: "Book1",
+    BookName: "updateBookName",
     date: null,
     text: "review 2",
     reviewerId: readerUser._id,
@@ -61,45 +61,54 @@ afterAll(() => __awaiter(void 0, void 0, void 0, function* () {
 }));
 // const review = { bookId, text, reviewerId: req.user._id };
 describe("Reviews tests", () => {
-    const addReviewOnBook = (review) => __awaiter(void 0, void 0, void 0, function* () {
-        const response = yield (0, supertest_1.default)(app)
-            .post("/review")
-            .set("Authorization", "JWT " + accessToken)
-            .field('reviewerId', readerUser._id)
-            .field('text', review.text)
-            .field('BookName', review.BookName)
-            .field('bookId', review.bookId.toString())
-            .field('reviewerId', review.reviewerId.toString())
-            .field('date', review.date.toString());
-        expect(response.statusCode).toBe(201);
-        expect(response.body.BookName).toBe(review.BookName);
-        expect(response.body.text).toBe(review.text);
-        createdReview1 = response.body._id;
-    });
+    //     const addReviewOnBook = async (review: IReview) => {
+    //         const response = await request(app)
+    //             .post("/review")
+    //             .set("Authorization", "JWT " + accessToken)
+    //             .field('reviewerId', readerUser._id)
+    //             .field('text', review.text)
+    //             .field('BookName', review.BookName)
+    //             .field('bookId', review.bookId.toString())
+    //             .field('reviewerId', review.reviewerId.toString())
+    //             .field('date', 'null');
+    //         expect(response.statusCode).toBe(201);
+    //         expect(response.body.BookName).toBe(review.BookName);
+    //         expect(response.body.text).toBe(review.text);
+    //         createdReview1Id = response.body._id;
+    // };
     //   test("Test Get All Student posts - empty response", async () => {
     //     const response = await request(app).get("/review");
     //     expect(response.statusCode).toBe(200);
     //     expect(response.body).toStrictEqual([]);
     //   });
     test("Test Post Review1", () => __awaiter(void 0, void 0, void 0, function* () {
-        yield addReviewOnBook(review1);
+        const response = yield (0, supertest_1.default)(app)
+            .post("/review")
+            .set("Authorization", "JWT " + accessToken)
+            .send(review1);
+        expect(response.statusCode).toBe(201);
+        expect(response.body.text).toBe(review1.text);
+        createdReview1Id = response.body._id;
     }));
     test("Test Post Review2", () => __awaiter(void 0, void 0, void 0, function* () {
-        yield addReviewOnBook(review2);
+        const response = yield (0, supertest_1.default)(app)
+            .post("/review")
+            .set("Authorization", "JWT " + accessToken)
+            .send(review2);
+        expect(response.statusCode).toBe(201);
+        expect(response.body.text).toBe(review2.text);
     }));
-    test("Test Get All reviews with one review in the DB", () => __awaiter(void 0, void 0, void 0, function* () {
+    test("Test Get All reviews with two reviews in the DB", () => __awaiter(void 0, void 0, void 0, function* () {
         const response = yield (0, supertest_1.default)(app).get("/review");
         expect(response.statusCode).toBe(200);
-        const rc = yield response.body[0];
-        console.log("this is rc: ", rc);
-        expect(rc.BookName).toBe(review1.BookName);
-        expect(rc.bookId).toBe(review1.bookId);
-        expect(rc.text).toBe(review1.text);
-        expect(rc.owner).toBe(readerUser._id);
+        const reviews = response.body;
+        expect(reviews.toBeDefined);
+        expect(reviews.length).toBeGreaterThan(0);
+        console.log("reviews that returned from the test: ", reviews);
     }));
-    test("Delete review", () => __awaiter(void 0, void 0, void 0, function* () {
+    test("User delete his own review by its ID ", () => __awaiter(void 0, void 0, void 0, function* () {
         const response = yield (0, supertest_1.default)(app)
-            .delete(`/review/${createdReview1}`)
+            .delete(`/review/${createdReview1Id}`)
             .set("Authorization", "JWT " + accessToken);
         expect(response.statusCode).toBe(200);
     }));

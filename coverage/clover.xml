@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1707336401032" clover="3.2.0">
-  <project timestamp="1707336401032" name="All files">
-    <metrics statements="492" coveredstatements="348" conditionals="114" coveredconditionals="61" methods="65" coveredmethods="50" elements="671" coveredelements="459" complexity="0" loc="492" ncloc="492" packages="5" files="19" classes="19"/>
+<coverage generated="1707341772707" clover="3.2.0">
+  <project timestamp="1707341772707" name="All files">
+    <metrics statements="490" coveredstatements="369" conditionals="114" coveredconditionals="66" methods="65" coveredmethods="51" elements="669" coveredelements="486" complexity="0" loc="490" ncloc="490" packages="5" files="19" classes="19"/>
     <package name="src">
       <metrics statements="28" coveredstatements="28" conditionals="0" coveredconditionals="0" methods="5" coveredmethods="4"/>
       <file name="app.ts" path="C:\Users\amnav\Desktop\year C\BookApp\BookAPP\src\app.ts">
@@ -59,22 +59,22 @@
         <metrics statements="21" coveredstatements="18" conditionals="7" coveredconditionals="6" methods="3" coveredmethods="3"/>
         <line num="2" count="4" type="stmt"/>
         <line num="15" count="4" type="stmt"/>
-        <line num="19" count="24" type="stmt"/>
-        <line num="20" count="24" type="stmt"/>
-        <line num="21" count="24" type="cond" truecount="2" falsecount="0"/>
-        <line num="22" count="24" type="cond" truecount="1" falsecount="0"/>
-        <line num="24" count="23" type="stmt"/>
-        <line num="25" count="23" type="stmt"/>
-        <line num="26" count="23" type="cond" truecount="1" falsecount="0"/>
+        <line num="19" count="26" type="stmt"/>
+        <line num="20" count="26" type="stmt"/>
+        <line num="21" count="26" type="cond" truecount="2" falsecount="0"/>
+        <line num="22" count="26" type="cond" truecount="1" falsecount="0"/>
+        <line num="24" count="25" type="stmt"/>
+        <line num="25" count="25" type="stmt"/>
+        <line num="26" count="25" type="cond" truecount="1" falsecount="0"/>
         <line num="27" count="1" type="stmt"/>
         <line num="28" count="1" type="cond" truecount="0" falsecount="1"/>
         <line num="29" count="0" type="stmt"/>
         <line num="32" count="1" type="stmt"/>
-        <line num="34" count="22" type="stmt"/>
-        <line num="35" count="22" type="cond" truecount="2" falsecount="0"/>
-        <line num="36" count="22" type="stmt"/>
-        <line num="37" count="22" type="stmt"/>
-        <line num="38" count="22" type="stmt"/>
+        <line num="34" count="24" type="stmt"/>
+        <line num="35" count="24" type="cond" truecount="2" falsecount="0"/>
+        <line num="36" count="24" type="stmt"/>
+        <line num="37" count="24" type="stmt"/>
+        <line num="38" count="24" type="stmt"/>
         <line num="41" count="0" type="stmt"/>
         <line num="42" count="0" type="stmt"/>
         <line num="45" count="4" type="stmt"/>
@@ -160,7 +160,7 @@
       </file>
     </package>
     <package name="src.controllers">
-      <metrics statements="296" coveredstatements="165" conditionals="71" coveredconditionals="26" methods="47" coveredmethods="33"/>
+      <metrics statements="294" coveredstatements="186" conditionals="71" coveredconditionals="31" methods="47" coveredmethods="34"/>
       <file name="auth_controller.ts" path="C:\Users\amnav\Desktop\year C\BookApp\BookAPP\src\controllers\auth_controller.ts">
         <metrics statements="90" coveredstatements="58" conditionals="35" coveredconditionals="14" methods="15" coveredmethods="9"/>
         <line num="2" count="4" type="stmt"/>
@@ -255,7 +255,7 @@
         <line num="190" count="16" type="stmt"/>
       </file>
       <file name="base_controller.ts" path="C:\Users\amnav\Desktop\year C\BookApp\BookAPP\src\controllers\base_controller.ts">
-        <metrics statements="41" coveredstatements="13" conditionals="3" coveredconditionals="1" methods="8" coveredmethods="3"/>
+        <metrics statements="39" coveredstatements="13" conditionals="3" coveredconditionals="1" methods="8" coveredmethods="3"/>
         <line num="8" count="4" type="stmt"/>
         <line num="11" count="8" type="stmt"/>
         <line num="15" count="1" type="stmt"/>
@@ -286,17 +286,15 @@
         <line num="63" count="0" type="stmt"/>
         <line num="64" count="0" type="stmt"/>
         <line num="67" count="0" type="stmt"/>
-        <line num="68" count="0" type="stmt"/>
         <line num="69" count="0" type="stmt"/>
-        <line num="71" count="0" type="stmt"/>
-        <line num="72" count="0" type="stmt"/>
+        <line num="70" count="0" type="stmt"/>
+        <line num="76" count="0" type="stmt"/>
+        <line num="77" count="0" type="stmt"/>
         <line num="78" count="0" type="stmt"/>
-        <line num="79" count="0" type="stmt"/>
         <line num="80" count="0" type="stmt"/>
-        <line num="82" count="0" type="stmt"/>
-        <line num="87" count="4" type="stmt"/>
-        <line num="88" count="0" type="stmt"/>
-        <line num="91" count="4" type="stmt"/>
+        <line num="85" count="4" type="stmt"/>
+        <line num="86" count="0" type="stmt"/>
+        <line num="89" count="4" type="stmt"/>
       </file>
       <file name="book_controller.ts" path="C:\Users\amnav\Desktop\year C\BookApp\BookAPP\src\controllers\book_controller.ts">
         <metrics statements="54" coveredstatements="44" conditionals="11" coveredconditionals="8" methods="9" coveredmethods="9"/>
@@ -356,7 +354,7 @@
         <line num="105" count="4" type="stmt"/>
       </file>
       <file name="review_controller.ts" path="C:\Users\amnav\Desktop\year C\BookApp\BookAPP\src\controllers\review_controller.ts">
-        <metrics statements="49" coveredstatements="9" conditionals="10" coveredconditionals="0" methods="5" coveredmethods="2"/>
+        <metrics statements="49" coveredstatements="30" conditionals="10" coveredconditionals="5" methods="5" coveredmethods="3"/>
         <line num="1" count="4" type="stmt"/>
         <line num="2" count="4" type="stmt"/>
         <line num="5" count="4" type="stmt"/>
@@ -366,24 +364,24 @@
         <line num="16" count="0" type="stmt"/>
         <line num="20" count="0" type="stmt"/>
         <line num="22" count="0" type="stmt"/>
-        <line num="27" count="0" type="stmt"/>
-        <line num="28" count="0" type="cond" truecount="0" falsecount="3"/>
+        <line num="27" count="2" type="stmt"/>
+        <line num="28" count="2" type="cond" truecount="2" falsecount="1"/>
         <line num="29" count="0" type="stmt"/>
         <line num="30" count="0" type="stmt"/>
-        <line num="32" count="0" type="stmt"/>
-        <line num="34" count="0" type="stmt"/>
-        <line num="36" count="0" type="stmt"/>
-        <line num="37" count="0" type="stmt"/>
-        <line num="39" count="0" type="cond" truecount="0" falsecount="2"/>
-        <line num="40" count="0" type="stmt"/>
-        <line num="41" count="0" type="stmt"/>
-        <line num="42" count="0" type="cond" truecount="0" falsecount="2"/>
-        <line num="43" count="0" type="stmt"/>
-        <line num="44" count="0" type="cond" truecount="0" falsecount="1"/>
-        <line num="45" count="0" type="stmt"/>
-        <line num="47" count="0" type="stmt"/>
-        <line num="48" count="0" type="stmt"/>
-        <line num="49" count="0" type="stmt"/>
+        <line num="32" count="2" type="stmt"/>
+        <line num="34" count="2" type="stmt"/>
+        <line num="36" count="2" type="stmt"/>
+        <line num="37" count="2" type="stmt"/>
+        <line num="39" count="2" type="cond" truecount="1" falsecount="1"/>
+        <line num="40" count="2" type="stmt"/>
+        <line num="41" count="2" type="stmt"/>
+        <line num="42" count="2" type="cond" truecount="1" falsecount="1"/>
+        <line num="43" count="2" type="stmt"/>
+        <line num="44" count="2" type="cond" truecount="1" falsecount="0"/>
+        <line num="45" count="1" type="stmt"/>
+        <line num="47" count="2" type="stmt"/>
+        <line num="48" count="2" type="stmt"/>
+        <line num="49" count="2" type="stmt"/>
         <line num="51" count="0" type="stmt"/>
         <line num="52" count="0" type="stmt"/>
         <line num="55" count="0" type="stmt"/>
@@ -391,17 +389,17 @@
         <line num="61" count="1" type="stmt"/>
         <line num="62" count="1" type="stmt"/>
         <line num="63" count="1" type="stmt"/>
-        <line num="65" count="0" type="cond" truecount="0" falsecount="1"/>
+        <line num="65" count="1" type="cond" truecount="0" falsecount="1"/>
         <line num="66" count="0" type="stmt"/>
         <line num="67" count="0" type="stmt"/>
-        <line num="70" count="0" type="stmt"/>
-        <line num="72" count="0" type="cond" truecount="0" falsecount="1"/>
+        <line num="70" count="1" type="stmt"/>
+        <line num="72" count="1" type="cond" truecount="0" falsecount="1"/>
         <line num="73" count="0" type="stmt"/>
         <line num="74" count="0" type="stmt"/>
-        <line num="77" count="0" type="stmt"/>
-        <line num="81" count="0" type="stmt"/>
-        <line num="83" count="0" type="stmt"/>
-        <line num="85" count="1" type="stmt"/>
+        <line num="77" count="1" type="stmt"/>
+        <line num="81" count="1" type="stmt"/>
+        <line num="83" count="1" type="stmt"/>
+        <line num="85" count="0" type="stmt"/>
         <line num="90" count="0" type="stmt"/>
         <line num="91" count="0" type="stmt"/>
         <line num="96" count="0" type="stmt"/>
@@ -545,8 +543,8 @@
         <line num="208" count="4" type="stmt"/>
         <line num="235" count="4" type="stmt"/>
         <line num="244" count="4" type="stmt"/>
-        <line num="248" count="4" type="stmt"/>
-        <line num="254" count="4" type="stmt"/>
+        <line num="247" count="4" type="stmt"/>
+        <line num="253" count="4" type="stmt"/>
       </file>
       <file name="user_route.ts" path="C:\Users\amnav\Desktop\year C\BookApp\BookAPP\src\routes\user_route.ts">
         <metrics statements="14" coveredstatements="14" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
