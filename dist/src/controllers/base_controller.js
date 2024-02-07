@@ -10,6 +10,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.BaseController = void 0;
+//import book_model from "../models/book_model";
+// Extend Request interface to include user property
 class BaseController {
     constructor(model) {
         this.putById = (req, res) => __awaiter(this, void 0, void 0, function* () {
@@ -40,18 +42,8 @@ class BaseController {
                     res.send(obj);
                 }
                 else {
-                    if (req.user && req.user.role === "admin") {
-                        // Access to all books for admin
-                        const allObjects = yield this.model.find();
-                        res.send(allObjects);
-                    }
-                    else {
-                        // Access to books based on user or default behavior
-                        const obj = yield this.model.find({
-                        /* Your condition here */
-                        });
-                        res.send(obj);
-                    }
+                    const allObjects = yield this.model.find();
+                    res.send(allObjects);
                 }
             }
             catch (err) {

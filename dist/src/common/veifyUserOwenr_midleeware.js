@@ -18,8 +18,8 @@ const verifyUserOwner = (req, res, next) => __awaiter(void 0, void 0, void 0, fu
     try {
         const { id } = req.body;
         const currentUserId = (_a = req.locals) === null || _a === void 0 ? void 0 : _a.currentUserId;
-        console.log("this is the id test 2: " + id);
-        console.log("this is the currentUserId test 2: " + currentUserId);
+        console.log("Middleware - ID: " + id);
+        console.log("Middleware - currentUserId: " + currentUserId);
         if (!id || !currentUserId) {
             console.log("you have a problem here");
             return res

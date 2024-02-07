@@ -8,11 +8,12 @@ const path_1 = __importDefault(require("path"));
 const multer_1 = __importDefault(require("multer"));
 const storage = multer_1.default.diskStorage({
     destination: function (req, file, cb) {
-        cb(null, path_1.default.join(process.cwd(), "static", "uploads"));
+        const isBook = req.baseUrl.includes("/book");
+        console.log("req", req);
+        cb(null, path_1.default.join(process.cwd(), "static", isBook ? "books" : "uploads"));
     },
     filename: function (req, file, cb) {
-        const extension = file.originalname.split(".").pop();
-        cb(null, file.fieldname + "." + extension);
+        cb(null, file.originalname);
     },
 });
 exports.upload = (0, multer_1.default)({ storage });

@@ -17,7 +17,7 @@ const bcrypt_1 = __importDefault(require("bcrypt"));
 const getAllUsers = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const users = yield user_model_1.default.find();
-        res.status(200).send(users);
+        res.status(200).send({ users });
     }
     catch (error) {
         res.status(500).send({ message: "Error fetching users" });
@@ -38,42 +38,9 @@ const getUserById = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
         res.status(500).send("Internal Server Error -> getUserById");
     }
 });
-const getUserByEmail = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const { email } = req.params;
-        const user = yield user_model_1.default.findOne({ email });
-        res.status(200).json(user);
-    }
-    catch (err) {
-        res.status(400).send("worng to get: getUserByEmail");
-    }
-});
-const updateUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const { id } = req.body;
-        const { name, email, password } = req.body.user;
-        if (!name && !email && !password) {
-            res
-                .status(400)
-                .send("At least one field (name, email, or password) is required for update");
-            return;
-        }
-        const salt = yield bcrypt_1.default.genSalt(10);
-        const encryptedPassword = yield bcrypt_1.default.hash(password, salt);
-        const updatedUser = yield user_model_1.default.findByIdAndUpdate(id, { name, email, encryptedPassword }, { new: true });
-        if (!updatedUser) {
-            res.status(404).send("User not found");
-            return;
-        }
-        res.status(200).json(updatedUser);
-    }
-    catch (err) {
-        console.error("Error in updateUser:", err);
-        res.status(500).send("Internal Server Error -> updateUser");
-    }
-});
 const deleteUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
+        console.log("Controller - ID:", req.params.id);
         const deletedUser = yield user_model_1.default.findByIdAndDelete(req.params.id);
         if (!deletedUser) {
             res.status(404).send("User not found");
@@ -90,7 +57,6 @@ const updateOwnProfile = (req, res) => __awaiter(void 0, void 0, void 0, functio
     console.log("req.locals`:", req.locals);
     const { currentUserId } = req.locals;
     if (!currentUserId) {
-        console.log("this is here");
         res.status(400).send("User ID is required for updating the profile");
         return;
     }
@@ -122,9 +88,8 @@ const updateOwnProfile = (req, res) => __awaiter(void 0, void 0, void 0, functio
 //get my books
 const getMyBooks = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const currentUserId = req.locals.currentUserId;
-        console.log("currentUserId: ", currentUserId);
-        const user = yield user_model_1.default.findById(currentUserId).populate('books');
+        const user = yield user_model_1.default.findById(req.params.id);
+        console.log("the userr: ", user);
         if (!user) {
             res.status(404).send("User not found");
             return;
@@ -141,8 +106,6 @@ const getMyBooks = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
 exports.default = {
     getAllUsers,
     getUserById,
-    getUserByEmail,
-    updateUser,
     deleteUser,
     updateOwnProfile,
     getMyBooks,
