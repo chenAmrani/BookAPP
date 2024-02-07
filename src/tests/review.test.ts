@@ -9,15 +9,17 @@ import User, {IUser} from "../models/user_model";
 let app: Express;
 let createdReview1: string;
 
-const readerUser : IUser = {
-    _id: "",
-    name:"name1",
-    email: "author@test.com",
-    password: "authorpass",
-    image: "imageBase64",
-    role: "reader",
-    isGoogleSsoUser: false 
-  };
+
+const readerUser :  IUser = {
+  _id: "",
+  name:"reader2",
+  email: "reader2@test.com",
+  password: "readerpass",
+  image: "image1",
+  role: "reader",
+  isGoogleSsoUser: false 
+};
+
 
 interface IReview {
   BookName: string;
