@@ -71,31 +71,23 @@ import { upload } from "../common/multer";
  * @swagger
  * /user/:
  *   get:
- *    summary: get all users registered to the site (admin only)
- *    tags: [Users]
- *    requestBody:
- *      required: true
- *      content:
- *        application/json:
- *          schema:
- *            $ref: '#/components/schemas/User'
- *    security:
- *      - bearerAuth: []
- *    responses:
- *      200:
- *        description: Get all users registered to the site
- *        content:
- *          application/json:
- *            schema:
- *              $ref: '#/components/schemas/User'
- *      401:
- *        description: Unauthorized
- *        content:
- *          application/json:
- *            schema:
- *              $ref: '#/components/schemas/User'
- *
+ *     summary: Get all users registered on the site (admin only)
+ *     tags: [Users]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: A list of all users
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/User'
+ *       401:
+ *         description: Unauthorized
  */
+
 router.get("/", authMiddleware, adminMiddleware, UserController.getAllUsers);
 
 /**

@@ -8,7 +8,7 @@ interface CustomRequest extends Request {
   };
 }
 
-const getAllUsers = async (req: CustomRequest, res: Response): Promise<void> =>{
+const getAllUsers = async (req: CustomRequest , res: Response): Promise<void> =>{
   try {
     const users = await User.find();
     res.status(200).send(users);
@@ -17,7 +17,7 @@ const getAllUsers = async (req: CustomRequest, res: Response): Promise<void> =>{
   }
 };
 
-const getUserById = async (req: CustomRequest, res: Response) : Promise<void> => {
+const getUserById = async (req: CustomRequest , res: Response) : Promise<void> => {
   try {
     const { id } = req.params;
     const user = await User.findById(id);
