@@ -244,6 +244,7 @@ router.delete(
 router.get("/book/:bookId", reviewController.getReviewsByBookId);
 
 
+//need to add delete for admin
 router.delete(
   "/admin/:id",
   authMiddleware,

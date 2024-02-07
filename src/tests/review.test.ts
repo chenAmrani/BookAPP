@@ -7,17 +7,17 @@ import User, {IUser} from "../models/user_model";
 
 
 let app: Express;
-let createdReview1Id: string;
+let createdReview1: string;
 
 const readerUser : IUser = {
-  _id: "",
-  name:"reader2",
-  email: "reader2@test.com",
-  password: "readerpass",
-  image: "image1",
-  role: "reader",
-  isGoogleSsoUser: false 
-};
+    _id: "",
+    name:"name1",
+    email: "author@test.com",
+    password: "authorpass",
+    image: "imageBase64",
+    role: "reader",
+    isGoogleSsoUser: false 
+  };
 
 interface IReview {
   BookName: string;
@@ -27,14 +27,14 @@ interface IReview {
   bookId?: typeof mongoose.Schema.Types.ObjectId;
 }
 const review1: IReview = {
-  BookName: "updateBookName",
+  BookName: "Book1",
   date: null,
   text: "review 1",
   reviewerId: readerUser._id,
 };
 
 const review2: IReview = {
-  BookName: "updateBookName",
+  BookName: "Book1",
   date: null,
   text: "review 2",
   reviewerId: readerUser._id,
@@ -79,14 +79,14 @@ describe("Reviews tests", () => {
             .field('BookName', review.BookName)
             .field('bookId', review.bookId.toString())
             .field('reviewerId', review.reviewerId.toString())
-            .field('date', 'null');
+            .field('date', review.date.toString());
 
             
 
         expect(response.statusCode).toBe(201);
         expect(response.body.BookName).toBe(review.BookName);
         expect(response.body.text).toBe(review.text);
-        createdReview1Id = response.body._id;
+        createdReview1 = response.body._id;
 };
 
     //   test("Test Get All Student posts - empty response", async () => {
@@ -95,43 +95,35 @@ describe("Reviews tests", () => {
     //     expect(response.body).toStrictEqual([]);
     //   });
 
-    test("Test Post Review1", async () => {
-      const response = await request(app)
-          .post("/review")
-          .set("Authorization", "JWT " + accessToken)
-          .send(review1);
-
-      expect(response.statusCode).toBe(201);
-      expect(response.body.text).toBe(review1.text);
-      createdReview1Id = response.body._id;
-    });
- 
-      test("Test Post Review2", async () => {
-        const response = await request(app)
-            .post("/review")
-            .set("Authorization", "JWT " + accessToken)
-            .send(review2);
-
-        expect(response.statusCode).toBe(201);
-        expect(response.body.text).toBe(review2.text);
+      test("Test Post Review1", async () => {
+          await addReviewOnBook(review1);
       });
-    
-      test("Test Get All reviews with two reviews in the DB", async () => {
+      test("Test Post Review2", async () => {
+        await addReviewOnBook(review2);
+    });
+
+      test("Test Get All reviews with one review in the DB", async () => {
         const response = await request(app).get("/review");
         expect(response.statusCode).toBe(200);
-        const reviews = response.body; 
-        expect(reviews.toBeDefined);
-        expect(reviews.length).toBeGreaterThan(0);
-        console.log("reviews that returned from the test: ", reviews);
-    });
+        const rc = await response.body[0];
+        console.log("this is rc: " , rc);
+        expect(rc.BookName ).toBe(review1.BookName);
+        expect(rc.bookId).toBe(review1.bookId)
+        expect(rc.text).toBe(review1.text);
+        expect(rc.owner).toBe(readerUser._id);
+      });
 
-      test("User delete his own review by its ID ", async () => {
+      test("Delete review", async () => {
         const response = await request(app)
-          .delete(`/review/${createdReview1Id}`)
+          .delete(`/review/${createdReview1}`)
           .set("Authorization", "JWT " + accessToken);
         expect(response.statusCode).toBe(200);
       });
 
-    
+     
+
+
+
+  
    
 });
