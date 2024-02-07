@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from "express";
+import  { Request, Response, NextFunction } from "express";
 import User from "../models/user_model";
 
 interface CustomRequest extends Request {
@@ -13,8 +13,13 @@ const verifyUserOwner = async (
   next: NextFunction
 ) => {
   try {
-    const { id } =  req.body;
-    const currentUserId = req.locals?.currentUserId;
+    let  id  = '';
+    if (req.params.id ){
+      id = req.params.id ;
+    }else if (req.body.id){
+      id = req.body.id;
+    }
+    const currentUserId =  req.locals?.currentUserId;
     console.log("Middleware - ID: " + id);
     console.log("Middleware - currentUserId: " + currentUserId);
     if (!id || !currentUserId) {

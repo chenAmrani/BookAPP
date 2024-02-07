@@ -72,6 +72,7 @@ const readerUser : IUser = {
     console.log("this is readerUserId: " , readerUserId);
     const response3 = await request(app).post("/auth/login").send(readerUser);
     accessTokenUser3 = response3.body.accessToken;
+    console.log("this is accessTokenUser3: " , accessTokenUser3);
     });
   
     afterAll(async () => {
@@ -218,16 +219,13 @@ const readerUser : IUser = {
             test("Test Delete My User By Id - succsess", async () => {
               console.log("this is readerUserId: " , readerUserId);
               const response = await request(app)
-              .delete(`/user/deleteMyOwnUser${readerUserId}`)
+              .delete(`/user/deleteMyOwnUser/${readerUserId}`)
               .set("Authorization", "JWT " + accessTokenUser3);
       
               expect(response.statusCode).toBe(200);
               
-          });
-                
-
-              
-            });
+          });              
+});
 
 
             
