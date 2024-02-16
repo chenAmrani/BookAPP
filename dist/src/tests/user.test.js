@@ -16,6 +16,7 @@ const supertest_1 = __importDefault(require("supertest"));
 const app_1 = __importDefault(require("../app"));
 const mongoose_1 = __importDefault(require("mongoose"));
 const user_model_1 = __importDefault(require("../models/user_model"));
+//
 let app;
 let accessTokenUser1;
 let accessTokenUser2;
@@ -74,7 +75,7 @@ beforeAll(() => __awaiter(void 0, void 0, void 0, function* () {
     const response3 = yield (0, supertest_1.default)(app).post("/auth/login").send(readerUser);
     accessTokenUser3 = response3.body.accessToken;
     console.log("this is accessTokenUser3: ", accessTokenUser3);
-}));
+}), 15000);
 afterAll(() => __awaiter(void 0, void 0, void 0, function* () {
     yield mongoose_1.default.connection.close();
 }));
@@ -111,14 +112,21 @@ describe('User Controller Tests', () => {
             .set("Authorization", "JWT " + accessTokenUser2);
         expect(response.statusCode).toBe(200);
     }));
+    test("Test Get My Books with Invalid User ID", () => __awaiter(void 0, void 0, void 0, function* () {
+        const invalidUserId = "60f2c5d97329573b6cfe0e79";
+        const response = yield (0, supertest_1.default)(app)
+            .get(`/user/ownBooks/${invalidUserId}`)
+            .set("Authorization", "JWT " + accessTokenUser2);
+        expect(response.statusCode).toBe(404); // Expect a not found status code
+    }));
     //update
     test("Test Update - Admin - succsess", () => __awaiter(void 0, void 0, void 0, function* () {
         const updateData = {
             id: adminUserId,
             user: {
                 name: "change name admin",
-                email: "author@test.com",
-                password: "authorpass",
+                email: "admin@test.com",
+                password: "adminpass",
             }
         };
         const response = yield (0, supertest_1.default)(app)
@@ -161,12 +169,12 @@ describe('User Controller Tests', () => {
             .send(updateData);
         expect(response.statusCode).toBe(403);
     }));
-    //delete
-    test("Test Delete user by Id - Admin", () => __awaiter(void 0, void 0, void 0, function* () {
+    test("Test Delete My User By Id - not succsess", () => __awaiter(void 0, void 0, void 0, function* () {
+        console.log("this is readerUserId: ", readerUserId);
         const response = yield (0, supertest_1.default)(app)
-            .delete(`/user/delete/${authorUserId}`)
-            .set("Authorization", "JWT " + accessTokenUser1);
-        expect(response.statusCode).toBe(200);
+            .delete(`/user/deleteMyOwnUser/${readerUserId}`)
+            .set("Authorization", "JWT" + accessTokenUser2);
+        expect(response.statusCode).toBe(401);
     }));
     test("Test Update user that not exist", () => __awaiter(void 0, void 0, void 0, function* () {
         const updateData = {
@@ -183,12 +191,53 @@ describe('User Controller Tests', () => {
             .send(updateData);
         expect(response.statusCode).toBe(404);
     }));
+    test("Test Update Profile with Missing Fields", () => __awaiter(void 0, void 0, void 0, function* () {
+        const updateData = {
+            id: authorUserId,
+            user: {} // Empty object to simulate missing fields
+        };
+        const response = yield (0, supertest_1.default)(app)
+            .put("/user/updateOwnProfile")
+            .set("Authorization", "JWT " + accessTokenUser2)
+            .set("currentUserId", authorUserId) // Set the currentUserId in req.locals
+            .send(updateData);
+        expect(response.statusCode).toBe(400); // Expect a bad request status code
+        expect(response.text).toContain("At least one field (name, email, or password) is required for update");
+    }));
+    test("Test Update Profile without Authorization", () => __awaiter(void 0, void 0, void 0, function* () {
+        const updateData = {
+            id: authorUserId,
+            user: {
+                name: "change name author",
+                email: "author@test.com",
+                password: "authorpass",
+            }
+        };
+        const response = yield (0, supertest_1.default)(app)
+            .put("/user/updateOwnProfile")
+            .send(updateData); // Sending the update data without authorization
+        expect(response.statusCode).toBe(401); // Expect an unauthorized status code
+    }));
+    test("Test Delete user by Id - Admin", () => __awaiter(void 0, void 0, void 0, function* () {
+        const response = yield (0, supertest_1.default)(app)
+            .delete(`/user/delete/${authorUserId}`)
+            .set("Authorization", "JWT " + accessTokenUser1);
+        expect(response.statusCode).toBe(200);
+    }));
     test("Test Delete My User By Id - succsess", () => __awaiter(void 0, void 0, void 0, function* () {
         console.log("this is readerUserId: ", readerUserId);
         const response = yield (0, supertest_1.default)(app)
             .delete(`/user/deleteMyOwnUser/${readerUserId}`)
             .set("Authorization", "JWT " + accessTokenUser3);
         expect(response.statusCode).toBe(200);
+        expect(response.body).toEqual({ message: "Usere deleted succesfully" });
+    }));
+    test("Test Delete User with Non-existent ID", () => __awaiter(void 0, void 0, void 0, function* () {
+        const nonExistentUserId = "60f2c5d97329573b6cfe0e79"; // Provide a non-existent user ID
+        const response = yield (0, supertest_1.default)(app)
+            .delete(`/user/delete/${nonExistentUserId}`)
+            .set("Authorization", "JWT " + accessTokenUser1);
+        expect(response.statusCode).toBe(404); // Expect a not found status code
     }));
 });
 //# sourceMappingURL=user.test.js.map

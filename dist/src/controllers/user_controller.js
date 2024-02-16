@@ -38,6 +38,30 @@ const getUserById = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
         res.status(500).send("Internal Server Error -> getUserById");
     }
 });
+const updateUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { id } = req.body;
+        const { name, email, password } = req.body.user;
+        if (!name && !email && !password) {
+            res
+                .status(400)
+                .send("At least one field (name, email, or password) is required for update");
+            return;
+        }
+        const salt = yield bcrypt_1.default.genSalt(10);
+        const encryptedPassword = yield bcrypt_1.default.hash(password, salt);
+        const updatedUser = yield user_model_1.default.findByIdAndUpdate(id, { name, email, encryptedPassword }, { new: true });
+        if (!updatedUser) {
+            res.status(404).send("User not found");
+            return;
+        }
+        res.status(200).json(updatedUser);
+    }
+    catch (err) {
+        console.error("Error in updateUser:", err);
+        res.status(500).send("Internal Server Error -> updateUser");
+    }
+});
 const deleteUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         console.log("Controller - ID:", req.params.id);
@@ -46,7 +70,7 @@ const deleteUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
             res.status(404).send("User not found");
             return;
         }
-        res.status(200).json({ message: "User deleted successfully" });
+        res.status(200).json({ message: "Usere deleted succesfully" });
     }
     catch (err) {
         console.error("Error in deleteUser:", err);
@@ -106,6 +130,7 @@ const getMyBooks = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
 exports.default = {
     getAllUsers,
     getUserById,
+    updateUser,
     deleteUser,
     updateOwnProfile,
     getMyBooks,

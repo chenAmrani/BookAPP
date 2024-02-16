@@ -1,3 +1,4 @@
+
 import { Request, Response } from "express";
 import User, { IUser } from "../models/user_model";
 import bcrypt from "bcrypt";
@@ -23,7 +24,7 @@ const googleSignin = async (req: Request, res: Response) => {
         user = await User.create({
           name: payload?.name,
           email: email,
-          password: "*Signed up with a Google account*",
+          password: "Signed up with a Google account",
           image: payload?.picture,
           isGoogleSsoUser: true,
         });
@@ -123,6 +124,7 @@ const login = async (req: Request, res: Response) => {
 };
 
 const logout = async (req: Request, res: Response) => {
+  console.log("logout");
   const authHeader = req.headers["authorization"];
   const refreshToken = authHeader && authHeader.split(" ")[1]; // Bearer <token>
   if (refreshToken == null) return res.sendStatus(401);

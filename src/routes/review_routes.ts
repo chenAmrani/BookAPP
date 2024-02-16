@@ -1,3 +1,4 @@
+
 import express from "express";
 const router = express.Router();
 import reviewController from "../controllers/review_controller";
@@ -240,10 +241,59 @@ router.delete(
 
 
 
-
+/**
+ * @swagger
+ * /review/book/{bookId}:
+ *   get:
+ *     summary: Get a list of all reviews for a specific book
+ *     tags: [Reviews]
+ *     parameters:
+ *       - in: path
+ *         name: bookId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: ID of the book
+ *     responses:
+ *       200:
+ *         description: A list of reviews
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Review'
+ *       401:
+ *         description: Unauthorized, missing or invalid token
+ */
 router.get("/book/:bookId", reviewController.getReviewsByBookId);
 
 
+/**
+ * @swagger
+ * /review/admin/{id}:
+ *   delete:
+ *     summary: Delete a specific review by ID (Admin)
+ *     tags: [Reviews]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: ID of the review to be deleted
+ *     responses:
+ *       200:
+ *         description: OK
+ *       401:
+ *         description: Unauthorized, missing or invalid token
+ *       404:
+ *         description: Review not found
+ *       406:
+ *         description: Fail, error message
+ */
 router.delete(
   "/admin/:id",
   authMiddleware,

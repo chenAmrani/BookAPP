@@ -1,10 +1,11 @@
+
 import request from "supertest";
 import initApp from "../app";
 import mongoose from "mongoose";
 import User, { IUser } from "../models/user_model";
 import { Express } from "express";
 
-
+//
 
 let app: Express;
 let accessTokenUser1: string;
@@ -73,7 +74,7 @@ const readerUser : IUser = {
     const response3 = await request(app).post("/auth/login").send(readerUser);
     accessTokenUser3 = response3.body.accessToken;
     console.log("this is accessTokenUser3: " , accessTokenUser3);
-    });
+    }, 15000);
   
     afterAll(async () => {
       await mongoose.connection.close();
@@ -122,15 +123,23 @@ const readerUser : IUser = {
             expect(response.statusCode).toBe(200);
           });
 
-
+          test("Test Get My Books with Invalid User ID", async () => {
+            const invalidUserId = "60f2c5d97329573b6cfe0e79"; 
+          
+            const response = await request(app)
+              .get(`/user/ownBooks/${invalidUserId}`)
+              .set("Authorization", "JWT " + accessTokenUser2);
+          
+            expect(response.statusCode).toBe(404); // Expect a not found status code
+          });
           //update
           test("Test Update - Admin - succsess", async () => {
             const updateData = {
               id:adminUserId,
               user: {
                 name : "change name admin",
-                email: "author@test.com",
-                password: "authorpass",
+                email: "admin@test.com",
+                password: "adminpass",
               }
             }
       
@@ -184,16 +193,14 @@ const readerUser : IUser = {
           expect(response.statusCode).toBe(403);
           });
 
-
-          //delete
-          test("Test Delete user by Id - Admin", async () => {
+          test("Test Delete My User By Id - not succsess", async () => {
+            console.log("this is readerUserId: " , readerUserId);
             const response = await request(app)
-            .delete(`/user/delete/${authorUserId}`)
-            .set("Authorization", "JWT " + accessTokenUser1);
-      
-            expect(response.statusCode).toBe(200);
-            
-          });
+            .delete(`/user/deleteMyOwnUser/${readerUserId}`)
+            .set("Authorization", "JWT" + accessTokenUser2);
+            expect(response.statusCode).toBe(401);
+             
+        }); 
 
 
           test("Test Update user that not exist", async () => {
@@ -214,8 +221,53 @@ const readerUser : IUser = {
             expect(response.statusCode).toBe(404);
             
           });
+          
+          test("Test Update Profile with Missing Fields", async () => {
+            const updateData = {
+              id: authorUserId,
+              user: {} // Empty object to simulate missing fields
+            };
+          
+            const response = await request(app)
+              .put("/user/updateOwnProfile")
+              .set("Authorization", "JWT " + accessTokenUser2)
+              .set("currentUserId", authorUserId) // Set the currentUserId in req.locals
+              .send(updateData);
+          
+            expect(response.statusCode).toBe(400); // Expect a bad request status code
+            expect(response.text).toContain("At least one field (name, email, or password) is required for update");
+          });
+          
 
-           
+
+          test("Test Update Profile without Authorization", async () => {
+            const updateData = {
+              id: authorUserId,
+              user: {
+                name: "change name author",
+                email: "author@test.com",
+                password: "authorpass",
+              }
+            };
+          
+            const response = await request(app)
+              .put("/user/updateOwnProfile")
+              .send(updateData); // Sending the update data without authorization
+          
+            expect(response.statusCode).toBe(401); // Expect an unauthorized status code
+          });
+
+
+          test("Test Delete user by Id - Admin", async () => {
+            const response = await request(app)
+            .delete(`/user/delete/${authorUserId}`)
+            .set("Authorization", "JWT " + accessTokenUser1);
+      
+            expect(response.statusCode).toBe(200);
+            
+          });
+
+
             test("Test Delete My User By Id - succsess", async () => {
               console.log("this is readerUserId: " , readerUserId);
               const response = await request(app)
@@ -223,6 +275,19 @@ const readerUser : IUser = {
               .set("Authorization", "JWT " + accessTokenUser3);
       
               expect(response.statusCode).toBe(200);
+              expect(response.body).toEqual({ message: "Usere deleted succesfully" });
               
-          });              
+          });   
+          
+          test("Test Delete User with Non-existent ID", async () => {
+            const nonExistentUserId = "60f2c5d97329573b6cfe0e79"; // Provide a non-existent user ID
+          
+            const response = await request(app)
+              .delete(`/user/delete/${nonExistentUserId}`)
+              .set("Authorization", "JWT " + accessTokenUser1);
+          
+            expect(response.statusCode).toBe(404); // Expect a not found status code
+          });
+
+          
 });

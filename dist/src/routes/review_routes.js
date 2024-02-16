@@ -230,7 +230,57 @@ router.put("/", auth_middleware_1.default, review_controller_1.default.updateByI
  *         description: Fail, error message
  */
 router.delete("/:id", auth_middleware_1.default, review_controller_1.default.deleteById.bind(review_controller_1.default));
+/**
+ * @swagger
+ * /review/book/{bookId}:
+ *   get:
+ *     summary: Get a list of all reviews for a specific book
+ *     tags: [Reviews]
+ *     parameters:
+ *       - in: path
+ *         name: bookId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: ID of the book
+ *     responses:
+ *       200:
+ *         description: A list of reviews
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Review'
+ *       401:
+ *         description: Unauthorized, missing or invalid token
+ */
 router.get("/book/:bookId", review_controller_1.default.getReviewsByBookId);
+/**
+ * @swagger
+ * /review/admin/{id}:
+ *   delete:
+ *     summary: Delete a specific review by ID (Admin)
+ *     tags: [Reviews]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: ID of the review to be deleted
+ *     responses:
+ *       200:
+ *         description: OK
+ *       401:
+ *         description: Unauthorized, missing or invalid token
+ *       404:
+ *         description: Review not found
+ *       406:
+ *         description: Fail, error message
+ */
 router.delete("/admin/:id", auth_middleware_1.default, admin_middleware_1.default, review_controller_1.default.deleteById.bind(review_controller_1.default));
 exports.default = router;
 //# sourceMappingURL=review_routes.js.map
