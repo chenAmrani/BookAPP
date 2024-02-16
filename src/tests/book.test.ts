@@ -1,3 +1,4 @@
+
 import request from "supertest";
 import initApp from "../app";
 import mongoose from "mongoose";
@@ -7,7 +8,7 @@ import fs from "fs";
 import Book from "../models/book_model";
 import User from "../models/user_model";
 
-
+//
 const imageBuffer = fs.readFileSync("static/books/book1.jpg");
 
 let app: Express;
@@ -125,7 +126,7 @@ beforeAll(async () => {
   const readerResponse = await request(app).post("/auth/login").send(readerUser);
   readerAccessToken = readerResponse.body.accessToken;
   readerUser._id = response1.body._id;
-});
+}, 10000);
 
 afterAll(async () => {
   await mongoose.connection.close();

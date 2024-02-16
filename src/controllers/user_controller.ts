@@ -1,3 +1,4 @@
+
 import { Request, Response } from "express";
 import User from "../models/user_model";
 import bcrypt from "bcrypt";
@@ -33,7 +34,44 @@ const getUserById = async (req: CustomRequest , res: Response) : Promise<void> =
 };
 
 
-const deleteUser = async (req: CustomRequest, res: Response) : Promise<void> => {
+
+
+const updateUser = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { id } = req.body;
+    const { name, email, password } = req.body.user;
+
+    if (!name && !email && !password) {
+      res
+        .status(400)
+        .send(
+          "At least one field (name, email, or password) is required for update"
+        );
+      return;
+    }
+
+    const salt = await bcrypt.genSalt(10);
+    const encryptedPassword = await bcrypt.hash(password, salt);
+
+    const updatedUser = await User.findByIdAndUpdate(
+      id,
+      { name, email, encryptedPassword },
+      { new: true }
+    );
+
+    if (!updatedUser) {
+      res.status(404).send("User not found");
+      return;
+    }
+
+    res.status(200).json(updatedUser);
+  } catch (err) {
+    console.error("Error in updateUser:", err);
+    res.status(500).send("Internal Server Error -> updateUser");
+  }
+};
+
+const deleteUser = async (req: Request, res: Response) : Promise<void> => {
   try {
     console.log("Controller - ID:", req.params.id);
     const deletedUser = await User.findByIdAndDelete(req.params.id);
@@ -43,7 +81,7 @@ const deleteUser = async (req: CustomRequest, res: Response) : Promise<void> => 
       return;
     }
 
-    res.status(200).json({ message: "User deleted successfully" });
+    res.status(200).json({ message: "Usere deleted succesfully" });
   } catch (err) {
     console.error("Error in deleteUser:", err);
     res.status(500).send("Internal Server Error -> deleteUser");
@@ -122,6 +160,7 @@ const getMyBooks = async (req: Request, res: Response) : Promise<void> => {
 export default {
   getAllUsers,
   getUserById,
+  updateUser,
   deleteUser,
   updateOwnProfile,
   getMyBooks,

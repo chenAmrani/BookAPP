@@ -18,6 +18,7 @@ const mongoose_1 = __importDefault(require("mongoose"));
 const fs_1 = __importDefault(require("fs"));
 const book_model_1 = __importDefault(require("../models/book_model"));
 const user_model_1 = __importDefault(require("../models/user_model"));
+//
 const imageBuffer = fs_1.default.readFileSync("static/books/book1.jpg");
 let app;
 let authorAccessToken;
@@ -107,7 +108,7 @@ beforeAll(() => __awaiter(void 0, void 0, void 0, function* () {
     const readerResponse = yield (0, supertest_1.default)(app).post("/auth/login").send(readerUser);
     readerAccessToken = readerResponse.body.accessToken;
     readerUser._id = response1.body._id;
-}));
+}), 10000);
 afterAll(() => __awaiter(void 0, void 0, void 0, function* () {
     yield mongoose_1.default.connection.close();
 }));

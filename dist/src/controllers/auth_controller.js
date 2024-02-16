@@ -33,7 +33,7 @@ const googleSignin = (req, res) => __awaiter(void 0, void 0, void 0, function* (
                 user = yield user_model_1.default.create({
                     name: payload === null || payload === void 0 ? void 0 : payload.name,
                     email: email,
-                    password: "*Signed up with a Google account*",
+                    password: "Signed up with a Google account",
                     image: payload === null || payload === void 0 ? void 0 : payload.picture,
                     isGoogleSsoUser: true,
                 });
@@ -116,6 +116,7 @@ const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     }
 });
 const logout = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    console.log("logout");
     const authHeader = req.headers["authorization"];
     const refreshToken = authHeader && authHeader.split(" ")[1]; // Bearer <token>
     if (refreshToken == null)

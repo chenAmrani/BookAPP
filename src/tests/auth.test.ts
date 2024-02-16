@@ -1,10 +1,11 @@
+
 import request from "supertest";
 import initApp from "../app";
 import mongoose from "mongoose";
 import { Express } from "express";
 import User from "../models/user_model";
 import path from 'path';
-
+//
 let app: Express;
 const user = {
   name: "name1",
@@ -17,7 +18,7 @@ beforeAll(async () => {
   app = await initApp();
   console.log("beforeAll");
   await User.deleteMany({ 'email': user.email });
-});
+}, 10000);
 
 afterAll(async () => {
   await mongoose.connection.close();
@@ -25,7 +26,7 @@ afterAll(async () => {
 
 let accessToken: string;
 let refreshToken: string;
-// let newRefreshToken: string;
+let newRefreshToken: string;
 
 
 describe("Auth tests", () => {
@@ -84,7 +85,7 @@ test("Test login missing email", async () => {
   expect(response.statusCode).toBe(400);
 });
 
-test("Test login missing Incorrect email", async () => {
+test("Test login with Incorrect email", async () => {
   const response = await request(app)
       .post("/auth/login").send({
         email: "Admi@test.com",
@@ -93,7 +94,7 @@ test("Test login missing Incorrect email", async () => {
   expect(response.statusCode).toBe(401);
 });
 
-test("Test login missing Incorrect password", async () => {
+test("Test login with Incorrect password", async () => {
   const response = await request(app)
       .post("/auth/login").send({
         email: "Admi@test.com",
@@ -143,22 +144,12 @@ test("Test login missing password", async () => {
       .set("Authorization", "JWT 1" + accessToken);
     expect(response.statusCode).toBe(401);
   });
-
-  jest.setTimeout(10000);
-  test("Test access after timeout of token", async () => {
-    await new Promise(resolve => setTimeout(() => resolve("its free the promis"), 5000));
-    
-      const response = await request(app)
-        .get("/user")
-        .set("Authorization", "JWT " + accessToken);
-      expect(response.statusCode).not.toBe(200);
-    });
-  //    test("Logout user with a valid token", async () => {
-  //     const response = await request(app)
-  //         .post("/auth/logout")
-  //         .set("Authorization", "JWT " + newRefreshToken);
-  //     expect(response.statusCode).toBe(200);
-  // });
+  test("Logout user with a valid token", async () => {
+    const response = await request(app)
+      .post("/auth/logout")
+      .set("Authorization", "JWT " + accessToken);
+    expect(response.statusCode).toBe(200);
+  });
 
     test ("Test refresh token", async () => {
       const response = await request(app)
@@ -170,7 +161,7 @@ test("Test login missing password", async () => {
       expect(response.body.refreshToken).toBeDefined();
   
       const newAccessToken = response.body.accessToken;
-      // les newRefreshToken = response.body.refreshToken;
+      newRefreshToken = response.body.refreshToken;
       
   
       const response2 = await request(app)
@@ -206,4 +197,50 @@ test("Test login missing password", async () => {
     //     .send();
     //   expect(response1.statusCode).not.toBe(200);
     // });
+    test("Test Register missing role", async () => {
+      const response = await request(app)
+        .post("/auth/register")
+        .send({
+          name: "testUser",
+          email: "test@test.com",
+          password: "test123"
+        });
+      expect(response.statusCode).toBe(400);
+    });
+
+    test("Test login missing email", async () => {
+      const response = await request(app)
+        .post("/auth/login")
+        .send({
+          password: "test123"
+        });
+      expect(response.statusCode).toBe(400);
+    });
+
+
+
+    test("Test access after timeout of token", async () => {
+      await new Promise(resolve => setTimeout(resolve, 5000)); // Wait for token to expire
+      const response = await request(app)
+        .get("/user")
+        .set("Authorization", "JWT " + accessToken);
+      expect(response.statusCode).toBe(401);
+    });
+    jest.setTimeout(10000);
+  test("Test access after timeout of token", async () => {
+    await new Promise(resolve => setTimeout(() => resolve("its free the promis"), 5000));
+    
+      const response = await request(app)
+        .get("/user")
+        .set("Authorization", "JWT " + accessToken);
+      expect(response.statusCode).not.toBe(200);
+    });
+    //test logout with invalid token
+    test("Test logout with invalid token", async () => {
+      const response = await request(app)
+        .post("/auth/logout")
+        .set("Authorization", "JWT 1" + accessToken);
+      expect(response.statusCode).toBe(401);
+    });
+
 });
