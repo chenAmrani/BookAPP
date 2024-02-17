@@ -56,6 +56,25 @@ const register = async (req: Request, res: Response) => {
     return res.status(400).send("missing email or password or role or name");
   }
 
+  
+     // Name validation
+     const nameRegex = /^[a-zA-Z0-9\s]+$/;
+     if (!nameRegex.test(name)) {
+          return res.status(400).json({ error: "Invalid name format" });
+       }
+
+     // Email validation
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+          return res.status(400).json({ error: "Invalid email format." });
+        }
+
+     // Password validation
+      if (password.length < 6) {
+           return res.status(400).json({ error: "Password must be at least 6 characters long." });
+       }
+
+
   try {
     const doesUserExists = await User.findOne({ email: email });
     if (doesUserExists != null) {

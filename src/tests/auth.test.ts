@@ -68,6 +68,36 @@ describe("Auth tests", () => {
     expect(response.statusCode).toBe(400);
 });
 
+test("Test Register short password", async () => {
+  const response = await request(app)
+      .post("/auth/register").send({
+          name: "Short",
+          email: "Short@test.com",
+          password: "11",
+      });
+  expect(response.statusCode).toBe(400);
+});
+
+test("Test Register ivalid name", async () => {
+  const response = await request(app)
+      .post("/auth/register").send({
+          name: "!",
+          email: "Invalid@Name.com",
+          password: "11",
+      });
+  expect(response.statusCode).toBe(400);
+});
+
+test("Test Register ivalid email", async () => {
+  const response = await request(app)
+      .post("/auth/register").send({
+          name: "invalidEmail",
+          email: "Inalidtest.com",
+          password: "11",
+      });
+  expect(response.statusCode).toBe(400);
+});
+
 test("Test Register missing name", async () => {
   const response = await request(app)
       .post("/auth/register").send({
