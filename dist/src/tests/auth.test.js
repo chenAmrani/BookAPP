@@ -69,6 +69,33 @@ describe("Auth tests", () => {
         });
         expect(response.statusCode).toBe(400);
     }));
+    test("Test Register short password", () => __awaiter(void 0, void 0, void 0, function* () {
+        const response = yield (0, supertest_1.default)(app)
+            .post("/auth/register").send({
+            name: "Short",
+            email: "Short@test.com",
+            password: "11",
+        });
+        expect(response.statusCode).toBe(400);
+    }));
+    test("Test Register ivalid name", () => __awaiter(void 0, void 0, void 0, function* () {
+        const response = yield (0, supertest_1.default)(app)
+            .post("/auth/register").send({
+            name: "!",
+            email: "Invalid@Name.com",
+            password: "11",
+        });
+        expect(response.statusCode).toBe(400);
+    }));
+    test("Test Register ivalid email", () => __awaiter(void 0, void 0, void 0, function* () {
+        const response = yield (0, supertest_1.default)(app)
+            .post("/auth/register").send({
+            name: "invalidEmail",
+            email: "Inalidtest.com",
+            password: "11",
+        });
+        expect(response.statusCode).toBe(400);
+    }));
     test("Test Register missing name", () => __awaiter(void 0, void 0, void 0, function* () {
         const response = yield (0, supertest_1.default)(app)
             .post("/auth/register").send({
