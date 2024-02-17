@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">61% </span>
+                <span class="strong">73.11% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>61/100</span>
+                <span class='fraction'>68/93</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">40% </span>
+                <span class="strong">48.57% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>14/35</span>
+                <span class='fraction'>17/35</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">60% </span>
+                <span class="strong">86.66% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>9/15</span>
+                <span class='fraction'>13/15</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">63.73% </span>
+                <span class="strong">73.8% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>58/91</span>
+                <span class='fraction'>62/84</span>
             </div>
         
             
@@ -247,15 +247,7 @@
 <a name='L182'></a><a href='#L182'>182</a>
 <a name='L183'></a><a href='#L183'>183</a>
 <a name='L184'></a><a href='#L184'>184</a>
-<a name='L185'></a><a href='#L185'>185</a>
-<a name='L186'></a><a href='#L186'>186</a>
-<a name='L187'></a><a href='#L187'>187</a>
-<a name='L188'></a><a href='#L188'>188</a>
-<a name='L189'></a><a href='#L189'>189</a>
-<a name='L190'></a><a href='#L190'>190</a>
-<a name='L191'></a><a href='#L191'>191</a>
-<a name='L192'></a><a href='#L192'>192</a>
-<a name='L193'></a><a href='#L193'>193</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L185'></a><a href='#L185'>185</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-yes">4x</span>
@@ -272,7 +264,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -308,8 +299,6 @@
 <span class="cline-any cline-yes">14x</span>
 <span class="cline-any cline-yes">14x</span>
 <span class="cline-any cline-yes">14x</span>
-<span class="cline-any cline-yes">14x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">14x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">14x</span>
@@ -335,12 +324,9 @@
 <span class="cline-any cline-yes">8x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">14x</span>
-<span class="cline-any cline-yes">14x</span>
 <span class="cline-any cline-yes">14x</span>
 <span class="cline-any cline-yes">14x</span>
 <span class="cline-any cline-yes">14x</span>
@@ -381,15 +367,13 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -465,7 +449,6 @@ const googleSignin = <span class="fstat-no" title="function not covered" >async 
       audience: process.env.GOOGLE_CLIENT_ID,
     });
     const payload = <span class="cstat-no" title="statement not covered" >ticket.getPayload();</span>
-<span class="cstat-no" title="statement not covered" >    console.log("payload", payload);</span>
     const email = <span class="cstat-no" title="statement not covered" >payload?.email;</span>
 <span class="cstat-no" title="statement not covered" >    <span class="missing-if-branch" title="if path not taken" >I</span>if (email != null) {</span>
       let user = <span class="cstat-no" title="statement not covered" >await User.findOne({ email: email });</span>
@@ -502,8 +485,6 @@ const register = async (req: Request, res: Response) =&gt; {
   const role = req.body.role;
   const name = req.body.name;
 &nbsp;
-  console.log(req.file);
-&nbsp;
   if (!email || !password || !role || !name) {
     return res.status(400).send("missing email or password or role or name");
   }
@@ -526,16 +507,13 @@ const register = async (req: Request, res: Response) =&gt; {
 &nbsp;
     return res.status(201).send(userData);
   } catch (err) {
-<span class="cstat-no" title="statement not covered" >    console.log("err", err);</span>
 <span class="cstat-no" title="statement not covered" >    return res.status(400).send("Error: " + err.message);</span>
   }
 };
 &nbsp;
 const login = async (req: Request, res: Response) =&gt; {
   const email = req.body.email;
-  console.log("email", email);
   const password = req.body.password;
-  console.log("password", password);
 &nbsp;
   if (!email || !password) {
     return res.status(400).send("missing email or password");
@@ -572,16 +550,14 @@ const login = async (req: Request, res: Response) =&gt; {
   }
 };
 &nbsp;
-const logout = <span class="fstat-no" title="function not covered" >async (r</span>eq: Request, res: Response) =&gt;<span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" > {</span></span>
-<span class="cstat-no" title="statement not covered" >  console.log("logout");</span>
-  const authHeader = <span class="cstat-no" title="statement not covered" >req.headers["authorization"];</span>
-  const refreshToken = <span class="cstat-no" title="statement not covered" >authHeader &amp;&amp; authHeader.split(" ")[1];</span> // Bearer &lt;token&gt;
-<span class="cstat-no" title="statement not covered" >  <span class="missing-if-branch" title="if path not taken" >I</span>if (refreshToken == null) <span class="cstat-no" title="statement not covered" >return res.sendStatus(401);</span></span>
-<span class="cstat-no" title="statement not covered" >  jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET, <span class="fstat-no" title="function not covered" >async (e</span>rr) =&gt;<span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" > {</span></span></span>
-<span class="cstat-no" title="statement not covered" >    console.log(err);</span>
-<span class="cstat-no" title="statement not covered" >    <span class="missing-if-branch" title="if path not taken" >I</span>if (err) <span class="cstat-no" title="statement not covered" >return res.sendStatus(401);</span></span>
-<span class="cstat-no" title="statement not covered" >    try {</span>
-<span class="cstat-no" title="statement not covered" >      return res.sendStatus(200);</span>
+const logout = async (req: Request, res: Response) =&gt; {
+  const authHeader = req.headers["authorization"];
+  const refreshToken = authHeader &amp;&amp; authHeader.split(" ")[1]; // Bearer &lt;token&gt;
+  <span class="missing-if-branch" title="if path not taken" >I</span>if (refreshToken == null) <span class="cstat-no" title="statement not covered" >return res.sendStatus(401);</span>
+  jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET, async (err) =&gt; {
+    if (err) return res.sendStatus(401);
+    try {
+      return res.sendStatus(200);
     } catch (err) {
 <span class="cstat-no" title="statement not covered" >      res.sendStatus(401).send(err.message);</span>
     }
@@ -646,7 +622,7 @@ function prepareUser(
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2024-02-16T15:46:05.134Z
+                at 2024-02-17T11:38:43.388Z
             </div>
         <script src="../../prettify.js"></script>
         <script>

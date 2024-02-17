@@ -26,7 +26,7 @@ afterAll(async () => {
 
 let accessToken: string;
 let refreshToken: string;
-let newRefreshToken: string;
+// let newRefreshToken: string;
 
 
 describe("Auth tests", () => {
@@ -122,10 +122,6 @@ test("Test login missing password", async () => {
     expect(accessToken).toBeDefined();
   });
 
-
-
-
-
   test("Test forbidden access without token", async () => {
     const response = await request(app).get("/user"); 
     expect(response.statusCode).toBe(401);
@@ -146,7 +142,7 @@ test("Test login missing password", async () => {
   });
   test("Logout user with a valid token", async () => {
     const response = await request(app)
-      .post("/auth/logout")
+      .get("/auth/logout")
       .set("Authorization", "JWT " + accessToken);
     expect(response.statusCode).toBe(200);
   });
@@ -161,7 +157,7 @@ test("Test login missing password", async () => {
       expect(response.body.refreshToken).toBeDefined();
   
       const newAccessToken = response.body.accessToken;
-      newRefreshToken = response.body.refreshToken;
+      // newRefreshToken = response.body.refreshToken;
       
   
       const response2 = await request(app)
@@ -171,32 +167,6 @@ test("Test login missing password", async () => {
     });
 
   
-   
-
-//   test("Logout user with an invalid token", async () => {
-//     const response = await request(app)
-//         .post("/auth/logout")
-//         .set("Authorization", "JWT 1" + newRefreshToken);
-//     expect(response.statusCode).toBe(401);
-// });
-
-
-
-    // test("Test double use of refresh token", async () => {
-    //   const response = await request(app)
-    //     .get("/auth/refresh")
-    //     .set("Authorization", "JWT " + refreshToken)
-    //     .send();
-    //     console.log("this is response: " , response.statusCode);
-    //   expect(response.statusCode).not.toBe(200);
-  
-    //   //verify that the new token is not valid as well
-    //   const response1 = await request(app)
-    //     .get("/auth/refresh")
-    //     .set("Authorization", "JWT " + newRefreshToken)
-    //     .send();
-    //   expect(response1.statusCode).not.toBe(200);
-    // });
     test("Test Register missing role", async () => {
       const response = await request(app)
         .post("/auth/register")
@@ -232,13 +202,14 @@ test("Test login missing password", async () => {
     
       const response = await request(app)
         .get("/user")
-        .set("Authorization", "JWT " + accessToken);
+        .set("Authorization", "JWT" + accessToken);
       expect(response.statusCode).not.toBe(200);
     });
-    //test logout with invalid token
+
+ 
     test("Test logout with invalid token", async () => {
       const response = await request(app)
-        .post("/auth/logout")
+        .get("/auth/logout")
         .set("Authorization", "JWT 1" + accessToken);
       expect(response.statusCode).toBe(401);
     });

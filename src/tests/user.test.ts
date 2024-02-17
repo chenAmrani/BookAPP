@@ -91,7 +91,7 @@ const readerUser : IUser = {
             expect(response.statusCode).toBe(200);
           });
 
-
+          
           test("Test Get All Users - not Admin", async () => {
             const response = await request(app).get("/user/")
             .set("Authorization", "JWT " + accessTokenUser2);

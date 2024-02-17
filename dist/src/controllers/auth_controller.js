@@ -25,7 +25,6 @@ const googleSignin = (req, res) => __awaiter(void 0, void 0, void 0, function* (
             audience: process.env.GOOGLE_CLIENT_ID,
         });
         const payload = ticket.getPayload();
-        console.log("payload", payload);
         const email = payload === null || payload === void 0 ? void 0 : payload.email;
         if (email != null) {
             let user = yield user_model_1.default.findOne({ email: email });
@@ -56,7 +55,6 @@ const register = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const password = req.body.password;
     const role = req.body.role;
     const name = req.body.name;
-    console.log(req.file);
     if (!email || !password || !role || !name) {
         return res.status(400).send("missing email or password or role or name");
     }
@@ -78,15 +76,12 @@ const register = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         return res.status(201).send(userData);
     }
     catch (err) {
-        console.log("err", err);
         return res.status(400).send("Error: " + err.message);
     }
 });
 const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const email = req.body.email;
-    console.log("email", email);
     const password = req.body.password;
-    console.log("password", password);
     if (!email || !password) {
         return res.status(400).send("missing email or password");
     }
@@ -116,13 +111,11 @@ const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     }
 });
 const logout = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    console.log("logout");
     const authHeader = req.headers["authorization"];
     const refreshToken = authHeader && authHeader.split(" ")[1]; // Bearer <token>
     if (refreshToken == null)
         return res.sendStatus(401);
     jsonwebtoken_1.default.verify(refreshToken, process.env.JWT_REFRESH_SECRET, (err) => __awaiter(void 0, void 0, void 0, function* () {
-        console.log(err);
         if (err)
             return res.sendStatus(401);
         try {

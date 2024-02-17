@@ -2,9 +2,6 @@
 import { Request, Response } from "express";
 import { Model } from "mongoose";
 import { AuthRequest } from "../common/auth_middleware";
-//import book_model from "../models/book_model";
-
-// Extend Request interface to include user property
 
 export class BaseController<ModelType> {
   model: Model<ModelType>;
@@ -13,7 +10,6 @@ export class BaseController<ModelType> {
   }
 
   async get(req: AuthRequest, res: Response) {
-    console.log("getAll");
     try {
       if (req.query.name) {
         const obj = await this.model.find({ name: req.query.name });

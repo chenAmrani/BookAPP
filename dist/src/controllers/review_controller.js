@@ -44,13 +44,9 @@ class ReviewController extends base_controller_1.BaseController {
             }
             const review = { bookId, text, reviewerId: req.user._id };
             const createReview = yield review_model_1.default.create(review);
-            console.log("createReview: ", createReview);
-            console.log("the book id is: ", bookId.toString());
             if (createReview) {
                 const book = yield book_model_1.default.findById(bookId.toString());
-                console.log("book: ", book);
                 if (book) {
-                    console.log("The id of the created reviwe  " + createReview.id);
                     if (!book.reviews) {
                         book.reviews = [];
                     }
@@ -72,7 +68,6 @@ class ReviewController extends base_controller_1.BaseController {
     deleteById(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                console.log("req.params.id: ", req.params.id);
                 const review = yield review_model_1.default.findById(req.params.id);
                 if (!review) {
                     res.status(404).send("Review not found");
