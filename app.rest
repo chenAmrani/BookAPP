@@ -70,6 +70,14 @@ Content-Type: application/json
 }
 
 
+###
+
+Get http://localhost:6969/auth/logout
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NWQwOTUyYmZlZGM3MGI4MTRlYzEyZDAiLCJpYXQiOjE3MDgxNjg0OTQsImV4cCI6MTcwODE3MjA5NH0.wtXTu4P9ZbxJE6hfmUpDUcW4LCiebh-vO4E_FL81OJ4
+
+
+
+
 ### 
 POST http://localhost:6969/auth/register
 Content-Type: application/json

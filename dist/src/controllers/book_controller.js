@@ -51,9 +51,7 @@ class bookController extends base_controller_1.BaseController {
                     return;
                 }
                 const book = Object.assign(Object.assign({}, req.body), { image: req.file.filename });
-                console.log("book!!!!!!!!!!!", book);
                 const createdBook = yield this.model.create(book);
-                console.log("createdBook", createdBook);
                 if (createdBook) {
                     const user = yield user_model_1.default.findById(_id);
                     if (user) {
@@ -72,7 +70,6 @@ class bookController extends base_controller_1.BaseController {
                 res.status(201).send(createdBook);
             }
             catch (error) {
-                console.log(error);
                 res.status(500).json({ message: error.message });
             }
         });
@@ -86,7 +83,6 @@ class bookController extends base_controller_1.BaseController {
                 res.status(200).send(updatedBook);
             }
             catch (err) {
-                console.log(err);
                 res.status(406).send("fail: " + err.message);
             }
         });

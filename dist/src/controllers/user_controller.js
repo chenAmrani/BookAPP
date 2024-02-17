@@ -34,7 +34,6 @@ const getUserById = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
         res.status(200).json(user);
     }
     catch (err) {
-        console.error("Error in getUserById:", err);
         res.status(500).send("Internal Server Error -> getUserById");
     }
 });
@@ -58,13 +57,11 @@ const updateUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         res.status(200).json(updatedUser);
     }
     catch (err) {
-        console.error("Error in updateUser:", err);
         res.status(500).send("Internal Server Error -> updateUser");
     }
 });
 const deleteUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        console.log("Controller - ID:", req.params.id);
         const deletedUser = yield user_model_1.default.findByIdAndDelete(req.params.id);
         if (!deletedUser) {
             res.status(404).send("User not found");
@@ -73,12 +70,10 @@ const deleteUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         res.status(200).json({ message: "Usere deleted succesfully" });
     }
     catch (err) {
-        console.error("Error in deleteUser:", err);
         res.status(500).send("Internal Server Error -> deleteUser");
     }
 });
 const updateOwnProfile = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    console.log("req.locals`:", req.locals);
     const { currentUserId } = req.locals;
     if (!currentUserId) {
         res.status(400).send("User ID is required for updating the profile");
@@ -105,25 +100,20 @@ const updateOwnProfile = (req, res) => __awaiter(void 0, void 0, void 0, functio
         res.status(200).json(updatedUser);
     }
     catch (err) {
-        console.error("Error in updateOwnProfile:", err);
         res.status(500).send("Internal Server Error -> updateOwnProfile");
     }
 });
-//get my books
 const getMyBooks = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const user = yield user_model_1.default.findById(req.params.id);
-        console.log("the userr: ", user);
         if (!user) {
             res.status(404).send("User not found");
             return;
         }
         const myBooks = user.books || [];
-        console.log("user.books: ", user.books);
         res.status(200).json({ myBooks });
     }
     catch (err) {
-        console.error("Error in getMyBooks:", err);
         res.status(500).send("Internal Server Error -> getMyBooks");
     }
 });

@@ -10,15 +10,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.BaseController = void 0;
-//import book_model from "../models/book_model";
-// Extend Request interface to include user property
 class BaseController {
     constructor(model) {
         this.model = model;
     }
     get(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            console.log("getAll");
             try {
                 if (req.query.name) {
                     const obj = yield this.model.find({ name: req.query.name });

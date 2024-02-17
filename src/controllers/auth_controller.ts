@@ -16,7 +16,6 @@ const googleSignin = async (req: Request, res: Response) => {
       audience: process.env.GOOGLE_CLIENT_ID,
     });
     const payload = ticket.getPayload();
-    console.log("payload", payload);
     const email = payload?.email;
     if (email != null) {
       let user = await User.findOne({ email: email });
@@ -53,8 +52,6 @@ const register = async (req: Request, res: Response) => {
   const role = req.body.role;
   const name = req.body.name;
 
-  console.log(req.file);
-
   if (!email || !password || !role || !name) {
     return res.status(400).send("missing email or password or role or name");
   }
@@ -77,16 +74,13 @@ const register = async (req: Request, res: Response) => {
 
     return res.status(201).send(userData);
   } catch (err) {
-    console.log("err", err);
     return res.status(400).send("Error: " + err.message);
   }
 };
 
 const login = async (req: Request, res: Response) => {
   const email = req.body.email;
-  console.log("email", email);
   const password = req.body.password;
-  console.log("password", password);
 
   if (!email || !password) {
     return res.status(400).send("missing email or password");
@@ -124,12 +118,10 @@ const login = async (req: Request, res: Response) => {
 };
 
 const logout = async (req: Request, res: Response) => {
-  console.log("logout");
   const authHeader = req.headers["authorization"];
   const refreshToken = authHeader && authHeader.split(" ")[1]; // Bearer <token>
   if (refreshToken == null) return res.sendStatus(401);
   jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET, async (err) => {
-    console.log(err);
     if (err) return res.sendStatus(401);
     try {
       return res.sendStatus(200);
