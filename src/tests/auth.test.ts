@@ -179,9 +179,10 @@ test("Test login missing password", async () => {
 
     test ("Test refresh token", async () => {
       const response = await request(app)
-          .get("/auth/refresh")
-          .set("Authorization", "JWT " + refreshToken)
-          .send();
+          .post("/auth/refresh")
+          .send({
+            refreshToken: refreshToken
+          });
       expect(response.statusCode).toBe(200);
       expect(response.body.accessToken).toBeDefined();
       expect(response.body.refreshToken).toBeDefined();
