@@ -1,4 +1,3 @@
-
 import { Request, Response } from "express";
 import User, { IUser } from "../models/user_model";
 import bcrypt from "bcrypt";
@@ -33,7 +32,8 @@ const googleSignin = async (req: Request, res: Response) => {
       });
       const refreshToken = jwt.sign(
         { _id: user._id },
-        process.env.JWT_REFRESH_SECRET
+        process.env.JWT_REFRESH_SECRET,
+        { expiresIn: process.env.JWT_REFRESH_EXPIRATION }
       );
 
       await user.save();
@@ -56,32 +56,33 @@ const register = async (req: Request, res: Response) => {
     return res.status(400).send("missing email or password or role or name");
   }
 
-  
-     // Name validation
-     const nameRegex = /^[a-zA-Z0-9\s]+$/;
-     if (!nameRegex.test(name)) {
-          return res.status(400).json({ error: "Invalid name format" });
-       }
+  // Name validation
+  const nameRegex = /^[a-zA-Z0-9\s]+$/;
+  if (!nameRegex.test(name)) {
+    return res.status(400).json({ error: "Invalid name format" });
+  }
 
-     // Email validation
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!emailRegex.test(email)) {
-          return res.status(400).json({ error: "Invalid email format." });
-        }
+  // Email validation
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email)) {
+    return res.status(400).json({ error: "Invalid email format." });
+  }
 
-     // Password validation
-      if (password.length < 6) {
-           return res.status(400).json({ error: "Password must be at least 6 characters long." });
-       }
-
+  // Password validation
+  if (password.length < 6) {
+    return res
+      .status(400)
+      .json({ error: "Password must be at least 6 characters long." });
+  }
 
   try {
     const doesUserExists = await User.findOne({ email: email });
     if (doesUserExists != null) {
-      return res.status(406).send("email already exists");
+      return res.status(406).send({ error: "email already exists" });
     }
     const salt = await bcrypt.genSalt(10);
     const encryptedPassword = await bcrypt.hash(password, salt);
+
     const newUser = await User.create({
       email: email,
       password: encryptedPassword,
@@ -89,9 +90,11 @@ const register = async (req: Request, res: Response) => {
       role: role,
       name: name,
     });
+    const { accessToken, refreshToken } = generateJwtTokens(newUser._id);
+
     const userData = prepareUser(newUser);
 
-    return res.status(201).send(userData);
+    return res.status(201).send({ ...userData, accessToken, refreshToken });
   } catch (err) {
     return res.status(400).send("Error: " + err.message);
   }
@@ -115,13 +118,7 @@ const login = async (req: Request, res: Response) => {
       return res.status(401).send("email or password incorrect");
     }
 
-    const accessToken = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, {
-      expiresIn: process.env.JWT_EXPIRATION,
-    });
-    const refreshToken = jwt.sign(
-      { _id: user._id },
-      process.env.JWT_REFRESH_SECRET
-    );
+    const { accessToken, refreshToken } = generateJwtTokens(user._id);
 
     await user.save();
 
@@ -151,32 +148,31 @@ const logout = async (req: Request, res: Response) => {
 };
 
 const refresh = async (req: Request, res: Response) => {
-  const authHeader = req.headers["authorization"];
-  const refreshToken = authHeader && authHeader.split(" ")[1]; // Bearer <token>
-  if (refreshToken == null) return res.sendStatus(401);
+  const refreshToken = req.body.refreshToken;
+  console.log("refreshToken", refreshToken);
+
+  if (refreshToken == null) return res.sendStatus(401).send("no token");
   jwt.verify(
     refreshToken,
     process.env.JWT_REFRESH_SECRET,
     async (err, user: { _id: string }) => {
       if (err) {
-        console.log(err);
+        console.log("refresh1", err);
         return res.sendStatus(401);
       }
       try {
-        const userDb = await User.findOne({ _id: user._id });
-
-        const accessToken = await jwt.sign(
+        const accessToken = jwt.sign(
           { _id: user._id },
           process.env.JWT_SECRET,
           { expiresIn: process.env.JWT_EXPIRATION }
         );
 
-        await userDb.save();
         return res.status(200).send({
           accessToken: accessToken,
           refreshToken: refreshToken,
         });
       } catch (err) {
+        console.log("err!", err);
         res.sendStatus(401).send(err.message);
       }
     }
@@ -191,6 +187,18 @@ export default {
   googleSignin,
 };
 
+function generateJwtTokens(userId: string) {
+  const accessToken = jwt.sign({ _id: userId }, process.env.JWT_SECRET, {
+    expiresIn: process.env.JWT_EXPIRATION,
+  });
+  const refreshToken = jwt.sign(
+    { _id: userId },
+    process.env.JWT_REFRESH_SECRET,
+    { expiresIn: process.env.JWT_REFRESH_EXPIRATION }
+  );
+  return { accessToken, refreshToken };
+}
+
 function prepareUser(
   newUser: Document<unknown, NonNullable<unknown>, IUser> &
     IUser &
@@ -199,6 +207,5 @@ function prepareUser(
   const userData = newUser.toObject();
 
   delete userData.password;
-  // delete userData.refreshTokens; //לבדוק האם למחוק את זה
   return userData;
 }

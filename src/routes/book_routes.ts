@@ -176,7 +176,9 @@ router.put(
   "/admin/update/:id",
   authMiddleware,
   adminMiddleware,
-  bookController.putById.bind(bookController)
+  // check if form data includes field named "image", if yes, use multer to upload the image
+  upload.single("image"),
+  bookController.putById
 );
 
 /**
@@ -252,6 +254,7 @@ router.put(
   "/updateOwnBook/:id",
   authMiddleware,
   verifyBookOwner,
+  upload.single("image"),
   bookController.putById.bind(bookController)
 );
 
@@ -413,6 +416,12 @@ router.post(
  *       406:
  *         description: Book already exists
  */
-router.post("/admin", authMiddleware, adminMiddleware, upload.single("image"), bookController.post);
+router.post(
+  "/admin",
+  authMiddleware,
+  adminMiddleware,
+  upload.single("image"),
+  bookController.post
+);
 
 export default router;
