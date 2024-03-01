@@ -1,4 +1,3 @@
-
 import { Request, Response } from "express";
 import User from "../models/user_model";
 import bcrypt from "bcrypt";
@@ -9,16 +8,22 @@ interface CustomRequest extends Request {
   };
 }
 
-const getAllUsers = async (req: CustomRequest , res: Response): Promise<void> =>{
+const getAllUsers = async (
+  req: CustomRequest,
+  res: Response
+): Promise<void> => {
   try {
     const users = await User.find();
-    res.status(200).send({users});
+    res.status(200).send({ users });
   } catch (error) {
     res.status(500).send({ message: "Error fetching users" });
   }
 };
 
-const getUserById = async (req: CustomRequest , res: Response) : Promise<void> => {
+const getUserById = async (
+  req: CustomRequest,
+  res: Response
+): Promise<void> => {
   try {
     const { id } = req.params;
     const user = await User.findById(id);
@@ -31,9 +36,6 @@ const getUserById = async (req: CustomRequest , res: Response) : Promise<void> =
     res.status(500).send("Internal Server Error -> getUserById");
   }
 };
-
-
-
 
 const updateUser = async (req: Request, res: Response): Promise<void> => {
   try {
@@ -69,7 +71,7 @@ const updateUser = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
-const deleteUser = async (req: Request, res: Response) : Promise<void> => {
+const deleteUser = async (req: Request, res: Response): Promise<void> => {
   try {
     const deletedUser = await User.findByIdAndDelete(req.params.id);
 
@@ -84,7 +86,10 @@ const deleteUser = async (req: Request, res: Response) : Promise<void> => {
   }
 };
 
-const updateOwnProfile = async (req: CustomRequest,res: Response): Promise<void> => {
+const updateOwnProfile = async (
+  req: CustomRequest,
+  res: Response
+): Promise<void> => {
   const { currentUserId } = req.locals;
 
   if (!currentUserId) {
@@ -94,7 +99,7 @@ const updateOwnProfile = async (req: CustomRequest,res: Response): Promise<void>
 
   const { name, email, password } = req.body;
 
-  if (!name && !email && !password) {
+  if (!name && !email && !password && !req.file) {
     res
       .status(400)
       .send(
@@ -104,11 +109,11 @@ const updateOwnProfile = async (req: CustomRequest,res: Response): Promise<void>
   }
 
   try {
-    const updatedUserData: {
-      name: string;
-      email: string;
-      password?: string;
-    } = { name, email };
+    const updatedUserData: Record<string, string> = { name, email };
+
+    if (req.file) {
+      updatedUserData.image = req.file.filename;
+    }
 
     if (password) {
       const salt = await bcrypt.genSalt(10);
@@ -132,16 +137,16 @@ const updateOwnProfile = async (req: CustomRequest,res: Response): Promise<void>
   }
 };
 
-const getMyBooks = async (req: Request, res: Response) : Promise<void> => {
+const getMyBooks = async (req: Request, res: Response): Promise<void> => {
   try {
     const user = await User.findById(req.params.id);
-  
+
     if (!user) {
       res.status(404).send("User not found");
       return;
     }
     const myBooks = user.books || [];
-    res.status(200).json({myBooks});
+    res.status(200).json({ myBooks });
   } catch (err) {
     res.status(500).send("Internal Server Error -> getMyBooks");
   }

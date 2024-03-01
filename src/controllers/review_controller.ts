@@ -35,6 +35,7 @@ class ReviewController extends BaseController<IReview> {
 
     if (createReview) {
       const book = await book_model.findById(bookId.toString());
+      console.log("book", book);
       if (book) {
         if (!book.reviews) {
           book.reviews = [];

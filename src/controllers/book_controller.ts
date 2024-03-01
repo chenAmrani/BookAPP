@@ -46,7 +46,7 @@ class bookController extends BaseController<IBook> {
 
       const book = { ...req.body, image: req.file.filename };
       const createdBook = await this.model.create(book);
-      
+
       if (createdBook) {
         const user = await User.findById(_id);
 
@@ -67,7 +67,7 @@ class bookController extends BaseController<IBook> {
       res.status(500).json({ message: error.message });
     }
   };
-  
+
   async deleteById(req: Request, res: Response) {
     try {
       const book = await this.model.findById(req.params.id);
@@ -77,18 +77,31 @@ class bookController extends BaseController<IBook> {
       user.books = user.books.filter((bookId) => bookId !== req.params.id);
       await user.save();
       await this.model.findByIdAndDelete(req.params.id);
-      
+
       res.status(200).send("OK");
     } catch (err) {
       res.status(406).send("fail: " + err.message);
     }
   }
-  
+
   putById = async (req: AuthRequest, res: Response) => {
     try {
       const id = req.params.id;
-      const obj = req.body;
-      const updatedBook = await this.model.findByIdAndUpdate(id, obj, {
+
+      const updates: Record<string, string> = {};
+      Object.entries(req.body).forEach(([key, value]) => {
+        if (value) {
+          updates[key] = value as string;
+        }
+      });
+
+      console.log("req.file", req.file);
+      if (req.file) {
+        updates.image = req.file.filename;
+      }
+
+      console.log("updates", updates);
+      const updatedBook = await this.model.findByIdAndUpdate(id, updates, {
         new: true,
       });
       res.status(200).send(updatedBook);
