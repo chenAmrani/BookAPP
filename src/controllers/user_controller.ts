@@ -1,3 +1,4 @@
+
 import { Request, Response } from "express";
 import User from "../models/user_model";
 import bcrypt from "bcrypt";
@@ -8,16 +9,16 @@ interface CustomRequest extends Request {
   };
 }
 
-const getAllUsers = async (req: Request, res: Response): Promise<void> =>{
+const getAllUsers = async (req: CustomRequest , res: Response): Promise<void> =>{
   try {
     const users = await User.find();
-    res.status(200).send(users);
+    res.status(200).send({users});
   } catch (error) {
     res.status(500).send({ message: "Error fetching users" });
   }
 };
 
-const getUserById = async (req: Request, res: Response) : Promise<void> => {
+const getUserById = async (req: CustomRequest , res: Response) : Promise<void> => {
   try {
     const { id } = req.params;
     const user = await User.findById(id);
@@ -27,20 +28,12 @@ const getUserById = async (req: Request, res: Response) : Promise<void> => {
     }
     res.status(200).json(user);
   } catch (err) {
-    console.error("Error in getUserById:", err);
     res.status(500).send("Internal Server Error -> getUserById");
   }
 };
 
-const getUserByEmail = async (req: Request, res: Response): Promise<void> => {
-  try {
-    const { email } = req.params;
-    const user = await User.findOne({ email });
-    res.status(200).json(user);
-  } catch (err) {
-    res.status(400).send("worng to get: getUserByEmail");
-  }
-};
+
+
 
 const updateUser = async (req: Request, res: Response): Promise<void> => {
   try {
@@ -72,7 +65,6 @@ const updateUser = async (req: Request, res: Response): Promise<void> => {
 
     res.status(200).json(updatedUser);
   } catch (err) {
-    console.error("Error in updateUser:", err);
     res.status(500).send("Internal Server Error -> updateUser");
   }
 };
@@ -86,19 +78,16 @@ const deleteUser = async (req: Request, res: Response) : Promise<void> => {
       return;
     }
 
-    res.status(200).json({ message: "User deleted successfully" });
+    res.status(200).json({ message: "Usere deleted succesfully" });
   } catch (err) {
-    console.error("Error in deleteUser:", err);
     res.status(500).send("Internal Server Error -> deleteUser");
   }
 };
 
 const updateOwnProfile = async (req: CustomRequest,res: Response): Promise<void> => {
-  console.log("req.locals`:", req.locals);
   const { currentUserId } = req.locals;
 
   if (!currentUserId) {
-    console.log("this is here");
     res.status(400).send("User ID is required for updating the profile");
     return;
   }
@@ -139,26 +128,21 @@ const updateOwnProfile = async (req: CustomRequest,res: Response): Promise<void>
 
     res.status(200).json(updatedUser);
   } catch (err) {
-    console.error("Error in updateOwnProfile:", err);
     res.status(500).send("Internal Server Error -> updateOwnProfile");
   }
 };
 
-//get my books
 const getMyBooks = async (req: Request, res: Response) : Promise<void> => {
   try {
     const user = await User.findById(req.params.id);
-    console.log("the userr: ", user);  
   
     if (!user) {
       res.status(404).send("User not found");
       return;
     }
     const myBooks = user.books || [];
-    console.log("user.books: ", user.books);
     res.status(200).json({myBooks});
   } catch (err) {
-    console.error("Error in getMyBooks:", err);
     res.status(500).send("Internal Server Error -> getMyBooks");
   }
 };
@@ -166,7 +150,6 @@ const getMyBooks = async (req: Request, res: Response) : Promise<void> => {
 export default {
   getAllUsers,
   getUserById,
-  getUserByEmail,
   updateUser,
   deleteUser,
   updateOwnProfile,

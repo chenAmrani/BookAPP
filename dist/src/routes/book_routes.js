@@ -10,6 +10,7 @@ const auth_middleware_1 = __importDefault(require("../common/auth_middleware"));
 const author_middleware_1 = __importDefault(require("../common/author_middleware"));
 const admin_middleware_1 = __importDefault(require("../common/admin_middleware"));
 const verifyBookOwner_1 = __importDefault(require("../common/verifyBookOwner"));
+const multer_1 = require("../common/multer");
 /**
  * @swagger
  * tags:
@@ -107,7 +108,7 @@ const verifyBookOwner_1 = __importDefault(require("../common/verifyBookOwner"));
  *       401:
  *         description: Unauthorized, missing or invalid token
  */
-router.get("/", book_controller_1.default.get.bind(book_controller_1.default));
+router.get("/", book_controller_1.default.getBooks);
 /**
  * @swagger
  * /book/{id}:
@@ -177,12 +178,6 @@ router.put("/admin/update/:id", auth_middleware_1.default, admin_middleware_1.de
  *     summary: Delete a specific book (Admin)
  *     tags:
  *       - Book
- *     requestBody:
- *       required: false
- *       content:
- *         application/json:
- *           schema:
- *             $ref: '#/components/schemas/Book'
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -190,7 +185,8 @@ router.put("/admin/update/:id", auth_middleware_1.default, admin_middleware_1.de
  *         in: path
  *         description: The ID of the book to be deleted.
  *         required: true
- *         type: string
+ *         schema:
+ *           type: string
  *     responses:
  *       200:
  *         description: Book deleted successfully
@@ -245,12 +241,6 @@ router.put("/updateOwnBook/:id", auth_middleware_1.default, verifyBookOwner_1.de
  *     summary: Delete a specific book (Author)
  *     tags:
  *       - Book
- *     requestBody:
- *       required: false
- *       content:
- *         application/json:
- *           schema:
- *             $ref: '#/components/schemas/Book'
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -258,7 +248,8 @@ router.put("/updateOwnBook/:id", auth_middleware_1.default, verifyBookOwner_1.de
  *         in: path
  *         description: The ID of the book to be deleted.
  *         required: true
- *         type: string
+ *         schema:
+ *           type: string
  *     responses:
  *       200:
  *         description: Book deleted successfully
@@ -281,9 +272,39 @@ router.delete("/:id", auth_middleware_1.default, verifyBookOwner_1.default, book
  *     requestBody:
  *       required: true
  *       content:
- *         application/json:
+ *         multipart/form-data:
  *           schema:
- *             $ref: '#/components/schemas/Book'
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *               year:
+ *                 type: number
+ *               image:
+ *                 type: string
+ *                 format: binary
+ *               pages:
+ *                 type: number
+ *               price:
+ *                 type: number
+ *               rating:
+ *                 type: number
+ *               author:
+ *                 type: string
+ *               category:
+ *                 type: string
+ *               summary:
+ *                 type: string
+ *             required:
+ *               - name
+ *               - year
+ *               - image
+ *               - pages
+ *               - price
+ *               - rating
+ *               - author
+ *               - category
+ *               - summary
  *     responses:
  *       201:
  *         description: New book created
@@ -298,8 +319,65 @@ router.delete("/:id", auth_middleware_1.default, verifyBookOwner_1.default, book
  *       406:
  *         description: Book already exists
  */
-router.post("/", auth_middleware_1.default, author_middleware_1.default, book_controller_1.default.post);
-//need to add swagger
-router.post("/admin", auth_middleware_1.default, admin_middleware_1.default, book_controller_1.default.post);
+router.post("/", auth_middleware_1.default, author_middleware_1.default, multer_1.upload.single("image"), book_controller_1.default.post);
+/**
+ * @swagger
+ * /book/admin:
+ *   post:
+ *     summary: Create a new book (Admin)
+ *     tags: [Book]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *               year:
+ *                 type: number
+ *               image:
+ *                 type: string
+ *                 format: binary
+ *               pages:
+ *                 type: number
+ *               price:
+ *                 type: number
+ *               rating:
+ *                 type: number
+ *               author:
+ *                 type: string
+ *               category:
+ *                 type: string
+ *               summary:
+ *                 type: string
+ *             required:
+ *               - name
+ *               - year
+ *               - image
+ *               - pages
+ *               - price
+ *               - rating
+ *               - author
+ *               - category
+ *               - summary
+ *     responses:
+ *       201:
+ *         description: New book created
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Book'
+ *       401:
+ *         description: Unauthorized, missing or invalid token
+ *       403:
+ *         description: Forbidden, user does not have admin privileges
+ *       406:
+ *         description: Book already exists
+ */
+router.post("/admin", auth_middleware_1.default, admin_middleware_1.default, multer_1.upload.single("image"), book_controller_1.default.post);
 exports.default = router;
 //# sourceMappingURL=book_routes.js.map

@@ -1,3 +1,4 @@
+
 import { Request, Response } from "express";
 import User, { IUser } from "../models/user_model";
 import bcrypt from "bcrypt";
@@ -8,76 +9,42 @@ import { OAuth2Client } from "google-auth-library";
 const client = new OAuth2Client();
 
 const googleSignin = async (req: Request, res: Response) => {
-    console.log(req.body);
-    try {
-        const ticket = await client.verifyIdToken({
-            idToken: req.body.credential,
-            audience: process.env.GOOGLE_CLIENT_ID,
+  console.log(req.body);
+  try {
+    const ticket = await client.verifyIdToken({
+      idToken: req.body.credential,
+      audience: process.env.GOOGLE_CLIENT_ID,
+    });
+    const payload = ticket.getPayload();
+    const email = payload?.email;
+    if (email != null) {
+      let user = await User.findOne({ email: email });
+      if (user == null) {
+        user = await User.create({
+          name: payload?.name,
+          email: email,
+          password: "Signed up with a Google account",
+          image: payload?.picture,
+          isGoogleSsoUser: true,
         });
-        const payload = ticket.getPayload();
-        const email = payload?.email;
-        if (email != null) {
-            let user = await User.findOne({ 'email': email });
-            if (user == null) {
-                user = await User.create(
-                    {
-                        'name': payload?.name,
-                        'email': email,
-                        'password': '*Signed up with a Google account*',
-                        'image': payload?.picture
-                    });
-            }
-            const accessToken = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, {
-              expiresIn: process.env.JWT_EXPIRATION,
-            });
-            const refreshToken = jwt.sign(
-              { _id: user._id },
-              process.env.JWT_REFRESH_SECRET
-            );
-            if (user.refreshTokens == null) {
-              user.refreshTokens = [refreshToken];
-            } else {
-              user.refreshTokens.push(refreshToken);
-            }
-            await user.save();
-            // const tokens = await generateTokens(user)
-            // const userData = prepareUser(user);
-            // console.log("the user data is", userData);
-            // return res.status(200).send({
-            //   accessToken,
-            //   refreshToken,
-            //   userData,
-            // });
-            res.status(201).send(
-                {
-                    name: user.name,
-                    email: user.email,
-                    _id: user._id,
-                    image: user.image,
-                    accessToken: accessToken,
-                    refreshToken: refreshToken
-                });
-        }
-    } catch (err) {
-        return res.status(400).send(err.message);
+      }
+      const accessToken = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, {
+        expiresIn: process.env.JWT_EXPIRATION,
+      });
+      const refreshToken = jwt.sign(
+        { _id: user._id },
+        process.env.JWT_REFRESH_SECRET
+      );
+
+      await user.save();
+
+      const userData = prepareUser(user);
+      res.status(201).send({ accessToken, refreshToken, userData });
     }
-
-}
-
-// const generateTokens = async (user: Document & IUser) => {
-//   const accessToken = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRATION });
-//   const refreshToken = jwt.sign({ _id: user._id }, process.env.JWT_REFRESH_SECRET);
-//   if (user.refreshTokens == null) {
-//       user.refreshTokens = [refreshToken];
-//   } else {
-//       user.refreshTokens.push(refreshToken);
-//   }
-//   await user.save();
-//   return {
-//       'accessToken': accessToken,
-//       'refreshToken': refreshToken
-//   };
-// }
+  } catch (err) {
+    return res.status(400).send(err.message);
+  }
+};
 
 const register = async (req: Request, res: Response) => {
   const email = req.body.email;
@@ -85,11 +52,28 @@ const register = async (req: Request, res: Response) => {
   const role = req.body.role;
   const name = req.body.name;
 
-  console.log(req.file);
-
   if (!email || !password || !role || !name) {
     return res.status(400).send("missing email or password or role or name");
   }
+
+  
+     // Name validation
+     const nameRegex = /^[a-zA-Z0-9\s]+$/;
+     if (!nameRegex.test(name)) {
+          return res.status(400).json({ error: "Invalid name format" });
+       }
+
+     // Email validation
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+          return res.status(400).json({ error: "Invalid email format." });
+        }
+
+     // Password validation
+      if (password.length < 6) {
+           return res.status(400).json({ error: "Password must be at least 6 characters long." });
+       }
+
 
   try {
     const doesUserExists = await User.findOne({ email: email });
@@ -109,16 +93,13 @@ const register = async (req: Request, res: Response) => {
 
     return res.status(201).send(userData);
   } catch (err) {
-    console.log("err", err);
     return res.status(400).send("Error: " + err.message);
   }
 };
 
 const login = async (req: Request, res: Response) => {
   const email = req.body.email;
-  console.log("email", email);
   const password = req.body.password;
-  console.log("password", password);
 
   if (!email || !password) {
     return res.status(400).send("missing email or password");
@@ -141,11 +122,7 @@ const login = async (req: Request, res: Response) => {
       { _id: user._id },
       process.env.JWT_REFRESH_SECRET
     );
-    if (user.refreshTokens == null) {
-      user.refreshTokens = [refreshToken];
-    } else {
-      user.refreshTokens.push(refreshToken);
-    }
+
     await user.save();
 
     const userData = prepareUser(user);
@@ -163,33 +140,14 @@ const logout = async (req: Request, res: Response) => {
   const authHeader = req.headers["authorization"];
   const refreshToken = authHeader && authHeader.split(" ")[1]; // Bearer <token>
   if (refreshToken == null) return res.sendStatus(401);
-  jwt.verify(
-    refreshToken,
-    process.env.JWT_REFRESH_SECRET,
-    async (err, user: { _id: string }) => {
-      console.log(err);
-      if (err) return res.sendStatus(401);
-      try {
-        const userDb = await User.findOne({ _id: user._id });
-        if (
-          !userDb.refreshTokens ||
-          !userDb.refreshTokens.includes(refreshToken)
-        ) {
-          userDb.refreshTokens = [];
-          await userDb.save();
-          return res.sendStatus(401);
-        } else {
-          userDb.refreshTokens = userDb.refreshTokens.filter(
-            (t) => t !== refreshToken
-          );
-          await userDb.save();
-          return res.sendStatus(200);
-        }
-      } catch (err) {
-        res.sendStatus(401).send(err.message);
-      }
+  jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET, async (err) => {
+    if (err) return res.sendStatus(401);
+    try {
+      return res.sendStatus(200);
+    } catch (err) {
+      res.sendStatus(401).send(err.message);
     }
-  );
+  });
 };
 
 const refresh = async (req: Request, res: Response) => {
@@ -206,27 +164,13 @@ const refresh = async (req: Request, res: Response) => {
       }
       try {
         const userDb = await User.findOne({ _id: user._id });
-        if (
-          !userDb.refreshTokens ||
-          !userDb.refreshTokens.includes(refreshToken)
-        ) {
-          userDb.refreshTokens = [];
-          await userDb.save();
-          return res.sendStatus(401);
-        }
+
         const accessToken = await jwt.sign(
           { _id: user._id },
           process.env.JWT_SECRET,
           { expiresIn: process.env.JWT_EXPIRATION }
         );
-        const newRefreshToken = await jwt.sign(
-          { _id: user._id },
-          process.env.JWT_REFRESH_SECRET
-        );
-        userDb.refreshTokens = userDb.refreshTokens.filter(
-          (t) => t !== refreshToken
-        );
-        userDb.refreshTokens.push(newRefreshToken);
+
         await userDb.save();
         return res.status(200).send({
           accessToken: accessToken,
@@ -244,7 +188,7 @@ export default {
   login,
   logout,
   refresh,
-  googleSignin
+  googleSignin,
 };
 
 function prepareUser(

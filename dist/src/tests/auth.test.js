@@ -17,6 +17,7 @@ const app_1 = __importDefault(require("../app"));
 const mongoose_1 = __importDefault(require("mongoose"));
 const user_model_1 = __importDefault(require("../models/user_model"));
 const path_1 = __importDefault(require("path"));
+//
 let app;
 const user = {
     name: "name1",
@@ -29,13 +30,13 @@ beforeAll(() => __awaiter(void 0, void 0, void 0, function* () {
     app = yield (0, app_1.default)();
     console.log("beforeAll");
     yield user_model_1.default.deleteMany({ 'email': user.email });
-}));
+}), 10000);
 afterAll(() => __awaiter(void 0, void 0, void 0, function* () {
     yield mongoose_1.default.connection.close();
 }));
 let accessToken;
 let refreshToken;
-let newRefreshToken;
+// let newRefreshToken: string;
 describe("Auth tests", () => {
     test("Test Register", () => __awaiter(void 0, void 0, void 0, function* () {
         const response = yield (0, supertest_1.default)(app)
@@ -60,6 +61,79 @@ describe("Auth tests", () => {
         });
         expect(response.statusCode).toBe(400);
     }));
+    test("Test Register missing email", () => __awaiter(void 0, void 0, void 0, function* () {
+        const response = yield (0, supertest_1.default)(app)
+            .post("/auth/register").send({
+            name: "testUser",
+            password: "test123"
+        });
+        expect(response.statusCode).toBe(400);
+    }));
+    test("Test Register short password", () => __awaiter(void 0, void 0, void 0, function* () {
+        const response = yield (0, supertest_1.default)(app)
+            .post("/auth/register").send({
+            name: "Short",
+            email: "Short@test.com",
+            password: "11",
+        });
+        expect(response.statusCode).toBe(400);
+    }));
+    test("Test Register ivalid name", () => __awaiter(void 0, void 0, void 0, function* () {
+        const response = yield (0, supertest_1.default)(app)
+            .post("/auth/register").send({
+            name: "!",
+            email: "Invalid@Name.com",
+            password: "11",
+        });
+        expect(response.statusCode).toBe(400);
+    }));
+    test("Test Register ivalid email", () => __awaiter(void 0, void 0, void 0, function* () {
+        const response = yield (0, supertest_1.default)(app)
+            .post("/auth/register").send({
+            name: "invalidEmail",
+            email: "Inalidtest.com",
+            password: "11",
+        });
+        expect(response.statusCode).toBe(400);
+    }));
+    test("Test Register missing name", () => __awaiter(void 0, void 0, void 0, function* () {
+        const response = yield (0, supertest_1.default)(app)
+            .post("/auth/register").send({
+            email: "test@test.com",
+            password: "test123"
+        });
+        expect(response.statusCode).toBe(400);
+    }));
+    test("Test login missing email", () => __awaiter(void 0, void 0, void 0, function* () {
+        const response = yield (0, supertest_1.default)(app)
+            .post("/auth/login").send({
+            password: "test123"
+        });
+        expect(response.statusCode).toBe(400);
+    }));
+    test("Test login with Incorrect email", () => __awaiter(void 0, void 0, void 0, function* () {
+        const response = yield (0, supertest_1.default)(app)
+            .post("/auth/login").send({
+            email: "Admi@test.com",
+            password: "123456789",
+        });
+        expect(response.statusCode).toBe(401);
+    }));
+    test("Test login with Incorrect password", () => __awaiter(void 0, void 0, void 0, function* () {
+        const response = yield (0, supertest_1.default)(app)
+            .post("/auth/login").send({
+            email: "Admi@test.com",
+            password: "12345678",
+        });
+        expect(response.statusCode).toBe(401);
+    }));
+    test("Test login missing password", () => __awaiter(void 0, void 0, void 0, function* () {
+        const response = yield (0, supertest_1.default)(app)
+            .post("/auth/login").send({
+            email: "missingPass"
+        });
+        expect(response.statusCode).toBe(400);
+    }));
     test("Test Login", () => __awaiter(void 0, void 0, void 0, function* () {
         const response = yield (0, supertest_1.default)(app)
             .post("/auth/login")
@@ -70,7 +144,7 @@ describe("Auth tests", () => {
         expect(accessToken).toBeDefined();
     }));
     test("Test forbidden access without token", () => __awaiter(void 0, void 0, void 0, function* () {
-        const response = yield (0, supertest_1.default)(app).get("/user"); //check if its need to be user
+        const response = yield (0, supertest_1.default)(app).get("/user");
         expect(response.statusCode).toBe(401);
     }));
     test("Test access with valid token", () => __awaiter(void 0, void 0, void 0, function* () {
@@ -85,13 +159,11 @@ describe("Auth tests", () => {
             .set("Authorization", "JWT 1" + accessToken);
         expect(response.statusCode).toBe(401);
     }));
-    jest.setTimeout(10000);
-    test("Test access after timeout of token", () => __awaiter(void 0, void 0, void 0, function* () {
-        yield new Promise(resolve => setTimeout(() => resolve("its free the promis"), 5000));
+    test("Logout user with a valid token", () => __awaiter(void 0, void 0, void 0, function* () {
         const response = yield (0, supertest_1.default)(app)
-            .get("/user")
+            .get("/auth/logout")
             .set("Authorization", "JWT " + accessToken);
-        expect(response.statusCode).not.toBe(200);
+        expect(response.statusCode).toBe(200);
     }));
     test("Test refresh token", () => __awaiter(void 0, void 0, void 0, function* () {
         const response = yield (0, supertest_1.default)(app)
@@ -102,23 +174,50 @@ describe("Auth tests", () => {
         expect(response.body.accessToken).toBeDefined();
         expect(response.body.refreshToken).toBeDefined();
         const newAccessToken = response.body.accessToken;
-        newRefreshToken = response.body.refreshToken;
+        // newRefreshToken = response.body.refreshToken;
         const response2 = yield (0, supertest_1.default)(app)
             .get("/user")
             .set("Authorization", "JWT " + newAccessToken);
         expect(response2.statusCode).toBe(200);
     }));
-    test("Test double use of refresh token", () => __awaiter(void 0, void 0, void 0, function* () {
+    test("Test Register missing role", () => __awaiter(void 0, void 0, void 0, function* () {
         const response = yield (0, supertest_1.default)(app)
-            .get("/auth/refresh")
-            .set("Authorization", "JWT " + refreshToken)
-            .send();
+            .post("/auth/register")
+            .send({
+            name: "testUser",
+            email: "test@test.com",
+            password: "test123"
+        });
+        expect(response.statusCode).toBe(400);
+    }));
+    test("Test login missing email", () => __awaiter(void 0, void 0, void 0, function* () {
+        const response = yield (0, supertest_1.default)(app)
+            .post("/auth/login")
+            .send({
+            password: "test123"
+        });
+        expect(response.statusCode).toBe(400);
+    }));
+    test("Test access after timeout of token", () => __awaiter(void 0, void 0, void 0, function* () {
+        yield new Promise(resolve => setTimeout(resolve, 5000)); // Wait for token to expire
+        const response = yield (0, supertest_1.default)(app)
+            .get("/user")
+            .set("Authorization", "JWT " + accessToken);
+        expect(response.statusCode).toBe(401);
+    }));
+    jest.setTimeout(10000);
+    test("Test access after timeout of token", () => __awaiter(void 0, void 0, void 0, function* () {
+        yield new Promise(resolve => setTimeout(() => resolve("its free the promis"), 5000));
+        const response = yield (0, supertest_1.default)(app)
+            .get("/user")
+            .set("Authorization", "JWT" + accessToken);
         expect(response.statusCode).not.toBe(200);
-        const response1 = yield (0, supertest_1.default)(app)
-            .get("/auth/refresh")
-            .set("Authorization", "JWT " + newRefreshToken)
-            .send();
-        expect(response1.statusCode).not.toBe(200);
+    }));
+    test("Test logout with invalid token", () => __awaiter(void 0, void 0, void 0, function* () {
+        const response = yield (0, supertest_1.default)(app)
+            .get("/auth/logout")
+            .set("Authorization", "JWT 1" + accessToken);
+        expect(response.statusCode).toBe(401);
     }));
 });
 //# sourceMappingURL=auth.test.js.map

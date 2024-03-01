@@ -2,15 +2,15 @@ import mongoose from "mongoose";
 
 export interface IBook {
   name: string;
+  summary: string;
   year: number;
   image: string;
   pages: number;
   price: number;
   rating: number;
-  author: mongoose.Schema.Types.ObjectId;
   category: string;
-  summary: string;
   reviews: (typeof mongoose.Schema.Types.ObjectId)[];
+  author: mongoose.Schema.Types.ObjectId;
 }
 
 const bookSchema = new mongoose.Schema<IBook>({

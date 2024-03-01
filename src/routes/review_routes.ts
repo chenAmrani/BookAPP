@@ -1,7 +1,9 @@
+
 import express from "express";
 const router = express.Router();
 import reviewController from "../controllers/review_controller";
 import authMiddleware from "../common/auth_middleware";
+import  adminMiddleware  from "../common/admin_middleware";
 
 /**
  * @swagger
@@ -82,10 +84,11 @@ import authMiddleware from "../common/auth_middleware";
  *       401:
  *         description: Unauthorized, missing or invalid token
  */
+router.get("/", reviewController.get.bind(reviewController));
 
 /**
  * @swagger
- * /post:
+ * /review:
  *   post:
  *     summary: Create a new review
  *     tags: [Reviews]
@@ -96,7 +99,27 @@ import authMiddleware from "../common/auth_middleware";
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/Review'
+ *             type: object
+ *             required:
+ *               - bookId
+ *               - text
+ *               - reviewerId
+ *             properties:
+ *               bookId:
+ *                 type: string
+ *                 format: uuid
+ *                 description: The ID of the book being reviewed
+ *               text:
+ *                 type: string
+ *                 description: The text content of the review
+ *               reviewerId:
+ *                 type: string
+ *                 format: uuid
+ *                 description: The ID of the reviewer
+ *             example:
+ *               bookId: '60f2c5d97329573b6cfe0e77'  # Replace with actual book ID
+ *               text: 'This is a great book!'
+ *               reviewerId: '65bf721966d70f77cac83273'  # Replace with actual reviewer ID
  *     responses:
  *       201:
  *         description: The created review
@@ -113,7 +136,7 @@ import authMiddleware from "../common/auth_middleware";
  *       500:
  *         description: Internal Server Error
  */
-
+router.post("/", authMiddleware, reviewController.addNewReview);
 /**
  * @swagger
  * /review/{id}:
@@ -139,28 +162,35 @@ import authMiddleware from "../common/auth_middleware";
  *       404:
  *         description: Review not found
  */
+router.get("/:id", reviewController.getById.bind(reviewController));
 
 /**
  * @swagger
- * /put/{id}:
+ * /review:
  *   put:
  *     summary: Update details of a specific review
  *     tags: [Reviews]
  *     security:
  *       - bearerAuth: []
- *     parameters:
- *       - in: path
- *         name: id
- *         schema:
- *           type: string
- *         required: true
- *         description: ID of the review
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/Review'
+ *             type: object
+ *             required:
+ *               - id
+ *               - text
+ *             properties:
+ *               id:
+ *                 type: string
+ *                 description: ID of the review to be updated
+ *               text:
+ *                 type: string
+ *                 description: New text content for the review
+ *             example:
+ *               id: '60f2c5d97329573b6cfe0e77'  # Replace with actual review ID
+ *               text: 'This is an updated review!'
  *     responses:
  *       200:
  *         description: Updated details of the review
@@ -175,11 +205,14 @@ import authMiddleware from "../common/auth_middleware";
  *       404:
  *         description: Review not found
  */
+ 
+router.put("/", authMiddleware, reviewController.updateById);
+
 /**
  * @swagger
- * /delete/{id}:
+ * /review/{id}:
  *   delete:
- *     summary: Delete a specific review
+ *     summary: Delete a specific review by ID
  *     tags: [Reviews]
  *     security:
  *       - bearerAuth: []
@@ -189,7 +222,7 @@ import authMiddleware from "../common/auth_middleware";
  *         schema:
  *           type: string
  *         required: true
- *         description: ID of the review
+ *         description: ID of the review to be deleted
  *     responses:
  *       200:
  *         description: OK
@@ -200,21 +233,71 @@ import authMiddleware from "../common/auth_middleware";
  *       406:
  *         description: Fail, error message
  */
-
-router.get("/", reviewController.get.bind(reviewController));
-
-router.get("/:id", reviewController.getById.bind(reviewController));
-
-router.get("/book/:bookId", reviewController.getReviewsByBookId);
-
-router.post("/", authMiddleware, reviewController.addNewReview);
-
-router.put("/", authMiddleware, reviewController.updateById);
-
 router.delete(
   "/:id",
   authMiddleware,
   reviewController.deleteById.bind(reviewController)
 );
-//need to add delete for admin
+
+
+
+/**
+ * @swagger
+ * /review/book/{bookId}:
+ *   get:
+ *     summary: Get a list of all reviews for a specific book
+ *     tags: [Reviews]
+ *     parameters:
+ *       - in: path
+ *         name: bookId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: ID of the book
+ *     responses:
+ *       200:
+ *         description: A list of reviews
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Review'
+ *       401:
+ *         description: Unauthorized, missing or invalid token
+ */
+router.get("/book/:bookId", reviewController.getReviewsByBookId);
+
+
+/**
+ * @swagger
+ * /review/admin/{id}:
+ *   delete:
+ *     summary: Delete a specific review by ID (Admin)
+ *     tags: [Reviews]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: ID of the review to be deleted
+ *     responses:
+ *       200:
+ *         description: OK
+ *       401:
+ *         description: Unauthorized, missing or invalid token
+ *       404:
+ *         description: Review not found
+ *       406:
+ *         description: Fail, error message
+ */
+router.delete(
+  "/admin/:id",
+  authMiddleware,
+  adminMiddleware,
+  reviewController.deleteById.bind(reviewController)
+);
 export default router;

@@ -31,21 +31,12 @@ Content-Type: application/json
 
 ###
 
-POST http://localhost:6969/book/
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NWE2ZWQyN2E4NWU5YjRmZDRkYTVhOGQiLCJpYXQiOjE3MDU1MDc1NzUsImV4cCI6MTcwNTUxMTE3NX0.QH1Eq9XRi6QZMr90HJACziF0g_aLjYBClZMIYJmAvkE
+POST http://localhost:6969/book/updateOwnBook/65be60ef2d4640fbdfce6965
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NWJlNjBlZjJkNDY0MGZiZGZjZTY5NjUiLCJpYXQiOjE3MDcyMTgyNDAsImV4cCI6MTcwNzIyMTg0MH0.4exd1WzL9Y8ynPDxhZKiYcrethuaBRyERclKRhv7rPw
 Content-Type: application/json
 
 {
-  "name": "adminUpdateSwagger",
-  "year": 2020,
-  "image": "image1",
-  "pages": 100,
-  "price": 100,
-  "rating": 5,
-  "author": "65a582820b50e365c925d0cf",
-  "category": "category1",
-  "summary": "summary1",
-  "reviews": []
+  "name": "change"
 }
 
 # ###
@@ -75,8 +66,16 @@ Content-Type: application/json
 
 {
     "email": "ori@gmail.com",
-    "password": "1234"
+    "password": "123"
 }
+
+
+###
+
+Get http://localhost:6969/auth/logout
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NWQwOTUyYmZlZGM3MGI4MTRlYzEyZDAiLCJpYXQiOjE3MDgxNjg0OTQsImV4cCI6MTcwODE3MjA5NH0.wtXTu4P9ZbxJE6hfmUpDUcW4LCiebh-vO4E_FL81OJ4
+
+
 
 
 ### 
@@ -84,9 +83,9 @@ POST http://localhost:6969/auth/register
 Content-Type: application/json
 
 {
-    "name": "chen",
-    "email": "chen@gmail.com",
-    "password": "1234",
+    "name": "ori",
+    "email": "ori@gmail.com",
+    "password": "123",
     "role": "author",
     "books": ["65be6059f98ce2d590f646c0" , "65be6059f98ce2d590f646c1" ,"65be6059f98ce2d590f646c2" ]
 }

@@ -33,14 +33,9 @@ class ReviewController extends BaseController<IReview> {
 
     const createReview = await Review.create(review);
 
-    console.log("createReview: ", createReview);
-    console.log("the book id is: ", bookId.toString());
-
     if (createReview) {
       const book = await book_model.findById(bookId.toString());
-      console.log("book: ", book);
       if (book) {
-        console.log("The id of the created reviwe  " + createReview.id);
         if (!book.reviews) {
           book.reviews = [];
         }
@@ -59,7 +54,6 @@ class ReviewController extends BaseController<IReview> {
 
   async deleteById(req: AuthRequest, res: Response) {
     try {
-      console.log("req.params.id: ", req.params.id);
       const review = await Review.findById(req.params.id);
 
       if (!review) {

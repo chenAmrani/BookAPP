@@ -5,6 +5,7 @@ import authMiddleware from "../common/auth_middleware";
 import authorMiddleware from "../common/author_middleware";
 import adminMiddleware from "../common/admin_middleware";
 import verifyBookOwner from "../common/verifyBookOwner";
+import { upload } from "../common/multer";
 
 /**
  * @swagger
@@ -106,7 +107,7 @@ import verifyBookOwner from "../common/verifyBookOwner";
  *       401:
  *         description: Unauthorized, missing or invalid token
  */
-router.get("/", bookController.get.bind(bookController));
+router.get("/", bookController.getBooks);
 
 /**
  * @swagger
@@ -185,12 +186,6 @@ router.put(
  *     summary: Delete a specific book (Admin)
  *     tags:
  *       - Book
- *     requestBody:
- *       required: false
- *       content:
- *         application/json:
- *           schema:
- *             $ref: '#/components/schemas/Book'
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -198,7 +193,8 @@ router.put(
  *         in: path
  *         description: The ID of the book to be deleted.
  *         required: true
- *         type: string
+ *         schema:
+ *           type: string
  *     responses:
  *       200:
  *         description: Book deleted successfully
@@ -266,12 +262,6 @@ router.put(
  *     summary: Delete a specific book (Author)
  *     tags:
  *       - Book
- *     requestBody:
- *       required: false
- *       content:
- *         application/json:
- *           schema:
- *             $ref: '#/components/schemas/Book'
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -279,7 +269,8 @@ router.put(
  *         in: path
  *         description: The ID of the book to be deleted.
  *         required: true
- *         type: string
+ *         schema:
+ *           type: string
  *     responses:
  *       200:
  *         description: Book deleted successfully
@@ -309,9 +300,39 @@ router.delete(
  *     requestBody:
  *       required: true
  *       content:
- *         application/json:
+ *         multipart/form-data:
  *           schema:
- *             $ref: '#/components/schemas/Book'
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *               year:
+ *                 type: number
+ *               image:
+ *                 type: string
+ *                 format: binary
+ *               pages:
+ *                 type: number
+ *               price:
+ *                 type: number
+ *               rating:
+ *                 type: number
+ *               author:
+ *                 type: string
+ *               category:
+ *                 type: string
+ *               summary:
+ *                 type: string
+ *             required:
+ *               - name
+ *               - year
+ *               - image
+ *               - pages
+ *               - price
+ *               - rating
+ *               - author
+ *               - category
+ *               - summary
  *     responses:
  *       201:
  *         description: New book created
@@ -326,9 +347,72 @@ router.delete(
  *       406:
  *         description: Book already exists
  */
-router.post("/", authMiddleware, authorMiddleware, bookController.post);
+router.post(
+  "/",
+  authMiddleware,
+  authorMiddleware,
+  upload.single("image"),
+  bookController.post
+);
 
-//need to add swagger
-router.post("/admin", authMiddleware, adminMiddleware, bookController.post);
+/**
+ * @swagger
+ * /book/admin:
+ *   post:
+ *     summary: Create a new book (Admin)
+ *     tags: [Book]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *               year:
+ *                 type: number
+ *               image:
+ *                 type: string
+ *                 format: binary
+ *               pages:
+ *                 type: number
+ *               price:
+ *                 type: number
+ *               rating:
+ *                 type: number
+ *               author:
+ *                 type: string
+ *               category:
+ *                 type: string
+ *               summary:
+ *                 type: string
+ *             required:
+ *               - name
+ *               - year
+ *               - image
+ *               - pages
+ *               - price
+ *               - rating
+ *               - author
+ *               - category
+ *               - summary
+ *     responses:
+ *       201:
+ *         description: New book created
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Book'
+ *       401:
+ *         description: Unauthorized, missing or invalid token
+ *       403:
+ *         description: Forbidden, user does not have admin privileges
+ *       406:
+ *         description: Book already exists
+ */
+router.post("/admin", authMiddleware, adminMiddleware, upload.single("image"), bookController.post);
 
 export default router;

@@ -21,6 +21,10 @@ const authMiddleware = (req, res, next) => __awaiter(void 0, void 0, void 0, fun
     try {
         jsonwebtoken_1.default.verify(token, process.env.JWT_SECRET, (err, user) => {
             if (err) {
+                console.log("err", err);
+                if (err.message === "jwt expired") {
+                    return res.status(401).json({ error: "Token is expired" });
+                }
                 //console.error('Token Verification Error:', err);
                 return res.status(401).json({ error: "Token is not valid" });
             }

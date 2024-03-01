@@ -17,7 +17,7 @@ const bcrypt_1 = __importDefault(require("bcrypt"));
 const getAllUsers = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const users = yield user_model_1.default.find();
-        res.status(200).send(users);
+        res.status(200).send({ users });
     }
     catch (error) {
         res.status(500).send({ message: "Error fetching users" });
@@ -34,18 +34,7 @@ const getUserById = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
         res.status(200).json(user);
     }
     catch (err) {
-        console.error("Error in getUserById:", err);
         res.status(500).send("Internal Server Error -> getUserById");
-    }
-});
-const getUserByEmail = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const { email } = req.params;
-        const user = yield user_model_1.default.findOne({ email });
-        res.status(200).json(user);
-    }
-    catch (err) {
-        res.status(400).send("worng to get: getUserByEmail");
     }
 });
 const updateUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -68,7 +57,6 @@ const updateUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         res.status(200).json(updatedUser);
     }
     catch (err) {
-        console.error("Error in updateUser:", err);
         res.status(500).send("Internal Server Error -> updateUser");
     }
 });
@@ -79,18 +67,15 @@ const deleteUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
             res.status(404).send("User not found");
             return;
         }
-        res.status(200).json({ message: "User deleted successfully" });
+        res.status(200).json({ message: "Usere deleted succesfully" });
     }
     catch (err) {
-        console.error("Error in deleteUser:", err);
         res.status(500).send("Internal Server Error -> deleteUser");
     }
 });
 const updateOwnProfile = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    console.log("req.locals`:", req.locals);
     const { currentUserId } = req.locals;
     if (!currentUserId) {
-        console.log("this is here");
         res.status(400).send("User ID is required for updating the profile");
         return;
     }
@@ -115,33 +100,26 @@ const updateOwnProfile = (req, res) => __awaiter(void 0, void 0, void 0, functio
         res.status(200).json(updatedUser);
     }
     catch (err) {
-        console.error("Error in updateOwnProfile:", err);
         res.status(500).send("Internal Server Error -> updateOwnProfile");
     }
 });
-//get my books
 const getMyBooks = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const currentUserId = req.locals.currentUserId;
-        console.log("currentUserId: ", currentUserId);
-        const user = yield user_model_1.default.findById(currentUserId).populate('books');
+        const user = yield user_model_1.default.findById(req.params.id);
         if (!user) {
             res.status(404).send("User not found");
             return;
         }
         const myBooks = user.books || [];
-        console.log("user.books: ", user.books);
         res.status(200).json({ myBooks });
     }
     catch (err) {
-        console.error("Error in getMyBooks:", err);
         res.status(500).send("Internal Server Error -> getMyBooks");
     }
 });
 exports.default = {
     getAllUsers,
     getUserById,
-    getUserByEmail,
     updateUser,
     deleteUser,
     updateOwnProfile,

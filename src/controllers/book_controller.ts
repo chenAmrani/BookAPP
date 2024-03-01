@@ -1,7 +1,6 @@
 import BookModel, { IBook } from "../models/book_model";
-// import createController from "./base_controller";
 import { BaseController } from "./base_controller";
-import { Response } from "express";
+import { Request, Response } from "express";
 import { AuthRequest } from "../common/auth_middleware";
 import User from "../models/user_model";
 
@@ -10,7 +9,27 @@ class bookController extends BaseController<IBook> {
     super(BookModel);
   }
 
-  async post(req: AuthRequest, res: Response) {
+  getBooks = async (req: Request, res: Response) => {
+    try {
+      if (req.query.name) {
+        const obj = await this.model.find({ name: req.query.name });
+        res.send(obj);
+      } else {
+        const allObjects = await this.model.find().populate({
+          path: "reviews",
+
+          populate: [
+            { path: "reviewerId", select: "name image isGoogleSsoUser" },
+          ],
+        });
+        res.send(allObjects);
+      }
+    } catch (err) {
+      res.status(500).json({ message: err.message });
+    }
+  };
+
+  post = async (req: AuthRequest, res: Response) => {
     try {
       const _id = req.user._id;
       req.body.author = _id;
@@ -25,8 +44,9 @@ class bookController extends BaseController<IBook> {
         return;
       }
 
-      const createdBook = await this.model.create(req.body);
-      // console.log("this is the real deal: ", createdBook.id)
+      const book = { ...req.body, image: req.file.filename };
+      const createdBook = await this.model.create(book);
+      
       if (createdBook) {
         const user = await User.findById(_id);
 
@@ -44,24 +64,35 @@ class bookController extends BaseController<IBook> {
 
       res.status(201).send(createdBook);
     } catch (error) {
-      console.log(error);
       res.status(500).json({ message: error.message });
     }
-  }
+  };
+  
+  async deleteById(req: Request, res: Response) {
+    try {
+      const book = await this.model.findById(req.params.id);
+      const authorId = book?.author;
+      const user = await User.findById(authorId);
 
+      user.books = user.books.filter((bookId) => bookId !== req.params.id);
+      await user.save();
+      await this.model.findByIdAndDelete(req.params.id);
+      
+      res.status(200).send("OK");
+    } catch (err) {
+      res.status(406).send("fail: " + err.message);
+    }
+  }
+  
   putById = async (req: AuthRequest, res: Response) => {
     try {
       const id = req.params.id;
-      console.log("The id is: " + id);
       const obj = req.body;
-      console.log("The obj is: " + obj);
       const updatedBook = await this.model.findByIdAndUpdate(id, obj, {
         new: true,
       });
-      console.log("The updatedBook is: " + updatedBook);
       res.status(200).send(updatedBook);
     } catch (err) {
-      console.log(err);
       res.status(406).send("fail: " + err.message);
     }
   };

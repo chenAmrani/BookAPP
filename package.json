@@ -1,3 +1,4 @@
+
 {
   "name": "yes",
   "version": "1.0.0",
@@ -9,6 +10,7 @@
     "testBook": "tsc && jest --detectOpenHandles --forceExit --runInBand ./src/tests/book.test.ts",
     "testReview": "tsc && jest --detectOpenHandles --forceExit --runInBand ./src/tests/review.test.ts",
     "testUser": "tsc && jest --detectOpenHandles --forceExit --runInBand ./src/tests/user.test.ts",
+    "testFile": "tsc && jest --detectOpenHandles --forceExit --runInBand ./src/tests/file.test.ts",
     "start": "tsc && nodemon ./dist/src/server.js",
     "dev": "nodemon ./src/server.ts",
     "prod": "tsc -p tsconfig_prod.json && node ./dist/src/server.js"

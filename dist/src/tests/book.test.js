@@ -15,32 +15,41 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const supertest_1 = __importDefault(require("supertest"));
 const app_1 = __importDefault(require("../app"));
 const mongoose_1 = __importDefault(require("mongoose"));
+const fs_1 = __importDefault(require("fs"));
 const book_model_1 = __importDefault(require("../models/book_model"));
 const user_model_1 = __importDefault(require("../models/user_model"));
+//
+const imageBuffer = fs_1.default.readFileSync("static/books/book1.jpg");
 let app;
 let authorAccessToken;
 let readerAccessToken;
 let adminAccessToken;
 const adminUser = {
+    _id: "",
     name: "name1",
-    image: "image1",
     email: "admin@test.com",
     password: "adminpass",
-    role: "admin"
+    image: "image1",
+    role: "admin",
+    isGoogleSsoUser: false
 };
 const authorUser = {
+    _id: "",
     name: "name1",
-    image: "image1",
     email: "author@test.com",
     password: "authorpass",
-    role: "author"
+    image: "imageBase64",
+    role: "author",
+    isGoogleSsoUser: false
 };
 const readerUser = {
+    _id: "",
     name: "name1",
-    image: "image1",
     email: "reader@test.com",
     password: "readerpass",
-    role: "reader"
+    image: "image1",
+    role: "reader",
+    isGoogleSsoUser: false
 };
 let createdBookId;
 let createdBookId2;
@@ -48,7 +57,7 @@ let createdBookId3;
 const book1 = {
     name: "book1",
     year: 2020,
-    image: "image1",
+    image: "",
     pages: 100,
     price: 100,
     rating: 5,
@@ -59,7 +68,7 @@ const book1 = {
 const book2 = {
     name: "book2",
     year: 2020,
-    image: "image2",
+    image: "",
     pages: 100,
     price: 100,
     rating: 5,
@@ -70,7 +79,7 @@ const book2 = {
 const book3 = {
     name: "book3",
     year: 2020,
-    image: "image2",
+    image: "",
     pages: 100,
     price: 100,
     rating: 5,
@@ -87,7 +96,6 @@ beforeAll(() => __awaiter(void 0, void 0, void 0, function* () {
     const adminAcscessToken = yield (0, supertest_1.default)(app).post("/auth/login").send(adminUser);
     adminUser._id = adminResponse.body._id;
     adminAccessToken = adminAcscessToken.body.accessToken;
-    console.log("adminUser._id: ", adminUser._id);
     book2.author = adminUser._id;
     book3.author = adminUser._id;
     console.log("adminAccessToken" + adminAccessToken);
@@ -96,53 +104,80 @@ beforeAll(() => __awaiter(void 0, void 0, void 0, function* () {
     const authorResponse = yield (0, supertest_1.default)(app).post("/auth/login").send(authorUser);
     authorAccessToken = authorResponse.body.accessToken;
     book1.author = authorUser._id;
-    yield (0, supertest_1.default)(app).post("/auth/register").send(readerUser);
+    const response1 = yield (0, supertest_1.default)(app).post("/auth/register").send(readerUser);
     const readerResponse = yield (0, supertest_1.default)(app).post("/auth/login").send(readerUser);
     readerAccessToken = readerResponse.body.accessToken;
-}));
+    readerUser._id = response1.body._id;
+}), 10000);
 afterAll(() => __awaiter(void 0, void 0, void 0, function* () {
     yield mongoose_1.default.connection.close();
 }));
 describe("Book tests", () => {
     test("Test Get All Books - empty response", () => __awaiter(void 0, void 0, void 0, function* () {
         const response = yield (0, supertest_1.default)(app)
-            .get("/book") //get(/book?name=book1)
+            .get("/book")
             .set("Authorization", "JWT " + authorAccessToken);
         expect(response.statusCode).toBe(200);
         expect(response.body).toStrictEqual([]);
     }));
     test("Test Author Adding Book", () => __awaiter(void 0, void 0, void 0, function* () {
         const response = yield (0, supertest_1.default)(app)
-            .post("/book/")
+            .post("/book")
             .set("Authorization", "JWT " + authorAccessToken)
-            .send(book1);
-        console.log("book1: ", book1);
+            .field('name', book1.name)
+            .field('year', book1.year)
+            .field('pages', book1.pages)
+            .field('price', book1.price)
+            .field('rating', book1.rating)
+            .field('category', book1.category)
+            .field('summary', book1.summary)
+            .attach('image', imageBuffer, 'file.jpg');
         expect(response.status).toBe(201);
+        expect(response.body.name).toBe(book1.name);
+        expect(response.body.year).toBe(book1.year);
         createdBookId = response.body._id;
-        console.log("createdBookId: ", createdBookId);
+        console.log("createdBookId:", createdBookId);
     }));
-    test("Test Admin Adding Book", () => __awaiter(void 0, void 0, void 0, function* () {
+    test("Test Admin Adding Book2", () => __awaiter(void 0, void 0, void 0, function* () {
         const response = yield (0, supertest_1.default)(app)
             .post("/book/admin")
             .set("Authorization", "JWT " + adminAccessToken)
-            .send(book2);
+            .field('name', book2.name)
+            .field('year', book2.year)
+            .field('pages', book2.pages)
+            .field('price', book2.price)
+            .field('rating', book2.rating)
+            .field('category', book2.category)
+            .field('summary', book2.summary)
+            .attach('image', imageBuffer, 'file.jpg');
         expect(response.status).toBe(201);
+        expect(response.body.name).toBe(book2.name);
+        expect(response.body.year).toBe(book2.year);
         createdBookId2 = response.body._id;
     }));
-    test("Test Admin Adding Book", () => __awaiter(void 0, void 0, void 0, function* () {
+    test("Test Admin Adding Book3", () => __awaiter(void 0, void 0, void 0, function* () {
         const response = yield (0, supertest_1.default)(app)
             .post("/book/admin")
             .set("Authorization", "JWT " + adminAccessToken)
-            .send(book3);
+            .field('name', book3.name)
+            .field('year', book3.year)
+            .field('pages', book3.pages)
+            .field('price', book3.price)
+            .field('rating', book3.rating)
+            .field('category', book3.category)
+            .field('summary', book3.summary)
+            .attach('image', imageBuffer, 'file.jpg');
         expect(response.status).toBe(201);
-        //createdBookId3 = response.body._id;
+        expect(response.body.name).toBe(book3.name);
+        expect(response.body.year).toBe(book3.year);
+        createdBookId3 = response.body._id;
     }));
     test("Test Reader Adding Book - not allowed", () => __awaiter(void 0, void 0, void 0, function* () {
         const response = yield (0, supertest_1.default)(app)
             .post("/book")
             .set("Authorization", "JWT " + readerAccessToken)
             .send(book1);
-        expect(response.statusCode).toBe(403); // Expecting Forbidden access
+        expect(response.statusCode).toBe(403);
     }));
     // Check if the book1 is added to the database
     test("Test Get All Books in DB - 3 books before delete book2", () => __awaiter(void 0, void 0, void 0, function* () {
@@ -162,12 +197,12 @@ describe("Book tests", () => {
     //   expect(response.body.length).toBe(1);
     // });
     // test("Test Get My Books - Success", async () => {
-    //   const response = await request(app).get("/user/books")
+    //   const response = await request(app).get("/ownBooks/books")
     //   .set("Authorization", "JWT " + authorAccessToken);
     //   const rc = response.body[0];
     //   //console.log(rc)
     //   expect(response.statusCode).toBe(200);
-    //   expect(rc.email).toBe(authorUser.email);
+    //   expect(rc.name).toBe("updateBookName");
     // });
     test("Test Post Duplicate Book", () => __awaiter(void 0, void 0, void 0, function* () {
         const response = yield (0, supertest_1.default)(app)
@@ -189,7 +224,6 @@ describe("Book tests", () => {
         const updatedBookDetails = {
             name: "updateBookName",
             year: 2020,
-            image: "image1",
             pages: 100,
             price: 100,
             rating: 5,
@@ -198,18 +232,19 @@ describe("Book tests", () => {
             summary: "summary1",
             reviews: null,
         };
-        console.log("authorUser._id: ", authorUser._id);
         const response = yield (0, supertest_1.default)(app)
             .put(`/book/updateOwnBook/${createdBookId}`)
             .set("Authorization", "JWT " + authorAccessToken)
             .send(updatedBookDetails);
         expect(response.statusCode).toBe(200);
+        expect(response.body.name).toBe(updatedBookDetails.name);
+        expect(response.body.year).toBe(updatedBookDetails.year);
+        expect(response.body.category).toBe(updatedBookDetails.category);
     }));
     test("Test Author Update admin Book - not Success", () => __awaiter(void 0, void 0, void 0, function* () {
         const updatedBookDetails2 = {
             name: "newBook",
             year: 2020,
-            image: "image1",
             pages: 100,
             price: 100,
             rating: 5,
@@ -223,6 +258,22 @@ describe("Book tests", () => {
             .set("Authorization", "JWT " + authorAccessToken)
             .send(updatedBookDetails2);
         expect(response.statusCode).toBe(403);
+    }));
+    test("Test Get Book By ID", () => __awaiter(void 0, void 0, void 0, function* () {
+        const response = yield (0, supertest_1.default)(app)
+            .get(`/book/${createdBookId}`)
+            .set("Authorization", "JWT " + authorAccessToken);
+        expect(response.statusCode).toBe(200);
+        const book = yield book_model_1.default.findById(createdBookId);
+        expect(response.body.name).toBe(book.name);
+    }));
+    test("Test Get Books by Name", () => __awaiter(void 0, void 0, void 0, function* () {
+        const bookName = "book3"; // Provide a value for the book name
+        const response = yield (0, supertest_1.default)(app)
+            .get("/book")
+            .query({ name: bookName }) // Pass the book name as a query parameter
+            .set("Authorization", "JWT " + authorAccessToken);
+        expect(response.statusCode).toBe(200);
     }));
 });
 //# sourceMappingURL=book.test.js.map
