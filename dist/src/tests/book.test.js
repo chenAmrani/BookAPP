@@ -131,7 +131,7 @@ describe("Book tests", () => {
             .field('rating', book1.rating)
             .field('category', book1.category)
             .field('summary', book1.summary)
-            .attach('image', imageBuffer, 'file.jpg');
+            .attach('image', imageBuffer, 'fileTest.jpg');
         expect(response.status).toBe(201);
         expect(response.body.name).toBe(book1.name);
         expect(response.body.year).toBe(book1.year);

@@ -40,7 +40,7 @@ const googleSignin = (req, res) => __awaiter(void 0, void 0, void 0, function* (
             const accessToken = jsonwebtoken_1.default.sign({ _id: user._id }, process.env.JWT_SECRET, {
                 expiresIn: process.env.JWT_EXPIRATION,
             });
-            const refreshToken = jsonwebtoken_1.default.sign({ _id: user._id }, process.env.JWT_REFRESH_SECRET);
+            const refreshToken = jsonwebtoken_1.default.sign({ _id: user._id }, process.env.JWT_REFRESH_SECRET, { expiresIn: process.env.JWT_REFRESH_EXPIRATION });
             yield user.save();
             const userData = prepareUser(user);
             res.status(201).send({ accessToken, refreshToken, userData });
@@ -70,12 +70,14 @@ const register = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     }
     // Password validation
     if (password.length < 6) {
-        return res.status(400).json({ error: "Password must be at least 6 characters long." });
+        return res
+            .status(400)
+            .json({ error: "Password must be at least 6 characters long." });
     }
     try {
         const doesUserExists = yield user_model_1.default.findOne({ email: email });
         if (doesUserExists != null) {
-            return res.status(406).send("email already exists");
+            return res.status(406).send({ error: "email already exists" });
         }
         const salt = yield bcrypt_1.default.genSalt(10);
         const encryptedPassword = yield bcrypt_1.default.hash(password, salt);
@@ -86,8 +88,9 @@ const register = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             role: role,
             name: name,
         });
+        const { accessToken, refreshToken } = generateJwtTokens(newUser._id);
         const userData = prepareUser(newUser);
-        return res.status(201).send(userData);
+        return res.status(201).send(Object.assign(Object.assign({}, userData), { accessToken, refreshToken }));
     }
     catch (err) {
         return res.status(400).send("Error: " + err.message);
@@ -108,10 +111,7 @@ const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         if (!match) {
             return res.status(401).send("email or password incorrect");
         }
-        const accessToken = jsonwebtoken_1.default.sign({ _id: user._id }, process.env.JWT_SECRET, {
-            expiresIn: process.env.JWT_EXPIRATION,
-        });
-        const refreshToken = jsonwebtoken_1.default.sign({ _id: user._id }, process.env.JWT_REFRESH_SECRET);
+        const { accessToken, refreshToken } = generateJwtTokens(user._id);
         yield user.save();
         const userData = prepareUser(user);
         return res.status(200).send({
@@ -141,25 +141,24 @@ const logout = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     }));
 });
 const refresh = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const authHeader = req.headers["authorization"];
-    const refreshToken = authHeader && authHeader.split(" ")[1]; // Bearer <token>
+    const refreshToken = req.body.refreshToken;
+    console.log("refreshToken", refreshToken);
     if (refreshToken == null)
-        return res.sendStatus(401);
+        return res.sendStatus(401).send("no token");
     jsonwebtoken_1.default.verify(refreshToken, process.env.JWT_REFRESH_SECRET, (err, user) => __awaiter(void 0, void 0, void 0, function* () {
         if (err) {
-            console.log(err);
+            console.log("refresh1", err);
             return res.sendStatus(401);
         }
         try {
-            const userDb = yield user_model_1.default.findOne({ _id: user._id });
-            const accessToken = yield jsonwebtoken_1.default.sign({ _id: user._id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRATION });
-            yield userDb.save();
+            const accessToken = jsonwebtoken_1.default.sign({ _id: user._id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRATION });
             return res.status(200).send({
                 accessToken: accessToken,
                 refreshToken: refreshToken,
             });
         }
         catch (err) {
+            console.log("err!", err);
             res.sendStatus(401).send(err.message);
         }
     }));
@@ -171,10 +170,16 @@ exports.default = {
     refresh,
     googleSignin,
 };
+function generateJwtTokens(userId) {
+    const accessToken = jsonwebtoken_1.default.sign({ _id: userId }, process.env.JWT_SECRET, {
+        expiresIn: process.env.JWT_EXPIRATION,
+    });
+    const refreshToken = jsonwebtoken_1.default.sign({ _id: userId }, process.env.JWT_REFRESH_SECRET, { expiresIn: process.env.JWT_REFRESH_EXPIRATION });
+    return { accessToken, refreshToken };
+}
 function prepareUser(newUser) {
     const userData = newUser.toObject();
     delete userData.password;
-    // delete userData.refreshTokens; //לבדוק האם למחוק את זה
     return userData;
 }
 //# sourceMappingURL=auth_controller.js.map

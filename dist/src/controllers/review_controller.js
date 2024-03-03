@@ -46,6 +46,7 @@ class ReviewController extends base_controller_1.BaseController {
             const createReview = yield review_model_1.default.create(review);
             if (createReview) {
                 const book = yield book_model_1.default.findById(bookId.toString());
+                console.log("book", book);
                 if (book) {
                     if (!book.reviews) {
                         book.reviews = [];
