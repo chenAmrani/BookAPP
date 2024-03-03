@@ -176,6 +176,6 @@ router.get("/logout", auth_controller_1.default.logout);
  *       401:
  *         description: Unauthorized, invalid or missing token
  */
-router.get("/refresh", auth_controller_1.default.refresh);
+router.post("/refresh", auth_controller_1.default.refresh);
 exports.default = router;
 //# sourceMappingURL=auth_route.js.map

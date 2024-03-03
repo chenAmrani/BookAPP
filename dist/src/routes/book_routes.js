@@ -170,7 +170,9 @@ router.get("/:id", book_controller_1.default.getById.bind(book_controller_1.defa
  *       404:
  *         description: Book not found
  */
-router.put("/admin/update/:id", auth_middleware_1.default, admin_middleware_1.default, book_controller_1.default.putById.bind(book_controller_1.default));
+router.put("/admin/update/:id", auth_middleware_1.default, admin_middleware_1.default, 
+// check if form data includes field named "image", if yes, use multer to upload the image
+multer_1.upload.single("image"), book_controller_1.default.putById);
 /**
  * @swagger
  * /book/admin/delete/{id}:
@@ -233,7 +235,7 @@ router.delete("/admin/delete/:id", auth_middleware_1.default, admin_middleware_1
  *       404:
  *         description: Book not found
  */
-router.put("/updateOwnBook/:id", auth_middleware_1.default, verifyBookOwner_1.default, book_controller_1.default.putById.bind(book_controller_1.default));
+router.put("/updateOwnBook/:id", auth_middleware_1.default, verifyBookOwner_1.default, multer_1.upload.single("image"), book_controller_1.default.putById.bind(book_controller_1.default));
 /**
  * @swagger
  * /book/{id}:

@@ -76,8 +76,18 @@ class bookController extends base_controller_1.BaseController {
         this.putById = (req, res) => __awaiter(this, void 0, void 0, function* () {
             try {
                 const id = req.params.id;
-                const obj = req.body;
-                const updatedBook = yield this.model.findByIdAndUpdate(id, obj, {
+                const updates = {};
+                Object.entries(req.body).forEach(([key, value]) => {
+                    if (value) {
+                        updates[key] = value;
+                    }
+                });
+                console.log("req.file", req.file);
+                if (req.file) {
+                    updates.image = req.file.filename;
+                }
+                console.log("updates", updates);
+                const updatedBook = yield this.model.findByIdAndUpdate(id, updates, {
                     new: true,
                 });
                 res.status(200).send(updatedBook);

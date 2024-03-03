@@ -80,7 +80,7 @@ const updateOwnProfile = (req, res) => __awaiter(void 0, void 0, void 0, functio
         return;
     }
     const { name, email, password } = req.body;
-    if (!name && !email && !password) {
+    if (!name && !email && !password && !req.file) {
         res
             .status(400)
             .send("At least one field (name, email, or password) is required for update");
@@ -88,6 +88,9 @@ const updateOwnProfile = (req, res) => __awaiter(void 0, void 0, void 0, functio
     }
     try {
         const updatedUserData = { name, email };
+        if (req.file) {
+            updatedUserData.image = req.file.filename;
+        }
         if (password) {
             const salt = yield bcrypt_1.default.genSalt(10);
             updatedUserData.password = yield bcrypt_1.default.hash(password, salt);
