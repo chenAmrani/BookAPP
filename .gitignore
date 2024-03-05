@@ -84,6 +84,10 @@ web_modules/
 .cache
 .parcel-cache
 
+
+client-*.pem
+client.csr
+
 # Next.js build output
 .next
 out

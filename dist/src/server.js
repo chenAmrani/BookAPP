@@ -3,13 +3,19 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const dotenv_1 = __importDefault(require("dotenv"));
+console.log(process.env.NODE_ENV);
+dotenv_1.default.config();
+console.log(process.env.DB_URL);
 const app_1 = __importDefault(require("./app"));
 const swagger_ui_express_1 = __importDefault(require("swagger-ui-express"));
 const swagger_jsdoc_1 = __importDefault(require("swagger-jsdoc"));
 const http_1 = __importDefault(require("http"));
 const https_1 = __importDefault(require("https"));
 const fs_1 = __importDefault(require("fs"));
+const path_1 = __importDefault(require("path"));
 (0, app_1.default)().then((app) => {
+    console.log('Server started');
     const options = {
         definition: {
             openapi: "3.0.0",
@@ -31,8 +37,8 @@ const fs_1 = __importDefault(require("fs"));
     else {
         console.log('PRODUCTION');
         const options2 = {
-            key: fs_1.default.readFileSync('../client-key.pem'),
-            cert: fs_1.default.readFileSync('../client-cert.pem'),
+            key: fs_1.default.readFileSync(path_1.default.join(__dirname, '../../client-key.pem')),
+            cert: fs_1.default.readFileSync(path_1.default.join(__dirname, '../../client-cert.pem')),
         };
         https_1.default.createServer(options2, app).listen(process.env.HTTPS_PORT);
     }

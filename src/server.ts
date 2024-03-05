@@ -1,12 +1,19 @@
+import env from "dotenv";
+console.log(process.env.NODE_ENV);
+env.config();
+
+console.log(process.env.DB_URL);
 import initApp from "./app";
 import swaggerUI from "swagger-ui-express";
 import swaggerJsDoc from "swagger-jsdoc";
 import http from 'http';
 import https from 'https';
 import fs from 'fs';
+import path from "path";
 
 
 initApp().then((app) => {
+  console.log('Server started')
   const options = {
     definition: {
       openapi: "3.0.0",
@@ -31,8 +38,8 @@ initApp().then((app) => {
   else {
   console.log('PRODUCTION');
   const options2 = {
-    key: fs.readFileSync('../client-key.pem'),
-    cert: fs.readFileSync('../client-cert.pem'),
+    key: fs.readFileSync(path.join(__dirname,'../../client-key.pem')),
+    cert: fs.readFileSync(path.join(__dirname,'../../client-cert.pem')),
   };
   https.createServer(options2, app).listen(process.env.HTTPS_PORT);
  }
