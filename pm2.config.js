@@ -4,7 +4,7 @@ module.exports = {
         script: 'dist/src/server.js',
         production: {
             NODE_ENV: 'production',
-            dotenv_config_path: './.env.prod'
+            DOTENV_CONFIG_PATH: './.env.prod'
         }
     }]
 }
