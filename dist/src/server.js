@@ -6,10 +6,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const dotenv_1 = __importDefault(require("dotenv"));
 const fs_1 = __importDefault(require("fs"));
 console.log(process.env.NODE_ENV);
-console.log(process.env.dotenv_config_path);
-if (fs_1.default.existsSync(process.env.dotenv_config_path)) {
+console.log(process.env.DOTENV_CONFIG_PATH);
+if (fs_1.default.existsSync(process.env.DOTENV_CONFIG_PATH)) {
     console.log('exists');
-    dotenv_1.default.config({ path: process.env.dotenv_config_path });
+    dotenv_1.default.config({ path: process.env.DOTENV_CONFIG_PATH });
 }
 dotenv_1.default.config();
 console.log(process.env.DB_URL);

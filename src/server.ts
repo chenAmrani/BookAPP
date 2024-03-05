@@ -1,10 +1,10 @@
 import env from "dotenv";
 import fs from 'fs';
 console.log(process.env.NODE_ENV);
-console.log(process.env.dotenv_config_path);
-if(fs.existsSync(process.env.dotenv_config_path)){
+console.log(process.env.DOTENV_CONFIG_PATH);
+if(fs.existsSync(process.env.DOTENV_CONFIG_PATH)){
   console.log('exists');
-  env.config({path: process.env.dotenv_config_path});
+  env.config({path: process.env.DOTENV_CONFIG_PATH});
 }
 env.config();
 
