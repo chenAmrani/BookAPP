@@ -8,11 +8,11 @@ import userRoute from "./routes/user_route";
 import cors from "cors";
 import env from "dotenv";
 import fs from 'fs';
+
 if(fs.existsSync(process.env.DOTENV_CONFIG_PATH)){
   console.log('exists');
   env.config({path: process.env.DOTENV_CONFIG_PATH});
 } else {
-
   env.config();
 }
 
@@ -34,6 +34,10 @@ const initApp = (): Promise<Express> => {
       app.use("/auth", authRoute);
       app.use("/user", userRoute);
       app.use('/static', express.static( 'static'));
+      app.use('/assets', express.static('static/client/assets'));
+      app.use('*', (req,res)=>{
+        res.sendFile('index.html', {root: 'static/client'});
+      });
       resolve(app);
     });
   });
