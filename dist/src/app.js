@@ -10,6 +10,15 @@ const review_routes_1 = __importDefault(require("./routes/review_routes"));
 const auth_route_1 = __importDefault(require("./routes/auth_route"));
 const user_route_1 = __importDefault(require("./routes/user_route"));
 const cors_1 = __importDefault(require("cors"));
+const dotenv_1 = __importDefault(require("dotenv"));
+const fs_1 = __importDefault(require("fs"));
+if (fs_1.default.existsSync(process.env.DOTENV_CONFIG_PATH)) {
+    console.log('exists');
+    dotenv_1.default.config({ path: process.env.DOTENV_CONFIG_PATH });
+}
+else {
+    dotenv_1.default.config();
+}
 const initApp = () => {
     const promise = new Promise((resolve) => {
         const db = mongoose_1.default.connection;

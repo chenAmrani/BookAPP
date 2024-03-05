@@ -11,7 +11,9 @@ if (fs_1.default.existsSync(process.env.DOTENV_CONFIG_PATH)) {
     console.log('exists');
     dotenv_1.default.config({ path: process.env.DOTENV_CONFIG_PATH });
 }
-dotenv_1.default.config();
+else {
+    dotenv_1.default.config();
+}
 console.log(process.env.DB_URL);
 const app_1 = __importDefault(require("./app"));
 const swagger_ui_express_1 = __importDefault(require("swagger-ui-express"));
