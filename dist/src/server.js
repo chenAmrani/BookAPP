@@ -4,7 +4,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const dotenv_1 = __importDefault(require("dotenv"));
+const fs_1 = __importDefault(require("fs"));
 console.log(process.env.NODE_ENV);
+console.log(process.env.dotenv_config_path);
+if (fs_1.default.existsSync(process.env.dotenv_config_path)) {
+    console.log('exists');
+    dotenv_1.default.config({ path: process.env.dotenv_config_path });
+}
 dotenv_1.default.config();
 console.log(process.env.DB_URL);
 const app_1 = __importDefault(require("./app"));
@@ -12,7 +18,6 @@ const swagger_ui_express_1 = __importDefault(require("swagger-ui-express"));
 const swagger_jsdoc_1 = __importDefault(require("swagger-jsdoc"));
 const http_1 = __importDefault(require("http"));
 const https_1 = __importDefault(require("https"));
-const fs_1 = __importDefault(require("fs"));
 const path_1 = __importDefault(require("path"));
 (0, app_1.default)().then((app) => {
     console.log('Server started');

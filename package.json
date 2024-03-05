@@ -13,7 +13,7 @@
     "start": "tsc && nodemon ./dist/src/server.js",
     "dev": "nodemon ./src/server.ts",
     "prod": "tsc -p tsconfig.json &&  pm2 restart pm2.config.js --env production",
-    "prod-cfg": "tsc -p tsconfig.json && cross-env NODE_ENV=production dotenv_config_path='./.env.prod' node ./dist/src/server.js"
+    "prod-cfg": "tsc -p tsconfig.json && cross-env NODE_ENV=production DOTENV_CONFIG_PATH='./.env.prod' node ./dist/src/server.js"
   },
   "author": "Chen",
   "license": "ISC",

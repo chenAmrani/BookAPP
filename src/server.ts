@@ -1,5 +1,11 @@
 import env from "dotenv";
+import fs from 'fs';
 console.log(process.env.NODE_ENV);
+console.log(process.env.dotenv_config_path);
+if(fs.existsSync(process.env.dotenv_config_path)){
+  console.log('exists');
+  env.config({path: process.env.dotenv_config_path});
+}
 env.config();
 
 console.log(process.env.DB_URL);
@@ -8,7 +14,6 @@ import swaggerUI from "swagger-ui-express";
 import swaggerJsDoc from "swagger-jsdoc";
 import http from 'http';
 import https from 'https';
-import fs from 'fs';
 import path from "path";
 
 
