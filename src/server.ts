@@ -5,8 +5,10 @@ console.log(process.env.DOTENV_CONFIG_PATH);
 if(fs.existsSync(process.env.DOTENV_CONFIG_PATH)){
   console.log('exists');
   env.config({path: process.env.DOTENV_CONFIG_PATH});
+} else {
+
+  env.config();
 }
-env.config();
 
 console.log(process.env.DB_URL);
 import initApp from "./app";

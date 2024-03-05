@@ -6,6 +6,15 @@ import reviewRoute from "./routes/review_routes";
 import authRoute from "./routes/auth_route";
 import userRoute from "./routes/user_route";
 import cors from "cors";
+import env from "dotenv";
+import fs from 'fs';
+if(fs.existsSync(process.env.DOTENV_CONFIG_PATH)){
+  console.log('exists');
+  env.config({path: process.env.DOTENV_CONFIG_PATH});
+} else {
+
+  env.config();
+}
 
 
 const initApp = (): Promise<Express> => {
