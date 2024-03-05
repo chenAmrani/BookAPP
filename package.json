@@ -4,7 +4,7 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "test": "tsc && jest --coverage --detectOpenHandles --forceExit",
+    "test": "tsc && cross-env NODE_ENV=production jest --coverage --detectOpenHandles --forceExit",
     "testAuth": "tsc && jest --detectOpenHandles --forceExit --runInBand ./src/tests/auth.test.ts",
     "testBook": "tsc && jest --detectOpenHandles --forceExit --runInBand ./src/tests/book.test.ts",
     "testReview": "tsc && jest --detectOpenHandles --forceExit --runInBand ./src/tests/review.test.ts",
@@ -12,7 +12,8 @@
     "testFile": "tsc && jest --detectOpenHandles --forceExit --runInBand ./src/tests/file.test.ts",
     "start": "tsc && nodemon ./dist/src/server.js",
     "dev": "nodemon ./src/server.ts",
-    "prod": "tsc -p tsconfig.json &&  pm2 restart pm2.config.js --env production"
+    "prod": "tsc -p tsconfig.json &&  pm2 restart pm2.config.js --env production",
+    "prod-cfg": "tsc -p tsconfig.json && cross-env NODE_ENV=production dotenv_config_path='./.env.prod' node ./dist/src/server.js"
   },
   "author": "Chen",
   "license": "ISC",
