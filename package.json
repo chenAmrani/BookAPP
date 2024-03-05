@@ -4,7 +4,8 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "test": "tsc && cross-env NODE_ENV=production jest --coverage --detectOpenHandles --forceExit",
+    "test": "tsc && jest --coverage --detectOpenHandles --forceExit",
+    "test-prd": "tsc && cross-env NODE_ENV=production DOTENV_CONFIG_PATH='./.env.prod' jest --coverage --detectOpenHandles --forceExit",
     "testAuth": "tsc && jest --detectOpenHandles --forceExit --runInBand ./src/tests/auth.test.ts",
     "testBook": "tsc && jest --detectOpenHandles --forceExit --runInBand ./src/tests/book.test.ts",
     "testReview": "tsc && jest --detectOpenHandles --forceExit --runInBand ./src/tests/review.test.ts",
