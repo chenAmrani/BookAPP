@@ -133,15 +133,16 @@ afterAll(async () => {
 });
 
 
-// describe("Book tests", () => {
+describe("Book tests", () => {
 
-//   test("Test Get All Books - empty response", async () => {
-//     const response = await request(app)
-//       .get("/book") 
-//       .set("Authorization", "JWT " + authorAccessToken);
-//     expect(response.statusCode).toBe(200);
-//     expect(response.body).toStrictEqual([]);
-//   });
+  test("Test Get All Books - empty response", async () => {
+    const response = await request(app)
+      .get("/book") 
+      .set("Authorization", "JWT " + authorAccessToken);
+    expect(response.statusCode).toBe(200);
+    expect(response.body).toStrictEqual([]);
+  });
+});
 
 //   test("Test Author Adding Book", async () => {
     
