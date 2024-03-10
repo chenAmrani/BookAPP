@@ -34,9 +34,9 @@ const initApp = (): Promise<Express> => {
       app.use("/auth", authRoute);
       app.use("/user", userRoute);
       app.use('/static', express.static( 'static'));
-      app.use('/assets', express.static('static/client/assets'));
+      app.use('/assets', express.static('src/client/assets'));
       app.use('*', (req,res)=>{
-        res.sendFile('index.html', {root: 'static/client'});
+        res.sendFile('index.html', {root: 'src/client'});
       });
       resolve(app);
     });
