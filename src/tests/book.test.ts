@@ -1,17 +1,22 @@
 
 // import request from "supertest";
-import initApp from "../app";
+// import initApp from "../app";
 // import mongoose from "mongoose";
-import { Express } from "express";
+// import { Express } from "express";
 // import  {IUser} from "../models/user_model";
 // import fs from "fs";
 import Book from "../models/book_model";
 import User from "../models/user_model";
+import ReviewModel from "../models/review_model";
+ Book.deleteMany();
+  
+User.deleteMany({});
 
-//
+ReviewModel.deleteMany();
+
 // const imageBuffer = fs.readFileSync("static/books/book1.jpg");
 
-let app: Express;
+// let app: Express;
 // let authorAccessToken: string;
 // let readerAccessToken: string;
 // let adminAccessToken: string;
@@ -101,12 +106,12 @@ let app: Express;
 // };
 
 
-beforeAll(async () => {
-  app = await initApp();
-  console.log("beforeAll");
-  await Book.deleteMany();
+// beforeAll(async () => {
+//   app = await initApp();
+//   console.log("beforeAll");
+//   await Book.deleteMany();
   
-  await User.deleteMany({});
+//   await User.deleteMany({});
 
 //   const adminResponse = await request(app).post("/auth/register").send(adminUser);
 //   const adminAcscessToken = await request(app).post("/auth/login").send(adminUser);
@@ -304,23 +309,23 @@ beforeAll(async () => {
   
 // //     expect(response.statusCode).toBe(403);
     
-// //   });
+//   });
 
-// //   test("Test Get Book By ID", async () => {
-// //     const response = await request(app)
-// //       .get(`/book/${createdBookId}`) 
-// //       .set("Authorization", "JWT " + authorAccessToken);
-// //     expect(response.statusCode).toBe(200);
-// //     const book = await Book.findById(createdBookId);
-// //     expect(response.body.name).toBe(book.name);
-// //   });
+//   test("Test Get Book By ID", async () => {
+//     const response = await request(app)
+//       .get(`/book/${createdBookId}`) 
+//       .set("Authorization", "JWT " + authorAccessToken);
+//     expect(response.statusCode).toBe(200);
+//     const book = await Book.findById(createdBookId);
+//     expect(response.body.name).toBe(book.name);
+//   });
 
-// //   test("Test Get Books by Name", async () => {
-// //     const bookName = "book3"; // Provide a value for the book name
-// //     const response = await request(app)
-// //       .get("/book")
-// //       .query({ name: bookName }) // Pass the book name as a query parameter
-// //       .set("Authorization", "JWT " + authorAccessToken);
-// //     expect(response.statusCode).toBe(200);
-// //   });
-});
+//   test("Test Get Books by Name", async () => {
+//     const bookName = "book3"; // Provide a value for the book name
+//     const response = await request(app)
+//       .get("/book")
+//       .query({ name: bookName }) // Pass the book name as a query parameter
+//       .set("Authorization", "JWT " + authorAccessToken);
+//     expect(response.statusCode).toBe(200);
+//   });
+// });
