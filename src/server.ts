@@ -29,7 +29,7 @@ initApp().then((app) => {
         description:
           "REST server including authentication using JWT refresh token",
       },
-      servers: [{ url: "http://localhost:6969" }],
+      servers: [{ url: "https://10.10.248.216" }],
     },
     apis: ["./src/routes/*.ts"],
   };
