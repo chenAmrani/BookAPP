@@ -31,7 +31,10 @@ const initApp = (): Promise<Express> => {
       app.use(express.json());
       app.use(express.urlencoded({ extended: true}));
       app.use(bodyParser.json());
-      app.use(cors());
+      app.use(cors({
+        origin: 'https://node56.cs.colman.ac.il', // replace with your origin
+        credentials: true // allow credentials
+      }));
 
       app.use("/book", bookRoute);
       app.use("/review", reviewRoute);
