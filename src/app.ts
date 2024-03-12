@@ -5,9 +5,10 @@ import bookRoute from "./routes/book_routes";
 import reviewRoute from "./routes/review_routes";
 import authRoute from "./routes/auth_route";
 import userRoute from "./routes/user_route";
-import cors from "cors";
+import cors from 'cors';
 import env from "dotenv";
 import fs from 'fs';
+import bodyParser from "body-parser";
 
 if(fs.existsSync(process.env.DOTENV_CONFIG_PATH)){
   console.log('exists');
@@ -25,9 +26,12 @@ const initApp = (): Promise<Express> => {
     const url = process.env.DB_URL;
     mongoose.connect(url!).then(() => {
       const app = express();
-      app.use(cors());
+
+      
       app.use(express.json());
-      app.use(express.urlencoded({ extended: true }));
+      app.use(express.urlencoded({ extended: true}));
+      app.use(bodyParser.json());
+      app.use(cors());
 
       app.use("/book", bookRoute);
       app.use("/review", reviewRoute);
