@@ -26,7 +26,7 @@ const initApp = (): Promise<Express> => {
     mongoose.connect(url!).then(() => {
       const app = express();
       const corsOptions : cors.CorsOptions = {
-        origin: 'node56.cs.colman.il'
+        origin: 'https//:node56.cs.colman.il'
       };
       app.use(cors(corsOptions));
       app.use(express.json());
